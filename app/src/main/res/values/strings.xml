@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">ReservaLocalFia</string>
+    <string name="title_activity_asignatura_menu">AsignaturaMenuActivity</string>
+    <string name="title_activity_carga_academica_menu">CargaAcademicaMenuActivity</string>
+    <string name="title_activity_horario_menu">HorarioMenuActivity</string>
+    <string name="title_activity_asignatura_insertar">AsignaturaInsertarActivity</string>
+    <string name="title_activity_asignatura_eliminar">AsignaturaEliminarActivity</string>
+    <string name="title_activity_asignatura_actualizar">AsignaturaActualizarActivity</string>
+    <string name="title_activity_asignatura_consultar">AsignaturaConsultarActivity</string>
+    <string name="title_activity_carga_academica_insertar">CargaAcademicaInsertarActivity</string>
+    <string name="title_activity_carga_academica_eliminar">CargaAcademicaEliminarActivity</string>
+    <string name="title_activity_carga_academica_actualizar">CargaAcademicaActualizarActivity</string>
+    <string name="title_activity_carga_academica_consultar">CargaAcademicaConsultarActivity</string>
+    <string name="title_activity_horario_insertar">HorarioInsertarActivity</string>
+    <string name="title_activity_horario_eliminar">HorarioEliminarActivity</string>
+    <string name="title_activity_horario_actualizar">HorarioActualizarActivity</string>
+    <string name="title_activity_horario_consultar">HorarioConsultarActivity</string>
+    <string name="asignatura_menu">Función a Ejecutar Asignatura</string>
+    <string name="carga_academica_menu">Función a Ejecutar Carga Academica</string>
+    <string name="horario_menu">Función a Ejecutar Horario</string>
+    <string name="insertar_registro">Insertar Registro</string>
+    <string name="eliminar_registro">Eliminar Registro</string>
+    <string name="consultar_registro">Consultar Registro</string>
+    <string name="actualizar_registro">Actualizar Registro</string>
+    <string name="insertar">Insertar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="consultar">Consultar</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="opciones">Opciones:</string>
+    <string name="codigoasignatura" >Codigo Asignatura</string>
+    <string name="nomasignatura">Nombre Asignatura</string>
+    <string name="codigolocal">Codigo Local</string>
+    <string name="codigoescuela">Codigo Escuela</string>
+    <string name="idpriodad">Prioridad</string>
+    <string name="idroldocente">Rol Docente</string>
+    <string name="codigociclo">Codigo Ciclo</string>
+    <string name="carnetdocente">Carnet Docente</string>
+    <string name="idhorario">Horario</string>
+    <string name="iddia">Dia</string>
+    <string name="horainicio">Hora Inicio</string>
+    <string name="horafin">Hora Finalizacion</string>
+
+
 </resources>
