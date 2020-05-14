@@ -28,18 +28,18 @@
     <string name="consultar">Consultar</string>
     <string name="limpiar">Limpiar</string>
     <string name="opciones">Opciones:</string>
-    <string name="codigoasignatura" >Codigo Asignatura</string>
-    <string name="nomasignatura">Nombre Asignatura</string>
-    <string name="codigolocal">Codigo Local</string>
-    <string name="codigoescuela">Codigo Escuela</string>
-    <string name="idpriodad">Prioridad</string>
-    <string name="idroldocente">Rol Docente</string>
-    <string name="codigociclo">Codigo Ciclo</string>
-    <string name="carnetdocente">Carnet Docente</string>
-    <string name="idhorario">Horario</string>
-    <string name="iddia">Dia</string>
-    <string name="horainicio">Hora Inicio</string>
-    <string name="horafin">Hora Finalizacion</string>
+    <string name="codigoAsignatura" >Codigo Asignatura</string>
+    <string name="nomAsignatura">Nombre Asignatura</string>
+    <string name="codigoLocal">Codigo Local</string>
+    <string name="codigoEscuela">Codigo Escuela</string>
+    <string name="idPriodad">Prioridad</string>
+    <string name="idRolDocente">Rol Docente</string>
+    <string name="codigoCiclo">Codigo Ciclo</string>
+    <string name="carnetDocente">Carnet Docente</string>
+    <string name="idHorario">Horario</string>
+    <string name="idDia">Dia</string>
+    <string name="horaInicio">Hora Inicio</string>
+    <string name="horaFin">Hora Finalizacion</string>
 
 
 </resources>

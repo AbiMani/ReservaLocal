@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".CargaAcademicaConsultarActivity"></activity>
-        <activity android:name=".CarcaAcademicaInsertarActivity" />
+        <activity android:name=".CargaAcademicaInsertarActivity" />
         <activity android:name=".CargaAcademicaEliminarActivity" />
         <activity android:name=".CargaAcademicaActualizarActivity" />
         <activity android:name=".HorarioInsertarActivity" />

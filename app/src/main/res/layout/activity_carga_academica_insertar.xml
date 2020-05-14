@@ -5,46 +5,39 @@
     android:paddingTop="30dip"
     android:stretchColumns="1" >
     <TableRow>
-        <TextView android:text="@string/codigoAsignatura"/>
+        <TextView android:text="@string/carnetDocente"/>
+        <EditText
+            android:id="@+id/editCarnetDocente"
+            android:inputType="text"
+            android:maxLength="7" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/codigoAsignatura" />
         <EditText
             android:id="@+id/editCodigoAsignatura"
             android:inputType="text"
             android:maxLength="6" />
     </TableRow>
     <TableRow>
-        <TextView android:text="@string/codigoLocal" />
+        <TextView android:text="@string/codigoCiclo" />
         <EditText
             android:id="@+id/editCodigoCiclo"
             android:inputType="text"
-            android:maxLength="20" />
+            android:maxLength="6" />
     </TableRow>
     <TableRow>
-        <TextView android:text="@string/codigoEscuela" />
+        <TextView android:text="@string/idRolDocente" />
         <EditText
-            android:id="@+id/editCodigoEscuela"
+            android:id="@+id/editIdRolDocente"
             android:inputType="text"
-            android:maxLength="30" />
+            android:maxLength="2" />
     </TableRow>
-    <TableRow>
-        <TextView android:text="@string/nomAsignatura" />
-        <EditText
-            android:id="@+id/editNomAsignatura"
-            android:inputType="text"
-            android:maxLength="30" />
-    </TableRow>
-    <TableRow>
-        <TextView android:text="@string/idPriodad" />
-        <EditText
-            android:id="@+id/editIdPrioridad"
-            android:inputType="text" />
-    </TableRow>
-
     <TableRow>
         <TextView android:text="@string/opciones" />
     </TableRow>
     <TableRow>
         <Button
-            android:onClick="insertarAsignatura"
+            android:onClick="insertarCargaAcademica"
             android:text="@string/insertar" />
         <Button
             android:onClick="limpiarTexto"

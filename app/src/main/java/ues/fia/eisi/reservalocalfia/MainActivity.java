@@ -11,13 +11,16 @@ import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 
-    String[] menu={"Tabla Asignatura","Tabla CargaAcademica","Tabla Horario","LLenar Base de Datos"};
+    String[] menu={"Tabla Asignatura","Tabla Carga Academica","Tabla Horario","LLenar Base de Datos"};
     String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity"};
+    ControlReserveLocal BDhelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu));
+        BDhelper= new ControlReserveLocal(this);
     }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
@@ -32,10 +35,10 @@ public class MainActivity extends ListActivity {
                 e.printStackTrace();
             }
         }else{
-            //BDhelper.abrir();
-            //String tost =BDhelper.llenarBD();
-           // BDhelper.cerrar();
-            //Toast.makeText(this,tost, Toast.LENGTH_SHORT).show();
+             BDhelper.abrir();
+             String tost =BDhelper.llenarBD();
+             BDhelper.cerrar();
+             Toast.makeText(this,tost, Toast.LENGTH_SHORT).show();
         }
     }
 }
