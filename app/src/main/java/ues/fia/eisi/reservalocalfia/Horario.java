@@ -3,25 +3,25 @@ package ues.fia.eisi.reservalocalfia;
 
 
 public class Horario {
-    private int idHorario;
+    private Integer idHorario;
     private String idDia;
     private String horaInicio;
     private String horaFin;
 
     public Horario(){}
 
-    public Horario(int idHorario,String idDia, String horaInicio, String horaFin){
+    public Horario(Integer idHorario,String idDia, String horaInicio, String horaFin){
         this.idHorario = idHorario;
         this.idDia = idDia;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
     }
 
-    public int getidHorario() {
+    public Integer getidHorario() {
         return idHorario;
     }
 
-    public void setidHorario(int idHorario) {
+    public void setidHorario(Integer idHorario) {
         this.idHorario = idHorario;
     }
 

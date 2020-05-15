@@ -28,7 +28,7 @@
     <string name="consultar">Consultar</string>
     <string name="limpiar">Limpiar</string>
     <string name="opciones">Opciones:</string>
-    <string name="codigoAsignatura" >Codigo Asignatura</string>
+    <string name="codigoAsignatura">Codigo Asignatura</string>
     <string name="nomAsignatura">Nombre Asignatura</string>
     <string name="codigoLocal">Codigo Local</string>
     <string name="codigoEscuela">Codigo Escuela</string>

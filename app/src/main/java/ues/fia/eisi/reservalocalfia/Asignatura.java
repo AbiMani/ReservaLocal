@@ -9,7 +9,7 @@ public class Asignatura {
 
     public Asignatura(){}
 
-    public Asignatura(String codigoAsignatura,String codigoLocal, String codigoEscuela, Integer idPrioridad, String nomAsignatura){
+    public Asignatura(String codigoAsignatura,String codigoLocal, String codigoEscuela, String nomAsignatura, Integer idPrioridad){
         this.codigoAsignatura = codigoAsignatura;
         this.codigoLocal = codigoLocal;
         this.codigoEscuela = codigoEscuela;
@@ -53,7 +53,7 @@ public class Asignatura {
         return idPrioridad;
     }
 
-    public void setIdPrioridad(int idPrioridad) {
+    public void setIdPrioridad(Integer idPrioridad) {
         this.idPrioridad = idPrioridad;
     }
 }

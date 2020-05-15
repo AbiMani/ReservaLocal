@@ -8,14 +8,15 @@
         <TextView android:text="@string/idHorario"/>
         <EditText
             android:id="@+id/editIdHorario"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="2"/>
     </TableRow>
     <TableRow>
         <TextView android:text="@string/idDia" />
         <EditText
             android:id="@+id/editIdDia"
             android:inputType="text"
-            android:maxLength="2" />
+            android:maxLength="6" />
     </TableRow>
     <TableRow>
         <TextView android:text="@string/horaInicio" />
@@ -27,7 +28,7 @@
     <TableRow>
         <TextView android:text="@string/horaFin" />
         <EditText
-            android:id="@+id/editIdHoraFin"
+            android:id="@+id/editHoraFin"
             android:inputType="text"
             android:maxLength="30" />
     </TableRow>

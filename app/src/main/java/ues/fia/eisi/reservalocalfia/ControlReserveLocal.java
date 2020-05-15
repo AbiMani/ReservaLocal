@@ -38,9 +38,10 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad INTEGER not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
                 db.execSQL("CREATE TABLE cargaAcademica(idRolDocente VARCHAR(2) NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
-                db.execSQL("CREATE TABLE Dia(idDia VARCHAR(1) NOT NULL PRIMARY KEY,nomDia varchar(10) not null);");
-                db.execSQL("CREATE TABLE RolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
-                db.execSQL("CREATE TABLE Prioridad(idPrioridad INTEGER NOT NULL PRIMARY KEY,codigoAsignatura VARCHAR(6), nivelPrioridad VARCHAR(20));");
+                db.execSQL("CREATE TABLE dia(idDia VARCHAR(1) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
+                db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
+                db.execSQL("CREATE TABLE prioridad(idPrioridad INTEGER NOT NULL PRIMARY KEY,codigoAsignatura VARCHAR(6), nivelPrioridad VARCHAR(20));");
+
             }catch (SQLException e){
                 e.printStackTrace();
             }
@@ -136,7 +137,7 @@ public class ControlReserveLocal {
             ContentValues cv = new ContentValues();
             cv.put("idDia",horario.getidDia());
             cv.put("horaInicio",horario.gethoraInicio());
-            cv.put("horaInicio",horario.gethoraFin());
+            cv.put("horaFin",horario.gethoraFin());
             db.update("horario",cv,"idHorario = ?", id);
             return "Registro actualizado correctamente";
         }else {
@@ -148,10 +149,10 @@ public class ControlReserveLocal {
     public String actualizar(CargaAcademica cargaAcademica){
 
         if(verificarIntegridad(cargaAcademica, 2)){
-            String[] id = {cargaAcademica.getidRolDocente(), cargaAcademica.getcodigoAsignatura(), cargaAcademica.getcodigoCiclo(), cargaAcademica.getcarnetDocente()};
+            String[] id = { cargaAcademica.getcodigoAsignatura(), cargaAcademica.getcodigoCiclo(), cargaAcademica.getcarnetDocente()};
             ContentValues cv = new ContentValues();
-            cv.put("carnetDocente", cargaAcademica.getcarnetDocente());
-            db.update("cargaAcademica", cv, "idRolDocente = ? AND codigoAsignatura = ? AND codigoCiclo = ? AND carnetDocente = ?", id);
+            cv.put("idRolDocente", cargaAcademica.getidRolDocente());
+            db.update("cargaAcademica", cv, "codigoAsignatura = ? AND codigoCiclo = ? AND carnetDocente = ?", id);
             return "Registro Actualizado Correctamente";
         }else{
             return "Registro no Existe";
@@ -225,13 +226,13 @@ public class ControlReserveLocal {
 
     public CargaAcademica consultarCargaAcademica( String carnetDocente,String codigoAsignatura, String codigoCiclo){
         String[] id= {carnetDocente,codigoAsignatura,codigoCiclo};
-        Cursor cursor= db.query("cargaAcademica",camposCargaAcademica, "codigoAsignatura = ? AND carnetDocente = ? AND codigoCiclo= ?", id,null,null,null);
+        Cursor cursor= db.query("cargaAcademica",camposCargaAcademica, "carnetDocente = ? AND codigoAsignatura = ?  AND codigoCiclo= ?", id,null,null,null);
         if (cursor.moveToFirst()){
             CargaAcademica cargaAcademica = new CargaAcademica();
-            cargaAcademica.setcarnetDocente(cursor.getString(0));
+            cargaAcademica.setcarnetDocente(cursor.getString(3));
             cargaAcademica.setcodigoAsignatura(cursor.getString(1));
             cargaAcademica.setcodigoCiclo(cursor.getString(2));
-            cargaAcademica.setidRolDocente(cursor.getString(3));
+            cargaAcademica.setidRolDocente(cursor.getString(0));
             return cargaAcademica;
         }else {
             return null;
@@ -257,9 +258,9 @@ public class ControlReserveLocal {
             {
                 //verificar que al modificar cargaAcademica exista codigoAsignatura del asignatura, el codigo de horario y el codigoCiclo
                 CargaAcademica cargaAcademica1 = (CargaAcademica)dato;
-                String[] ids = {cargaAcademica1.getcarnetDocente(), cargaAcademica1.getcodigoAsignatura(), cargaAcademica1.getcodigoCiclo()};
+                String[] ids = {cargaAcademica1.getcodigoAsignatura(),cargaAcademica1.getcodigoCiclo(),cargaAcademica1.getcarnetDocente() };
                 abrir();
-                Cursor c = db.query("cargaAcademica", null, "carnetDocente = ? AND codigoAsignatura = ? AND codigoCiclo = ?", ids, null, null, null);
+                Cursor c = db.query("cargaAcademica", null, "codigoAsignatura = ? AND codigoCiclo = ? AND carnetDocente = ? ", ids, null, null, null);
                 if(c.moveToFirst()){
                     //Se encontraron datos
                     return true;
@@ -326,20 +327,31 @@ public class ControlReserveLocal {
 
         //tabla Horario--------------------- 4 tuplas
         final Integer[] VHidHorario = {1,2,3,4};
-        final String[] VHidDia = {"Lunes","Lunes","Lunes","Lunes"};
+        final String[] VHidDia = {"L","L","L","L"};
         final String[] VHhoraInicio = {"6:20","8:05","9:50","11:35"};
         final String[] VHhoraFin = {"8:00","9:45","11:30","13:15"};
 
         // tabla CargaAcademica--------------------- 7 tuplas
         final String[] VCidRolDocente = {"01","01","02","02","03","04","01"};
-        final String[] VCcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115","IC115","MAT115","PRN115"};
-        final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22016","12016","22016"};
+        final String[] VCcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115","IEC115","MAT115","PRN115"};
+        final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22020","22020","22016"};
         final String[] VCcarnetDocente = {"vvvvvvv","fffffff","sssssss","eeeeeee","ttttttt","vvvvvvv","fffffff"};
 
         abrir();
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
         db.execSQL("DELETE FROM cargaAcademica");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (1,'Lunes-Miercoles')");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (2,'Martes-Viernes')");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (3,'Jueves')");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (4,'Sabado');");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (5,'Domingo');");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (6,'Lunes');");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (7,'Martes');");
+        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (8,'Miercoles');");
+        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (1,'MAT115','Alta');");
+        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (2,'PRN115','Media');");
+        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (3,'BAD115','Baja');");
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
@@ -371,6 +383,7 @@ public class ControlReserveLocal {
             cargaAcademica.setcarnetDocente(VCcarnetDocente[i]);
             insertar(cargaAcademica);
         }
+
         cerrar();
         return "Guardado Correctamente";
     }

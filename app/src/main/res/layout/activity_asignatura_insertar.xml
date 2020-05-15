@@ -14,7 +14,7 @@
     <TableRow>
         <TextView android:text="@string/codigoLocal" />
         <EditText
-            android:id="@+id/editCodigoCiclo"
+            android:id="@+id/editCodigoLocal"
             android:inputType="text"
             android:maxLength="20" />
     </TableRow>
@@ -36,7 +36,8 @@
         <TextView android:text="@string/idPriodad" />
         <EditText
             android:id="@+id/editIdPrioridad"
-            android:inputType="text" />
+            android:inputType="number"
+            />
     </TableRow>
 
     <TableRow>

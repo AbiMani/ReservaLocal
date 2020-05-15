@@ -32,7 +32,7 @@ public class AsignaturaActualizarActivity extends Activity {
         asignatura.setCodigoLocal(editCodigoLocal.getText().toString());
         asignatura.setCodigoEscuela(editCodigoEscuela.getText().toString());
         asignatura.setNomAsignatura(editNomAsignatura.getText().toString());
-        asignatura.setIdPrioridad(Integer.valueOf(editIdPrioridad.getText().toString()));
+        asignatura.setIdPrioridad(Integer.parseInt(editIdPrioridad.getText().toString()));
 
         helper.abrir();
         String estado = helper.actualizar(asignatura);
@@ -46,6 +46,7 @@ public class AsignaturaActualizarActivity extends Activity {
         editCodigoLocal.setText("");
         editCodigoEscuela.setText("");
         editNomAsignatura.setText("");
+        editIdPrioridad.setText("");
     }
 }
 

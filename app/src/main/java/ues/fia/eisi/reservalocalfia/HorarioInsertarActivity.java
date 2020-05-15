@@ -1,5 +1,6 @@
 package ues.fia.eisi.reservalocalfia;
 
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +25,7 @@ public class HorarioInsertarActivity extends Activity {
         editHoraFin = (EditText) findViewById(R.id.editHoraFin);
     }
     public void insertarHorario(View v) {
-        Integer idHorario= Integer.valueOf(editIdHorario.getText().toString());
+        Integer idHorario= Integer.parseInt(editIdHorario.getText().toString());
         String idDia=editIdDia.getText().toString();
         String horaInicio=editHoraInicio.getText().toString();
         String horaFin=editHoraFin.getText().toString();

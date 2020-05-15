@@ -28,7 +28,7 @@ public class HorarioActualizarActivity extends Activity {
 
     public void actualizarHorario(View v){
         Horario horario = new Horario();
-        horario.setidHorario(Integer.valueOf(editIdHorario.getText().toString()));
+        horario.setidHorario(Integer.parseInt(editIdHorario.getText().toString()));
         horario.setidDia(editIdDia.getText().toString());
         horario.sethoraInicio(editHoraInicio.getText().toString());
         horario.sethoraFin(editHoraFin.getText().toString());
