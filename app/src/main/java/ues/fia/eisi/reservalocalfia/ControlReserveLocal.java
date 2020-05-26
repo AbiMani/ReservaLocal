@@ -41,6 +41,41 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE dia(idDia VARCHAR(1) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
                 db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
                 db.execSQL("CREATE TABLE prioridad(idPrioridad INTEGER NOT NULL PRIMARY KEY,codigoAsignatura VARCHAR(6), nivelPrioridad VARCHAR(20));");
+                db.execSQL("create trigger fk_carga_asignatura before insert on cargaAcademica for each row begin select " +
+                        "case when ((select codigoAsignatura from asignatura where codigoAsignatura=new.codigoAsignatura) is null)" +
+                        " then raise(abort,'no puede insertar, no existe asignatura') end; end;");
+             /**   db.execSQL("create trigger fk_carga_ciclo before insert on cargaAcademica for each row begin select " +
+                        "case when ((select codigoCiclo from ciclo where codigoCiclo=new.codigoCiclo) is null)" +
+                        " then raise(abort,'no puede insertar, no existe ciclo') end; end;");
+                db.execSQL("create trigger fk_carga_docente before insert on cargaAcademica for each row begin select " +
+                        "case when ((select carnetDocente from docente where carnetDocente=new.carnetDocente) is null)" +
+                        " then raise(abort,'no puede insertar, no existe docente') end; end;");
+                db.execSQL("create trigger fk_carga_roldocente before insert on cargaAcademica for each row begin select " +
+                        "case when ((select idRolDocente from rolDocente where idRolDocente=new.idRolDocente) is null)" +
+                        " then raise(abort,'no puede insertar, no existe rol docente') end; end;");
+                db.execSQL("create trigger fk_asignatura_local before insert on asignatura for each row begin select " +
+                        "case when ((select codigoLocal from local where codigoLocal=new.codigoLocal) is null)" +
+                        " then raise(abort,'no puede insertar, no existe local') end; end;");
+                db.execSQL("create trigger fk_asignatura_escuela before insert on asignatura for each row begin select " +
+                        "case when ((select codigoEscuela from escuela where codigoEscuela=new.codigoEscuela) is null)" +
+                        " then raise(abort,'no puede insertar, no existe escuela') end; end;"); **/
+                db.execSQL("create trigger fk_asignatura_prioridad before insert on asignatura for each row begin select " +
+                        "case when ((select idPrioridad from prioridad where idPrioridad=new.idPrioridad) is null)" +
+                        " then raise(abort,'no puede insertar, no existe escuela') end; end;");
+                db.execSQL("create trigger dependencias_asignatura after update of codigoAsignatura on asignatura begin " +
+                        "update cargaAcademica set codigoAsignatura= new.codigoAsignatura where cargaAcademica.codigoAsignatura=old.codigoAsignatura; end;");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (1,'Lunes-Miercoles');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (2,'Martes-Viernes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (3,'Jueves');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (4,'Sabado');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (5,'Domingo');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (6,'Lunes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (7,'Martes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (8,'Miercoles');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (1,'MAT115','Alta');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (2,'PRN115','Media');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (3,'BAD115','Baja');");
+
 
             }catch (SQLException e){
                 e.printStackTrace();
@@ -162,11 +197,16 @@ public class ControlReserveLocal {
     public String eliminar(Asignatura asignatura){
         String regAfectados= "filas afectadas= ";
         int contador=0;
-        if(verificarIntegridad(asignatura,3)){
-            contador+= db.delete("cargaAcademica", "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null);
+        if(verificarIntegridad(asignatura,5)) {
+            if (verificarIntegridad(asignatura, 3)) {
+                regAfectados += "No se puede eliminar, Tiene dependencias en otra tabla";
+            } else {
+                contador += db.delete("asignatura", "codigoAsignatura='" + asignatura.getCodigoAsignatura() + "'", null);
+                regAfectados += contador;
+            }
+        }else{
+            return "Registro no existe";
         }
-        contador+=db.delete("asignatura", "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'", null);
-        regAfectados+= contador;
         return regAfectados;
     }
 
@@ -177,19 +217,28 @@ public class ControlReserveLocal {
         String where="codigoAsignatura='"+cargaAcademica.getcodigoAsignatura()+"'";
         where=where+" AND carnetDocente='"+cargaAcademica.getcarnetDocente()+"'";
         where=where+" AND codigoCiclo="+cargaAcademica.getcodigoCiclo();
-        contador+=db.delete("cargaAcademica", where, null);
-        regAfectados+=contador;
+        if (verificarIntegridad(cargaAcademica,2)) {
+            contador += db.delete("cargaAcademica", where, null);
+            regAfectados += contador;
+        }else{
+            return "Registro no existe";
+        }
         return regAfectados;
     }
 
-    public String eliminar(Horario horario){//no esta en el pdf que nos dio el ingeniero
+    public String eliminar(Horario horario){
         String regAfectados= "filas afectadas= ";
         int contador=0;
-        //if(verificarIntegridad(horario,4)){
-          //  contador+= db.delete("cargaAcademica","idHorario='"+horario.getidHorario()+"'",null);
-        //}
-        contador+= db.delete("horario", "idHorario='"+horario.getidHorario()+"'",null);
-        regAfectados+= contador;
+        if(verificarIntegridad(horario,6)){
+            if(verificarIntegridad(horario,4)){
+                regAfectados+="No se puede eliminar, Tiene dependencias en otra tabla";
+            }else{
+                contador+= db.delete("horario", "idHorario='"+horario.getidHorario()+"'",null);
+                regAfectados+= contador;
+            }
+        }else{
+            return "Registro no existe";
+        }
         return regAfectados;
     }
 
@@ -271,6 +320,9 @@ public class ControlReserveLocal {
             {
                 Asignatura asignatura = (Asignatura)dato;
                 Cursor c=db.query(true, "cargaAcademica", new String[] {"codigoAsignatura" }, "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null, null, null, null, null);
+                //Cursor c1=db.query(true, "detalleGrupoReserva", new String[] {"idHorario" }, "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null, null, null, null, null);
+                //Cursor c2=db.query(true, "grupo", new String[] {"idHorario" }, "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null, null, null, null, null);
+
                 if(c.moveToFirst())
                     return true; //Se encontraron datos
                 else
@@ -278,12 +330,14 @@ public class ControlReserveLocal {
             }
             case 4:
             {
-                //Horario horario = (Horario)dato;
-               // Cursor cmat=db.query(true, "cargaAcademica", new String[] {"idHorario" }, "idHorario='"+horario.getidHorario()+"'",null, null, null, null, null);
-                //if(cmat.moveToFirst())
-                   // return true; //Se encontraron datos
-               // else
-                   // return false;
+                Horario horario = (Horario)dato;
+                Cursor dghor=db.query(true, "detalleGrupoReserva", new String[] {"idHorario" }, "idHorario='"+horario.getidHorario()+"'",null, null, null, null, null);
+                Cursor drhor=db.query(true, "detalleReservaEvento", new String[] {"idHorario" }, "idHorario='"+horario.getidHorario()+"'",null, null, null, null, null);
+
+                if(dghor.moveToFirst() && drhor.moveToFirst())
+                   return true; //Se encontraron datos
+                else
+                    return false;
             }
             case 5:
             {
@@ -321,7 +375,7 @@ public class ControlReserveLocal {
         // tabla Asignatura--------------------- 4 tuplas
         final String[] VAcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115"};
         final String[] VAcodigoLocal = {"B11","C31","c31","B11"};
-        final String[] VAcodigoEscuela = {"Orantes","Ortiz","Gonzales","Coto"};
+        final String[] VAcodigoEscuela = {"UDCB","EISI","Gonzales","EISI"};
         final String[] VAnomAsignatura = {"Matematica I","Programacion I","Ingenieria Economica","Teoria de Sistemas"};
         final Integer[] VAidPrioridad = {1,3,3,4};
 
@@ -341,17 +395,8 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
         db.execSQL("DELETE FROM cargaAcademica");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (1,'Lunes-Miercoles')");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (2,'Martes-Viernes')");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (3,'Jueves')");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (4,'Sabado');");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (5,'Domingo');");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (6,'Lunes');");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (7,'Martes');");
-        db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (8,'Miercoles');");
-        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (1,'MAT115','Alta');");
-        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (2,'PRN115','Media');");
-        db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (3,'BAD115','Baja');");
+
+
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
