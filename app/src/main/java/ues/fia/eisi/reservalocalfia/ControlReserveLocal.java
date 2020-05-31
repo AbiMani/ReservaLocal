@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
@@ -14,9 +16,17 @@ public class ControlReserveLocal {
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
     private static final String[] camposHorario = new String[] {"idHorario","idDia","horaInicio","horaFin"};
 
+    private static final String[]camposDetalleReserva = new String [] {"idhorario","idreservaevento","codigolocal"};
+    private static final String[]camposReservaEvento = new String [] {"idreservaevento","codigoescuela","idtipoevento","nombreevento", "capacidadtotalevento", "fechareserva"};
+    private static final String[] camposTipoEvento = new String [] {"idtipoEvento","nomtipoevento"};
+
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
+
+    private static final String DROP_TABLE1 ="DROP TABLE IF EXISTS detallereserva; ";
+    private static final String DROP_TABLE2 ="DROP TABLE IF EXISTS reservaevento; ";
+    private static final String DROP_TABLE3 ="DROP TABLE IF EXISTS tipoevento; ";
 
     public ControlReserveLocal(Context ctx) {
         this.context=ctx;
@@ -76,6 +86,11 @@ public class ControlReserveLocal {
                 db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (2,'PRN115','Media');");
                 db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (3,'BAD115','Baja');");
 
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+                db.execSQL("CREATE TABLE detallereserva(iddetalle INTEGER PRIMARY KEY AUTOINCREMENT, idhorario INTEGER NOT NULL, idreservaevento INTEGER NOT NULL  ,codigolocal VARCHAR(7) NOT NULL)");
+                db.execSQL("CREATE TABLE reservaevento(idreservaevento INTEGER PRIMARY KEY AUTOINCREMENT,codigoescuela VARCHAR(20) NOT NULL,idtipoevento VARCHAR(2) NOT NULL,nombreevento VARCHAR(30),capacidadtotalevento INTEGER, fechareserva VARCHAR(10))");
+                db.execSQL("CREATE TABLE tipoevento(idtipoevento VARCHAR(2) NOT NULL ,nomtipoevento VARCHAR(30),PRIMARY KEY(idtipoevento))");
+
 
             }catch (SQLException e){
                 e.printStackTrace();
@@ -91,6 +106,11 @@ public class ControlReserveLocal {
     public void abrir() throws SQLException{
         db = DBHelper.getWritableDatabase();
         return;
+    }
+    //Metodo para leer datos de la base
+    public SQLiteDatabase abrirConsultar() throws SQLException{
+        db = DBHelper.getReadableDatabase();
+        return db;
     }
     public void cerrar(){
         DBHelper.close();
@@ -287,7 +307,88 @@ public class ControlReserveLocal {
             return null;
         }
     }
+    //---------------------------------TipoEvento---------------------------------
+    public String insertar(TipoEvento tipoEvento){
 
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        //*
+        if(verificarIntegridad(tipoEvento,7))
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+
+            ContentValues tipoEv = new ContentValues();
+            tipoEv.put("idtipoevento", tipoEvento.getIdTipoEvento());
+            tipoEv.put("nomtipoevento", tipoEvento.getNomTipoEvento());
+            contador=db.insert("tipoevento", null, tipoEv);
+            regInsertados=regInsertados+contador;
+        }
+
+        return regInsertados;
+    }
+
+    public String actualizar(TipoEvento tipoEvento){
+
+        // * 2 Verificar que el registro que exista
+        if(verificarIntegridad(tipoEvento, 7)){
+            String[] id = {tipoEvento.getIdTipoEvento()};
+            ContentValues cv = new ContentValues();
+            cv.put("nomtipoevento", tipoEvento.getNomTipoEvento());
+            db.update("tipoEvento", cv, "idtipoevento = ? ", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
+    public String eliminar(TipoEvento tipoEvento){
+
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+
+        if(verificarIntegridad(tipoEvento, 7))
+        {
+            String where="idtipoevento='"+tipoEvento.getIdTipoEvento()+"'";
+
+            contador+=db.delete("tipoEvento", where, null);
+            regAfectados+=contador;
+            return regAfectados;
+        }
+        else
+        {
+            return "Registro no Existe";
+        }
+    }
+    public TipoEvento consultarTipoEvento(String idtipoevento){
+
+        String[] id = {idtipoevento};
+        Cursor cursor = db.query("tipoevento", camposTipoEvento, "idtipoevento = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            TipoEvento tipoEvento = new TipoEvento();
+            tipoEvento.setIdTipoEvento(cursor.getString(0));
+            tipoEvento.setNomTipoEvento(cursor.getString(1));
+            return tipoEvento;
+        }else{
+            return null;
+        }
+    }
+    public ArrayList<TipoEvento> ListTipoEventos() {
+
+        abrirConsultar();
+        TipoEvento tipoEvento;
+        ArrayList<TipoEvento> lista = new ArrayList<TipoEvento>();
+
+        Cursor cursor = abrirConsultar().rawQuery("SELECT * FROM tipoevento", null);
+        while(cursor.moveToNext()){
+            tipoEvento = new TipoEvento();
+            tipoEvento.setIdTipoEvento(cursor.getString(0));
+            lista.add(tipoEvento);
+        }
+        return lista;
+    }
+    //---------------------------------------------------------------------------------------
     private boolean verificarIntegridad(Object dato, int relacion) throws SQLException{
         switch (relacion){
             case 1:
@@ -361,6 +462,17 @@ public class ControlReserveLocal {
                 Cursor cm = db.query("horario", null, "idHorario = ?", idm, null, null, null);
                 if(cm.moveToFirst()){
                     //Se encontro Horario
+                    return true;
+                }
+                return false;
+            }
+            case 7:{
+                TipoEvento tipoEvento = (TipoEvento) dato;
+                String[] id = {tipoEvento.getIdTipoEvento()};
+                abrir();
+                Cursor c2 = db.query("tipoevento", null, "idtipoevento = ?", id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro Tipo de evento
                     return true;
                 }
                 return false;
