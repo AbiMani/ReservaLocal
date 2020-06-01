@@ -40,6 +40,8 @@
     <string name="idDia">Dia</string>
     <string name="horaInicio">Hora Inicio</string>
     <string name="horaFin">Hora Finalizacion</string>
+    <string name="idTipoEvento" />
+    <string name="nombreEvento" />
 
 
 </resources>
