@@ -31,9 +31,6 @@ public class TipoEventoInsertarActivity extends Activity {
         String idTipovento=editidTipoEvento.getText().toString();
         String nombreEvento=editnombreEvento.getText().toString();
 
-        if (!idTipovento.isEmpty() || !nombreEvento.isEmpty()){
-            String msj="Todos los campos deben llenarse";
-        }
         TipoEvento tipoEvento= new TipoEvento();
         tipoEvento.setIdTipoEvento((idTipovento));
         tipoEvento.setNomTipoEvento(nombreEvento);
