@@ -16,14 +16,15 @@
             android:id="@+id/editIdDia"
             android:inputType="text"
             android:maxLength="1" />
-
+        <Spinner
+            android:id="@+id/spinnerDia"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
     </TableRow>
     <TableRow>
         <TextView android:text="@string/horaInicio" />
-        <EditText
-            android:id="@+id/editHoraInicio"
-            android:inputType="text"
-            android:maxLength="30" />
         <Spinner
             android:id="@+id/spinnerInicio"
             android:layout_height="wrap_content"
@@ -34,10 +35,6 @@
     </TableRow>
     <TableRow>
         <TextView android:text="@string/horaFin" />
-        <EditText
-            android:id="@+id/editHoraFin"
-            android:inputType="text"
-            android:maxLength="30" />
         <Spinner
             android:id="@+id/spinnerFin"
             android:layout_height="wrap_content"

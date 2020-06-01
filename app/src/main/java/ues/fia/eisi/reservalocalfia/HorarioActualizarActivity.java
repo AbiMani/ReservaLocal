@@ -5,15 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class HorarioActualizarActivity extends Activity {
     ControlReserveLocal helper;
     EditText editIdHorario;
     EditText editIdDia;
-    EditText editHoraInicio;
-    EditText editHoraFin;
+    Spinner spinnerInicio;
+    Spinner spinnerFin;
+    String selecInicio;
+    String selecFin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +27,44 @@ public class HorarioActualizarActivity extends Activity {
         helper = new ControlReserveLocal(this);
         editIdHorario = (EditText) findViewById(R.id.editIdHorario);
         editIdDia = (EditText) findViewById(R.id.editIdDia);
-        editHoraInicio = (EditText) findViewById(R.id.editHoraInicio);
-        editHoraFin = (EditText) findViewById(R.id.editHoraFin);
+        spinnerInicio = (Spinner) findViewById(R.id.spinnerInicio);
+        spinnerFin = (Spinner) findViewById(R.id.spinnerFin);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.inicio,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.fin,android.R.layout.simple_spinner_item);
+        spinnerInicio.setAdapter(adapter);
+        spinnerFin.setAdapter(adapter1);
+
+        spinnerInicio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selecInicio = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerFin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selecFin = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void actualizarHorario(View v){
         Horario horario = new Horario();
         horario.setidHorario(Integer.parseInt(editIdHorario.getText().toString()));
         horario.setidDia(editIdDia.getText().toString());
-        horario.sethoraInicio(editHoraInicio.getText().toString());
-        horario.sethoraFin(editHoraFin.getText().toString());
+        horario.sethoraInicio(selecInicio);
+        horario.sethoraFin(selecFin);
         helper.abrir();
         String estado =helper.actualizar(horario);
         helper.cerrar();
@@ -41,8 +74,6 @@ public class HorarioActualizarActivity extends Activity {
     public void  limpiarTexto(View v){
         editIdHorario.setText("");
         editIdDia.setText("");
-        editHoraInicio.setText("");
-        editHoraFin.setText("");
     }
 
 }

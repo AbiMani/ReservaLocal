@@ -7,12 +7,15 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
     private static final String[] camposAsignatura = new String[] {"codigoAsignatura","codigoLocal","codigoEscuela","nomAsignatura","idPrioridad"};
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
     private static final String[] camposHorario = new String[] {"idHorario","idDia","horaInicio","horaFin"};
+    private static final String[] camposDia = new String[] {"idDia","nomDia"};
 
     private final Context context;
     private DatabaseHelper DBHelper;
@@ -272,6 +275,19 @@ public class ControlReserveLocal {
             return null;
         }
     }
+
+    public ArrayList<Dia> consultaDia(){
+        ArrayList<Dia> diaList= new ArrayList<Dia>();
+        Cursor cursor = db.query("dia", camposDia, null,null,null,null,null);
+        while(cursor.moveToNext()){
+            Dia dia = new Dia();
+            dia.setIdDia(cursor.getString(0));
+            dia.setNomDia(cursor.getString(1));
+            diaList.add(dia);
+
+        }return diaList;
+    }
+
 
     public CargaAcademica consultarCargaAcademica( String carnetDocente,String codigoAsignatura, String codigoCiclo){
         String[] id= {carnetDocente,codigoAsignatura,codigoCiclo};
