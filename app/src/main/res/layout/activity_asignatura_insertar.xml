@@ -34,10 +34,12 @@
     </TableRow>
     <TableRow>
         <TextView android:text="@string/idPriodad" />
-        <EditText
-            android:id="@+id/editIdPrioridad"
-            android:inputType="number"
-            />
+        <Spinner
+            android:id="@+id/spinnerPrioridad"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
     </TableRow>
 
     <TableRow>

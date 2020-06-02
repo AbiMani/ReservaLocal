@@ -13,10 +13,12 @@
     </TableRow>
     <TableRow>
         <TextView android:text="@string/idDia" />
-        <EditText
-            android:id="@+id/editIdDia"
-            android:inputType="text"
-            android:maxLength="6" />
+        <Spinner
+            android:id="@+id/spinnerDia"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
     </TableRow>
     <TableRow>
         <TextView android:text="@string/horaInicio" />

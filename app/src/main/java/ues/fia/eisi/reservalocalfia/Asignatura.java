@@ -4,12 +4,12 @@ public class Asignatura {
     private String codigoAsignatura;
     private String codigoLocal;
     private String codigoEscuela;
-    private Integer idPrioridad;
+    private String idPrioridad;
     private String nomAsignatura;
 
     public Asignatura(){}
 
-    public Asignatura(String codigoAsignatura,String codigoLocal, String codigoEscuela, String nomAsignatura, Integer idPrioridad){
+    public Asignatura(String codigoAsignatura,String codigoLocal, String codigoEscuela, String nomAsignatura, String idPrioridad){
         this.codigoAsignatura = codigoAsignatura;
         this.codigoLocal = codigoLocal;
         this.codigoEscuela = codigoEscuela;
@@ -49,11 +49,11 @@ public class Asignatura {
         this.nomAsignatura = nomAsignatura;
     }
 
-    public Integer getIdPrioridad() {
+    public String getIdPrioridad() {
         return idPrioridad;
     }
 
-    public void setIdPrioridad(Integer idPrioridad) {
+    public void setIdPrioridad(String idPrioridad) {
         this.idPrioridad = idPrioridad;
     }
 }

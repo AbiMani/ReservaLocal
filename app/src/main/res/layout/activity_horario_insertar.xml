@@ -12,10 +12,6 @@
     </TableRow>
     <TableRow>
         <TextView android:text="@string/idDia" />
-        <EditText
-            android:id="@+id/editIdDia"
-            android:inputType="text"
-            android:maxLength="1" />
         <Spinner
             android:id="@+id/spinnerDia"
             android:layout_height="wrap_content"

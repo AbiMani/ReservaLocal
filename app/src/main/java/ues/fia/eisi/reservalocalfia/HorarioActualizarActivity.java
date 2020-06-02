@@ -11,14 +11,19 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class HorarioActualizarActivity extends Activity {
     ControlReserveLocal helper;
     EditText editIdHorario;
-    EditText editIdDia;
-    Spinner spinnerInicio;
+
+    Spinner spinnerInicio, spinnerDia;
     Spinner spinnerFin;
     String selecInicio;
     String selecFin;
+    String[] items;
+    Dia dia = new Dia();
+    ArrayList<Dia> diasList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +31,17 @@ public class HorarioActualizarActivity extends Activity {
         setContentView(R.layout.activity_horario_actualizar);
         helper = new ControlReserveLocal(this);
         editIdHorario = (EditText) findViewById(R.id.editIdHorario);
-        editIdDia = (EditText) findViewById(R.id.editIdDia);
+        spinnerDia = (Spinner) findViewById(R.id.spinnerDia);
         spinnerInicio = (Spinner) findViewById(R.id.spinnerInicio);
         spinnerFin = (Spinner) findViewById(R.id.spinnerFin);
+        diasList = helper.listaDia();
+        items = new String[diasList.size()];
+        for (int i=0;i<diasList.size();i++){
+            dia = diasList.get(i);
+            items[i] = String.valueOf(dia.getIdDia());
+        }
+        ArrayAdapter<String> adap=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinnerDia.setAdapter(adap);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.inicio,android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.fin,android.R.layout.simple_spinner_item);
@@ -62,7 +75,7 @@ public class HorarioActualizarActivity extends Activity {
     public void actualizarHorario(View v){
         Horario horario = new Horario();
         horario.setidHorario(Integer.parseInt(editIdHorario.getText().toString()));
-        horario.setidDia(editIdDia.getText().toString());
+        horario.setidDia(spinnerDia.getSelectedItem().toString());
         horario.sethoraInicio(selecInicio);
         horario.sethoraFin(selecFin);
         helper.abrir();
@@ -73,7 +86,6 @@ public class HorarioActualizarActivity extends Activity {
     }
     public void  limpiarTexto(View v){
         editIdHorario.setText("");
-        editIdDia.setText("");
     }
 
 }

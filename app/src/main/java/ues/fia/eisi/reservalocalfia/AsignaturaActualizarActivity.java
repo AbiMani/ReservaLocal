@@ -3,8 +3,12 @@ package ues.fia.eisi.reservalocalfia;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class AsignaturaActualizarActivity extends Activity {
     ControlReserveLocal helper;
@@ -12,7 +16,10 @@ public class AsignaturaActualizarActivity extends Activity {
     EditText editCodigoLocal;
     EditText editCodigoEscuela;
     EditText editNomAsignatura;
-    EditText editIdPrioridad;
+    Spinner spinnerPrioridad;
+    String[] items;
+    Prioridad prioridad = new Prioridad();
+    ArrayList<Prioridad> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +30,17 @@ public class AsignaturaActualizarActivity extends Activity {
         editCodigoLocal = (EditText) findViewById(R.id.editCodigoLocal);
         editCodigoEscuela = (EditText) findViewById(R.id.editCodigoEscuela);
         editNomAsignatura = (EditText) findViewById(R.id.editNomAsignatura);
-        editIdPrioridad = (EditText) findViewById(R.id.editIdPrioridad);
+        spinnerPrioridad = (Spinner) findViewById(R.id.spinnerPrioridad);
+
+        list = helper.listaPrioridad();
+        items = new String[list.size()];
+        for (int i=0;i<list.size();i++){
+            prioridad = list.get(i);
+            items[i] = String.valueOf(prioridad.getIdprioridad());
+        }
+
+        ArrayAdapter<String> adap=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinnerPrioridad.setAdapter(adap);
     }
 
     public void actualizarAsignatura(View v){
@@ -32,7 +49,7 @@ public class AsignaturaActualizarActivity extends Activity {
         asignatura.setCodigoLocal(editCodigoLocal.getText().toString());
         asignatura.setCodigoEscuela(editCodigoEscuela.getText().toString());
         asignatura.setNomAsignatura(editNomAsignatura.getText().toString());
-        asignatura.setIdPrioridad(Integer.parseInt(editIdPrioridad.getText().toString()));
+        asignatura.setIdPrioridad(spinnerPrioridad.getSelectedItem().toString());
 
         helper.abrir();
         String estado = helper.actualizar(asignatura);
@@ -46,7 +63,7 @@ public class AsignaturaActualizarActivity extends Activity {
         editCodigoLocal.setText("");
         editCodigoEscuela.setText("");
         editNomAsignatura.setText("");
-        editIdPrioridad.setText("");
+
     }
 }
 

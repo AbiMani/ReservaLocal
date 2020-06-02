@@ -17,27 +17,35 @@ import java.util.List;
 public class HorarioInsertarActivity extends Activity {
     ControlReserveLocal helper;
     EditText editIdHorario;
-    EditText editIdDia;
     Spinner spinnerDia;
     Spinner spinnerInicio;
     Spinner spinnerFin;
     String selecInicio;
     String selecFin;
-    ArrayList<String> listaDias;
+    String[] items;
+    Dia dia = new Dia();
     ArrayList<Dia> diasList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario_insertar);
         helper = new ControlReserveLocal(this);
         editIdHorario = (EditText) findViewById(R.id.editIdHorario);
-        editIdDia = (EditText) findViewById(R.id.editIdDia);
         spinnerDia = (Spinner) findViewById(R.id.spinnerDia);
         spinnerInicio = (Spinner) findViewById(R.id.spinnerInicio);
         spinnerFin = (Spinner) findViewById(R.id.spinnerFin);
 
 
-        //diasList = helper.consultaDia();
+        diasList = helper.listaDia();
+        items = new String[diasList.size()];
+        for (int i=0;i<diasList.size();i++){
+            dia = diasList.get(i);
+            items[i] = String.valueOf(dia.getIdDia());
+        }
+
+        ArrayAdapter<String> adap=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinnerDia.setAdapter(adap);
         //obtenerdias(diasList);
         //ArrayAdapter<CharSequence> adaptador = new ArrayAdapter(this, android.R.layout.simple_spinner_item,listaDias);
         //spinnerDia.setAdapter(adaptador);
@@ -75,18 +83,10 @@ public class HorarioInsertarActivity extends Activity {
     }
 
 
-    private void obtenerdias(ArrayList<Dia> diasList) {
-        listaDias= new ArrayList<String>();
-        listaDias.add("seleccione:");
-        for(int i=0;i<diasList.size();i++){
-            listaDias.add(diasList.get(i).getIdDia()+" - "+diasList.get(i).getNomDia());
-        }
-    }
-
 
     public void insertarHorario(View v) {
         Integer idHorario= Integer.parseInt(editIdHorario.getText().toString());
-        String idDia=editIdDia.getText().toString();
+        String idDia=spinnerDia.getSelectedItem().toString();
         String horaInicio=selecInicio;
         String horaFin=selecFin;
 
@@ -104,6 +104,5 @@ public class HorarioInsertarActivity extends Activity {
     }
     public void limpiarTexto(View v) {
         editIdHorario.setText("");
-        editIdDia.setText("");
     }
 }

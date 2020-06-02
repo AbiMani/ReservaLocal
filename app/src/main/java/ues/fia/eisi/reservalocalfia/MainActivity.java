@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 
-    String[] menu={"Tabla Asignatura","Tabla Carga Academica","Tabla Horario","Reserva de Evento","Detalle de reserva","Tipo de Evento","LLenar Base de Datos"};
+    String[] menu={"Asignatura","Carga Academica","Horario","Reserva de Evento","Detalle de reserva","Tipo de Evento","LLenar Base de Datos"};
     String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity", "ReservaEventoMenuActivity","DetalleReservaMenuActivity","TipoEventoMenuActivity"};
     ControlReserveLocal BDhelper;
 

@@ -16,6 +16,7 @@ public class ControlReserveLocal {
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
     private static final String[] camposHorario = new String[] {"idHorario","idDia","horaInicio","horaFin"};
     private static final String[] camposDia = new String[] {"idDia","nomDia"};
+    private static final String[] camposPri = new String[] {"idPrioridad","nivelPrioridad"};
 
     private static final String[]camposDetalleReserva = new String [] {"idhorario","idreservaevento","codigolocal"};
     private static final String[]camposReservaEvento = new String [] {"idreservaevento","codigoescuela","idtipoevento","nombreevento", "capacidadtotalevento", "fechareserva"};
@@ -46,12 +47,12 @@ public class ControlReserveLocal {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
-                db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad INTEGER not null);");
+                db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
                 db.execSQL("CREATE TABLE cargaAcademica(idRolDocente VARCHAR(2) NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
-                db.execSQL("CREATE TABLE dia(idDia VARCHAR(1) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
+                db.execSQL("CREATE TABLE dia(idDia VARCHAR(4) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
                 db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
-                db.execSQL("CREATE TABLE prioridad(idPrioridad INTEGER NOT NULL PRIMARY KEY,codigoAsignatura VARCHAR(6), nivelPrioridad VARCHAR(20));");
+                db.execSQL("CREATE TABLE prioridad(idPrioridad VARCHAR(1) NOT NULL PRIMARY KEY, nivelPrioridad VARCHAR(20));");
                 db.execSQL("create trigger fk_carga_asignatura before insert on cargaAcademica for each row begin select " +
                         "case when ((select codigoAsignatura from asignatura where codigoAsignatura=new.codigoAsignatura) is null)" +
                         " then raise(abort,'no puede insertar, no existe asignatura') end; end;");
@@ -75,17 +76,17 @@ public class ControlReserveLocal {
                         " then raise(abort,'no puede insertar, no existe escuela') end; end;");
                 db.execSQL("create trigger dependencias_asignatura after update of codigoAsignatura on asignatura begin " +
                         "update cargaAcademica set codigoAsignatura= new.codigoAsignatura where cargaAcademica.codigoAsignatura=old.codigoAsignatura; end;");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (1,'Lunes-Miercoles');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (2,'Martes-Viernes');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (3,'Jueves');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (4,'Sabado');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (5,'Domingo');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (6,'Lunes');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (7,'Martes');");
-                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES (8,'Miercoles');");
-                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (1,'MAT115','Alta');");
-                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (2,'PRN115','Media');");
-                db.execSQL("INSERT INTO prioridad (idPrioridad,codigoAsignatura,nivelPrioridad) VALUES (3,'BAD115','Baja');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('L-X','Lunes-Miercoles');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('M-V','Martes-Viernes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('L','Lunes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('M','Martes');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('X','Miercoles');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('J','Jueves');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('S','Sabado');");
+                db.execSQL("INSERT INTO dia (idDia,nomDia) VALUES ('D','Domingo');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,nivelPrioridad) VALUES ('A','Alta');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,nivelPrioridad) VALUES ('M','Media');");
+                db.execSQL("INSERT INTO prioridad (idPrioridad,nivelPrioridad) VALUES ('B','Baja');");
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------
                 db.execSQL("CREATE TABLE detallereserva(iddetalle INTEGER PRIMARY KEY AUTOINCREMENT, idhorario INTEGER NOT NULL, idreservaevento INTEGER NOT NULL  ,codigolocal VARCHAR(7) NOT NULL)");
@@ -272,7 +273,7 @@ public class ControlReserveLocal {
             asignatura.setCodigoLocal(cursor.getString(1));
             asignatura.setCodigoEscuela(cursor.getString(2));
             asignatura.setNomAsignatura(cursor.getString(3));
-            asignatura.setIdPrioridad(cursor.getInt(4));
+            asignatura.setIdPrioridad(cursor.getString(4));
             return asignatura;
         }else{
             return null;
@@ -294,16 +295,32 @@ public class ControlReserveLocal {
         }
     }
 
-    public ArrayList<Dia> consultaDia(){
-        ArrayList<Dia> diaList= new ArrayList<Dia>();
-        Cursor cursor = db.query("dia", camposDia, null,null,null,null,null);
+    public ArrayList<Dia> listaDia(){
+        abrirConsultar();
+        Dia dia;
+        ArrayList<Dia> lista = new ArrayList<Dia>();
+
+        Cursor cursor = abrirConsultar().rawQuery("SELECT * FROM dia", null);
         while(cursor.moveToNext()){
-            Dia dia = new Dia();
+            dia = new Dia();
             dia.setIdDia(cursor.getString(0));
             dia.setNomDia(cursor.getString(1));
-            diaList.add(dia);
+            lista.add(dia);
 
-        }return diaList;
+        }return lista;
+    }
+
+    public ArrayList<Prioridad> listaPrioridad(){
+        abrirConsultar();
+        Prioridad prioridad;
+        ArrayList<Prioridad> lista = new ArrayList<Prioridad>();
+
+        Cursor cursor = abrirConsultar().rawQuery("SELECT * FROM prioridad", null);
+        while(cursor.moveToNext()){
+            prioridad = new Prioridad();
+            prioridad.setIdprioridad(cursor.getString(0));
+            lista.add(prioridad);
+        }return lista;
     }
 
 
@@ -503,11 +520,11 @@ public class ControlReserveLocal {
         final String[] VAcodigoLocal = {"B11","C31","c31","B11"};
         final String[] VAcodigoEscuela = {"UDCB","EISI","Gonzales","EISI"};
         final String[] VAnomAsignatura = {"Matematica I","Programacion I","Ingenieria Economica","Teoria de Sistemas"};
-        final Integer[] VAidPrioridad = {1,3,3,4};
+        final String[] VAidPrioridad = {"A","B","B","B"};
 
         //tabla Horario--------------------- 4 tuplas
         final Integer[] VHidHorario = {1,2,3,4};
-        final String[] VHidDia = {"L","L","L","L"};
+        final String[] VHidDia = {"L-X","L-X","L-X","L-X"};
         final String[] VHhoraInicio = {"6:20","8:05","9:50","11:35"};
         final String[] VHhoraFin = {"8:00","9:45","11:30","13:15"};
 
