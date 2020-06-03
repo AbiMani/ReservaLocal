@@ -11,8 +11,10 @@ import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 
-    String[] menu={"Asignatura","Carga Academica","Horario","Reserva de Evento","Detalle de reserva","Tipo de Evento","LLenar Base de Datos"};
-    String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity", "ReservaEventoMenuActivity","DetalleReservaMenuActivity","TipoEventoMenuActivity"};
+    String[] menu={"Asignatura","Carga Academica","Horario","Reserva de Evento","Detalle de reserva","Tipo de Evento",
+            "Gestion Docente","Gestion Rol de Docentes","Gestion del tipo de local","LLenar Base de Datos"};
+    String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity", "ReservaEventoMenuActivity",
+            "DetalleReservaMenuActivity","TipoEventoMenuActivity","DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity"};
     ControlReserveLocal BDhelper;
 
 
@@ -25,7 +27,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
         super.onListItemClick(l, v, position, id);
-        if(position!=6) {
+        if(position!=9) {
             String nombreValue = activities[position];
             try {
                 Class<?> clase = Class.forName("ues.fia.eisi.reservalocalfia." + nombreValue);

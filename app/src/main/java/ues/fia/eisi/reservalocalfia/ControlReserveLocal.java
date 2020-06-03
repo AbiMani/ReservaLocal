@@ -22,6 +22,11 @@ public class ControlReserveLocal {
     private static final String[]camposReservaEvento = new String [] {"idreservaevento","codigoescuela","idtipoevento","nombreevento", "capacidadtotalevento", "fechareserva"};
     private static final String[] camposTipoEvento = new String [] {"idtipoEvento","nomtipoevento"};
 
+    //campos de las tablas docente
+    private static final String[]camposDocente = new String [] {"carnetDocente","nombreDocente","apellido", "rol", "nomEscuela"};
+    private static final String[]camposRolDocente = new String [] {"idRolDocente","nomRolDocente"};
+    private static final String[]camposTipoLocal = new String [] {"idTipoLocal","nomTipoLocal"};
+
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -51,7 +56,7 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
                 db.execSQL("CREATE TABLE cargaAcademica(idRolDocente VARCHAR(2) NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
                 db.execSQL("CREATE TABLE dia(idDia VARCHAR(4) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
-                db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
+                //db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
                 db.execSQL("CREATE TABLE prioridad(idPrioridad VARCHAR(1) NOT NULL PRIMARY KEY, nivelPrioridad VARCHAR(20));");
                 db.execSQL("create trigger fk_carga_asignatura before insert on cargaAcademica for each row begin select " +
                         "case when ((select codigoAsignatura from asignatura where codigoAsignatura=new.codigoAsignatura) is null)" +
@@ -92,6 +97,14 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE detallereserva(iddetalle INTEGER PRIMARY KEY AUTOINCREMENT, idhorario INTEGER NOT NULL, idreservaevento INTEGER NOT NULL  ,codigolocal VARCHAR(7) NOT NULL)");
                 db.execSQL("CREATE TABLE reservaevento(idreservaevento INTEGER PRIMARY KEY AUTOINCREMENT,codigoescuela VARCHAR(20) NOT NULL,idtipoevento VARCHAR(2) NOT NULL,nombreevento VARCHAR(30),capacidadtotalevento INTEGER, fechareserva VARCHAR(10))");
                 db.execSQL("CREATE TABLE tipoevento(idtipoevento VARCHAR(2) NOT NULL ,nomtipoevento VARCHAR(30),PRIMARY KEY(idtipoevento))");
+
+                //tabla docente
+                db.execSQL("CREATE TABLE docente(carnetDocente VARCHAR(7) NOT NULL,nombreDocente VARCHAR(30)," +
+                        "apellido VARCHAR(30),rol VARCHAR(30),nomEscuela VARCHAR(30),PRIMARY KEY(carnetDocente));");
+                //tabla tipo local
+                db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
+                //tabla rol docente
+                db.execSQL("CREATE TABLE rolDocente(idRolDocente INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomRolDocente varchar(30));");
 
 
             }catch (SQLException e){
@@ -419,6 +432,246 @@ public class ControlReserveLocal {
         }
         return lista;
     }
+
+    // Insertar Docente
+    public String insertar(Docente docente){
+
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+
+        // verificar que no exista docente
+        if(verificarIntegridadJavier(docente,1))
+        {
+            regInsertados= "Error al Insertar el registro ya existe, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+            ContentValues doce = new ContentValues();
+            doce.put("carnetDocente", docente.getCarnetDocente());
+            doce.put("nombreDocente", docente.getNombreDocente());
+            doce.put("apellido", docente.getApellido());
+            doce.put("rol", docente.getRol());
+            doce.put("nomEscuela", docente.getNomEscuela());
+            contador=db.insert("docente", null, doce);
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
+
+    //Metodo Consultar Docente
+    public Docente consultarDocente(String carnetDocente){
+
+        String[] id = {carnetDocente};
+        Cursor cursor = db.query("docente", camposDocente, "carnetDocente = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Docente doce = new Docente();
+            doce.setCarnetDocente(cursor.getString(0));
+            doce.setNombreDocente(cursor.getString(1));
+            doce.setApellido(cursor.getString(2));
+            doce.setRol(cursor.getString(3));
+            doce.setNomEscuela(cursor.getString(4));
+            return doce;
+        }else{
+            return null;
+        }
+    }
+
+    //Metodo de Actualizar Docente
+    public String actualizar(Docente docente){
+        //Si existe
+        if(verificarIntegridadJavier(docente, 1)){
+            String[] id = {docente.getCarnetDocente()};
+            ContentValues cv = new ContentValues();
+            cv.put("nombreDocente", docente.getNombreDocente());
+            cv.put("apellido", docente.getApellido());
+            cv.put("rol", docente.getRol());
+            cv.put("nomEscuela", docente.getNomEscuela());
+            db.update("docente", cv, "carnetDocente = ?", id);
+            return "Registro del Docente se Actualizo Correctamente";
+        }else{
+            return "Registro con carnet del Docente " + docente.getCarnetDocente() + " no existe";
+        }
+    }
+
+    //Metodo eliminar docente
+    public String eliminar(Docente docente){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        //Si existe carnet
+        if(verificarIntegridadJavier(docente, 1))        {
+            //si tiene registros relacionados, se eliminan primero
+            /*if (verificarIntegridad(alumno,3)) {
+                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
+            }*/
+            contador+=db.delete("docente", "carnetDocente='"+docente.getCarnetDocente()+"'", null);
+            regAfectados+=contador;
+        }
+        else
+        {
+            return "Registro con carnet del Docente  " + docente.getCarnetDocente() + " no existe";
+        }
+
+        return regAfectados;
+    }
+
+    //Insertar Rol docente
+    public String insertar(RolDocente rolDocente){
+
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+
+        // verificar que no exista el rol docente
+        if(verificarIntegridadJavier(rolDocente,2))
+        {
+            regInsertados= "Error al Insertar el rol para el docente ya existe, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+            ContentValues rol = new ContentValues();
+            rol.put("nomRolDocente", rolDocente.getNomRolDocente());
+            contador=db.insert("rolDocente", "idRolDocente", rol);
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
+
+    //Consultar el rol del Docente
+    public RolDocente consultarRolDocente(String nomRolDocente){
+
+        String[] id = {nomRolDocente};
+        Cursor cursor = db.query("rolDocente", camposRolDocente, "nomRolDocente = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            RolDocente rol = new RolDocente();
+            rol.setIdRolDocente(cursor.getInt(0));
+            rol.setNomRolDocente(cursor.getString(1));
+            return rol;
+        }else{
+            return null;
+        }
+    }
+
+    //Actualizar el rol del Docente
+    public String actualizar(RolDocente rolDocente){
+        //Si existe
+        if(verificarIntegridadJavier(rolDocente, 2)){
+            String[] id = {rolDocente.getNomRolDocente()};
+            ContentValues variable = new ContentValues();
+            variable.put("nomRolDocente", rolDocente.getNomRolDocente());
+            db.update("rolDocente", variable, "nomRolDocente = ?", id);
+            return "Registro del Rol del Docente Actualizado Correctamente";
+        }else{
+            return "El Rol Docente " + rolDocente.getNomRolDocente() + " no existe";
+        }
+    }
+
+    public String actualizar1(RolDocente rolDocente){
+        //verifica si existe un rol docente existente
+        if(verificarIntegridadJavier(rolDocente, 2)){
+            return "Registro del Rol del Docente que quiere actualizar ya existe";
+        }else{
+            String[] id = {String.valueOf(rolDocente.getIdRolDocente())};
+            ContentValues variable = new ContentValues();
+            variable.put("idRolDocente", rolDocente.getIdRolDocente());
+            variable.put("nomRolDocente", rolDocente.getNomRolDocente());
+            db.update("rolDocente", variable, "idRolDocente = ?", id);
+            return "Registro del Rol del Docente se Actualizo Correctamente";
+        }
+
+    }
+
+    //eliminar el rol del Docente
+    public String eliminar(RolDocente rolDocente){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        //Si existe carnet
+        if(verificarIntegridadJavier(rolDocente, 2))        {
+            //si tiene registros relacionados, se eliminan primero
+            /*if (verificarIntegridad(alumno,3)) {
+                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
+            }*/
+            contador+=db.delete("rolDocente", "nomRolDocente='"+rolDocente.getNomRolDocente()+"'", null);
+            regAfectados+=contador;
+        }
+        else
+        {
+            return "Registro con el Rol Docente " + rolDocente.getNomRolDocente() + " no existe";
+        }
+
+        return regAfectados;
+    }
+
+    //Insertar Tipo Local
+    public String insertar(TipoLocal tipoLocal){
+
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        // verificar que no exista el tipo de local
+        if(verificarIntegridadJavier(tipoLocal,3))
+        {
+            regInsertados= "Error al Insertar el registro del Tipo Local, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+            ContentValues tipo = new ContentValues();
+            tipo.put("nomTipoLocal", tipoLocal.getNomTipoLocal());
+            contador=db.insert("tipoLocal", "idTipoLocal", tipo);
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
+
+    //Consultar el Tipo Local
+    public TipoLocal consultarTipoLocal(String nomTipoLocal){
+
+        String[] id = {nomTipoLocal};
+        Cursor cursor = db.query("tipoLocal", camposTipoLocal, "nomTipoLocal = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            TipoLocal local = new TipoLocal();
+            local.setIdTipoLocal(cursor.getInt(0));
+            local.setNomTipoLocal(cursor.getString(1));
+            return local;
+        }else{
+            return null;
+        }
+    }
+
+    //Actualizar el Tipo de Local
+    public String actualizar(TipoLocal tipoLocal){
+        //verifica si existe un tipo Local
+        if(verificarIntegridadJavier(tipoLocal, 3)){
+            return "Registro del Tipo Local que quiere actualizar ya existe";
+        }else{
+            String[] id = {String.valueOf(tipoLocal.getIdTipoLocal())};
+            ContentValues variable = new ContentValues();
+            variable.put("idTipoLocal", tipoLocal.getIdTipoLocal());
+            variable.put("nomTipoLocal", tipoLocal.getNomTipoLocal());
+            db.update("tipoLocal", variable, "idTipoLocal = ?", id);
+            return "Registro del Tipo Local se Actualizo Correctamente";
+        }
+
+    }
+
+    //eliminar el rol del Docente
+    public String eliminar(TipoLocal tipoLocal){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        //Si existe carnet
+        if(verificarIntegridadJavier(tipoLocal, 3))        {
+            //si tiene registros relacionados, se eliminan primero
+            /*if (verificarIntegridad(alumno,3)) {
+                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
+            }*/
+            contador+=db.delete("tipoLocal", "nomTipoLocal='"+tipoLocal.getNomTipoLocal()+"'", null);
+            regAfectados+=contador;
+        }
+        else
+        {
+            return "Registro con el Tipo Local " + tipoLocal.getNomTipoLocal() + " no existe";
+        }
+
+        return regAfectados;
+    }
+
     //---------------------------------------------------------------------------------------
     private boolean verificarIntegridad(Object dato, int relacion) throws SQLException{
         switch (relacion){
@@ -513,6 +766,61 @@ public class ControlReserveLocal {
         }
     }
 
+    /*verificacion de integridad de javier */
+    private boolean verificarIntegridadJavier(Object dato, int relacion) throws SQLException{
+
+        switch(relacion){
+
+            case 1:
+            {
+                //verificar que exista un docente
+                Docente docente2 = (Docente)dato;
+                String[] id = {docente2.getCarnetDocente()};
+                abrir();
+                Cursor c2 = db.query("docente", null, "carnetDocente = ?", id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro Docente
+                    return true;
+                }
+                return false;
+            }
+
+            case 2:
+            {
+                //verificar que exista un rol docente
+                RolDocente rolDocente2 = (RolDocente)dato;
+                String[] id = {rolDocente2.getNomRolDocente()};
+                abrir();
+                Cursor c2 = db.query("rolDocente", null, "nomRolDocente = ?",id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro el rol docente
+                    return true;
+                }
+                return false;
+            }
+
+            case 3:
+            {
+                //verificar que exista el tipo de local
+                TipoLocal tipoLocal2 = (TipoLocal) dato;
+                String[] id = {tipoLocal2.getNomTipoLocal()};
+                abrir();
+                Cursor c2 = db.query("tipoLocal", null, "nomTipoLocal = ?",id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro el rol docente
+                    return true;
+                }
+                return false;
+            }
+
+            default:
+                return false;
+
+        }
+
+
+    }
+
     public String llenarBD(){
 
         // tabla Asignatura--------------------- 4 tuplas
@@ -534,12 +842,28 @@ public class ControlReserveLocal {
         final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22020","22020","22016"};
         final String[] VCcarnetDocente = {"vvvvvvv","fffffff","sssssss","eeeeeee","ttttttt","vvvvvvv","fffffff"};
 
+        //Tabla docente
+        final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
+        final String[] VDnombreDocente = {"Oscar","Fatima","Sara","Gabriela"};
+        final String[] VDapellido = {"Rodriguez","Sanchez","Gonzales","Coto"};
+        final String[] VDrol = {"Docente","Docente","Asesor","Instructor"};
+        final String[] VDnomEscuela = {"Ing. Sistema Informatico","Ing. Sistema Informatico","Ing. Sistema informatico",
+                "Ing. Sistema Informatico"};
+
+        //tabla rol docente
+        final String[] VRDnomRolDocente = {"Docente","Docente","Jefe Catedra","Encargado de Laboratorio"};
+
+        //tipo de local
+        final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
+
         abrir();
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
         db.execSQL("DELETE FROM cargaAcademica");
 
-
+        db.execSQL("DELETE FROM docente;");
+        db.execSQL("DELETE FROM rolDocente;");
+        db.execSQL("DELETE FROM tipoLocal;");
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
@@ -570,6 +894,31 @@ public class ControlReserveLocal {
             cargaAcademica.setcodigoCiclo(VCcodigoCiclo[i]);
             cargaAcademica.setcarnetDocente(VCcarnetDocente[i]);
             insertar(cargaAcademica);
+        }
+
+        //llenado de las tabla docente
+        Docente docente = new Docente();
+        for(int i=0;i<4;i++){
+            docente.setCarnetDocente(VDcarnetDocente[i]);
+            docente.setNombreDocente(VDnombreDocente[i]);
+            docente.setApellido(VDapellido[i]);
+            docente.setRol(VDrol[i]);
+            docente.setNomEscuela(VDnomEscuela[i]);
+            insertar(docente);
+        }
+
+        //llenado de la tabla rol docente
+        RolDocente rolDocente = new RolDocente();
+        for(int i=0;i<4;i++){
+            rolDocente.setNomRolDocente(VRDnomRolDocente[i]);
+            insertar(rolDocente);
+        }
+
+        //llenado de la tabla tipo local
+        TipoLocal tipoLocal = new TipoLocal();
+        for (int i=0;i<4;i++){
+            tipoLocal.setNomTipoLocal(V_TPnomTipoLocal[i]);
+            insertar(tipoLocal);
         }
 
         cerrar();
