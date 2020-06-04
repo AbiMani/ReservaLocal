@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,46 +8,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    tools:context=".TipoEventoMenuActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gestion Tipos de Eventos"
+        android:text="Gestion Tipos de eventos"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:layout_marginBottom="30dp"/>
-    <Button
-        android:id="@+id/btnInsertar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Insertar nuevo tipo de evento"
-        android:onClick="onClick"
+        android:layout_marginBottom="30dp"
         tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/btnEliminar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Eliminar Registro"
-        android:onClick="onClick"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnConsultar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Consultar registro"
-        android:onClick="onClick"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnActualizar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Actualizar registro"
-        android:onClick="onClick"
-        tools:ignore="MissingConstraints" />
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

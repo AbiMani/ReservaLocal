@@ -18,7 +18,7 @@ public class TipoEventoConsultarActivity extends Activity {
     EditText editidTipoEvento;
     EditText editnombreEvento;
     Spinner spinnerTipoEvento;
-    String[] items;
+    ArrayList<String> items=new ArrayList<String>();
     ArrayList<TipoEvento> list;
     TipoEvento tipoEvento=new TipoEvento();
 
@@ -32,10 +32,9 @@ public class TipoEventoConsultarActivity extends Activity {
         helper = new ControlReserveLocal(this);
 
         list = helper.ListTipoEventos();
-        items = new String[list.size()];
+        items.add("Seleccione...");
         for (int i=0;i<list.size();i++){
-            tipoEvento = list.get(i);
-            items[i] = String.valueOf(tipoEvento.getIdTipoEvento());
+            items.add(list.get(i).getIdTipoEvento());
         }
         spinnerTipoEvento=(Spinner) findViewById(R.id.spinner2);
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
@@ -45,20 +44,23 @@ public class TipoEventoConsultarActivity extends Activity {
     }
     public void consultarTipoEvento (View v){
 
-        helper.abrir();
-        String tipoEvento_id=spinnerTipoEvento.getSelectedItem().toString();
-        TipoEvento tipoEvento = helper.consultarTipoEvento(tipoEvento_id);
-        helper.cerrar();
-        if (tipoEvento == null) {
-            Toast.makeText(this, "Tipo de evento no registrado", Toast.LENGTH_LONG).show();
-            editnombreEvento.setText(" ");
-        } else {
-
-            editnombreEvento.setText(tipoEvento.getNomTipoEvento());
+        if (spinnerTipoEvento.getSelectedItem().toString().equals("Seleccione..."))
+        {Toast.makeText(this, "Debe seleccionar un tipo de evento", Toast.LENGTH_SHORT).show();}
+        else {
+            helper.abrir();
+            String tipoEvento_id = spinnerTipoEvento.getSelectedItem().toString();
+            TipoEvento tipoEvento = helper.consultarTipoEvento(tipoEvento_id);
+            helper.cerrar();
+            if (tipoEvento == null) {
+                Toast.makeText(this, "Tipo de evento no registrado", Toast.LENGTH_LONG).show();
+                editnombreEvento.setText(" ");
+            } else {
+                editnombreEvento.setText(tipoEvento.getNomTipoEvento());
+            }
         }
     }
     public void limpiarTexto(View v){
         editnombreEvento.setText("");
-        //editidTipoEvento.setText("");
+        spinnerTipoEvento.setSelection(0);
     }
 }

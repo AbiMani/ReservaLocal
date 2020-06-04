@@ -18,7 +18,7 @@ public class TipoEventoEliminarActivity extends Activity {
     EditText editnombreEvento;
     ControlReserveLocal controlhelper;
     Spinner spinnerTipoEvento;
-    String[] items;
+    ArrayList<String> items=new ArrayList<String>();
     ArrayList<TipoEvento> list;
     TipoEvento tipoEvento=new TipoEvento();
 
@@ -29,10 +29,9 @@ public class TipoEventoEliminarActivity extends Activity {
         controlhelper=new ControlReserveLocal(this);
 
         list = controlhelper.ListTipoEventos();
-        items = new String[list.size()];
+        items.add("Seleccione...");;
         for (int i=0;i<list.size();i++){
-            tipoEvento = list.get(i);
-            items[i] = String.valueOf(tipoEvento.getIdTipoEvento());
+            items.add(list.get(i).getIdTipoEvento());
         }
         spinnerTipoEvento=(Spinner) findViewById(R.id.spinner3);
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
@@ -44,14 +43,18 @@ public class TipoEventoEliminarActivity extends Activity {
         String regEliminadas;
         TipoEvento tipoEvento=new TipoEvento();
         String tipoEvento_id=spinnerTipoEvento.getSelectedItem().toString();
-        tipoEvento.setIdTipoEvento(tipoEvento_id);
-        controlhelper.abrir();
-        regEliminadas=controlhelper.eliminar(tipoEvento);
-        controlhelper.cerrar();
-        Toast.makeText(this, regEliminadas, Toast.LENGTH_SHORT).show();
+        if (spinnerTipoEvento.getSelectedItem().toString().equals("Seleccione..."))
+        {Toast.makeText(this, "Debe seleccionar un tipo de evento", Toast.LENGTH_SHORT).show();}
+        else {
+            tipoEvento.setIdTipoEvento(tipoEvento_id);
+            controlhelper.abrir();
+            regEliminadas = controlhelper.eliminar(tipoEvento);
+            controlhelper.cerrar();
+            Toast.makeText(this, regEliminadas, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void limpiarTexto(View v) {
-        editidTipoEvento.setText("");
+        spinnerTipoEvento.setSelection(0);
     }
 }

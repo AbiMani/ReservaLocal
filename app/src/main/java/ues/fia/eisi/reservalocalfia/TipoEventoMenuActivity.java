@@ -2,11 +2,15 @@ package ues.fia.eisi.reservalocalfia;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class TipoEventoMenuActivity extends AppCompatActivity {
+public class TipoEventoMenuActivity extends ListActivity {
 
     String[] menu={"Insertar Registro","Eliminar Registro","Consultar Registro", "Actualizar Registro"};
     String[] activities={"TipoEventoInsertarActivity","TipoEventoEliminarActivity","TipoEventoConsultarActivity", "TipoEventoActualizarActivity"};
@@ -14,32 +18,30 @@ public class TipoEventoMenuActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setListAdapter(new ArrayAdapter<String>(this,  android.R.layout.simple_list_item_1, menu));
-        setContentView(R.layout.activity_tipo_evento_menu);
-        //BDhelper=new ControlBDReservaLocales(this);
+
+        ListView listView = getListView();
+        //listView.setBackgroundColor(Color.rgb(0, 0, 255));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, menu);
+        setListAdapter(adapter);
     }
-    public void onClick(View view) {
-        Intent miIntent=null;
-        switch (view.getId()){
-            case R.id.btnInsertar:
-                miIntent=new Intent(TipoEventoMenuActivity.this,TipoEventoInsertarActivity.class);
-                break;
-            case R.id.btnEliminar:
-                miIntent=new Intent(TipoEventoMenuActivity.this,TipoEventoEliminarActivity.class);
-                break;
-            case R.id.btnConsultar:
-                miIntent=new Intent(TipoEventoMenuActivity.this,TipoEventoConsultarActivity.class);
-                break;
-            case R.id.btnActualizar:
-                miIntent=new Intent(TipoEventoMenuActivity.this,TipoEventoActualizarActivity.class);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + view.getId());
-        }
-        if (miIntent!=null){
-            startActivity(miIntent);
+
+
+    @Override
+    protected void onListItemClick(ListView l,View v,int position,long id){
+        super.onListItemClick(l, v, position, id);
+
+        String nombreValue=activities[position];
+
+        l.getChildAt(position).setBackgroundColor(Color.rgb(128, 128, 255));
+
+        try{
+            Class<?> clase=Class.forName("ues.fia.eisi.reservalocalfia."+nombreValue);
+            Intent inte = new Intent(this,clase);
+            this.startActivity(inte);
+        }catch(ClassNotFoundException e){
+            e.printStackTrace();
         }
 
     }
-
 }
