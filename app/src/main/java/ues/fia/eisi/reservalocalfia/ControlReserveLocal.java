@@ -26,6 +26,7 @@ public class ControlReserveLocal {
     private static final String[]camposDocente = new String [] {"carnetDocente","nombreDocente","apellido", "rol", "nomEscuela"};
     private static final String[]camposRolDocente = new String [] {"idRolDocente","nomRolDocente"};
     private static final String[]camposTipoLocal = new String [] {"idTipoLocal","nomTipoLocal"};
+    private static final String[] camposEscuela= new String[] {"codigoEscuela", "nomEscuela"};
 
     private final Context context;
     private DatabaseHelper DBHelper;
@@ -34,6 +35,7 @@ public class ControlReserveLocal {
     private static final String DROP_TABLE1 ="DROP TABLE IF EXISTS detallereserva; ";
     private static final String DROP_TABLE2 ="DROP TABLE IF EXISTS reservaevento; ";
     private static final String DROP_TABLE3 ="DROP TABLE IF EXISTS tipoevento; ";
+
 
     public ControlReserveLocal(Context ctx) {
         this.context=ctx;
@@ -98,6 +100,8 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE reservaevento(idreservaevento INTEGER PRIMARY KEY AUTOINCREMENT,codigoescuela VARCHAR(20) NOT NULL,idtipoevento VARCHAR(2) NOT NULL,nombreevento VARCHAR(30),capacidadtotalevento INTEGER, fechareserva VARCHAR(10))");
                 db.execSQL("CREATE TABLE tipoevento(idtipoevento VARCHAR(2) NOT NULL ,nomtipoevento VARCHAR(30),PRIMARY KEY(idtipoevento))");
 
+                db.execSQL("CREATE TABLE escuela(codigoEscuela VARCHAR(20) PRIMARY KEY, nomEscuela VARCHAR(50))");
+
                 db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T1', 'Evaluacion')");
                 db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T2', 'Capacitacion')");
                 db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T3', 'Clases')");
@@ -113,18 +117,18 @@ public class ControlReserveLocal {
                         "    END;\n" +
                         "END");
                 //TRIGGER EXISTENCIA DE CODIGO ESCUELA EN TABLA ESCUELA
-               /* db.execSQL("CREATE TRIGGER fk_escuela_reservaevento\n" +
+                db.execSQL("CREATE TRIGGER fk_escuela_reservaevento\n" +
                         "BEFORE INSERT ON reservaevento\n" +
                         "FOR EACH ROW\n" +
                         "BEGIN\n" +
                         "    SELECT CASE\n" +
-                        "    WHEN ((SELECT codigoEscueala FROM Escuela\n" +
+                        "    WHEN ((SELECT codigoEscuela FROM escuela\n" +
                         "          WHERE codigoEscuela=new.codigoEscuela)IS NULL )\n" +
-                        "     THEN RAISE(ABORT, 'No codigo escuela')\n" +
+                        "     THEN RAISE(ABORT, 'No existe codigo escuela')\n" +
                         "    END;\n" +
                         "END");
                         //TIGGER EXISTENCIA DE CODIGOLOCAL EN TABLA LOCAL
-                 db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
+                 /*db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
                        "BEFORE INSERT ON detallereserva\n" +
                        "FOR EACH ROW\n" +
                        "BEGIN\n" +
@@ -414,33 +418,27 @@ public class ControlReserveLocal {
     public String actualizar(TipoEvento tipoEvento){
 
         // * 2 Verificar que el registro que exista
-        if(verificarIntegridad(tipoEvento, 7)){
             String[] id = {tipoEvento.getIdTipoEvento()};
             ContentValues cv = new ContentValues();
             cv.put("nomtipoevento", tipoEvento.getNomTipoEvento());
             db.update("tipoEvento", cv, "idtipoevento = ? ", id);
             return "Registro Actualizado Correctamente";
-        }else{
-            return "Registro no Existe";
-        }
     }
     public String eliminar(TipoEvento tipoEvento){
 
-        String regAfectados="filas afectadas= ";
+        String regAfectados;
         int contador=0;
+        if (verificarIntegridad(tipoEvento, 12)){
+            regAfectados="El registro tiene dependencias en otra tabla ";
+        }
+        else {
+            String where = "idtipoevento='" + tipoEvento.getIdTipoEvento() + "'";
 
-        if(verificarIntegridad(tipoEvento, 7))
-        {
-            String where="idtipoevento='"+tipoEvento.getIdTipoEvento()+"'";
-
-            contador+=db.delete("tipoEvento", where, null);
-            regAfectados+=contador;
+            contador += db.delete("tipoEvento", where, null);
+            regAfectados="Registro eliminado";
+        }
             return regAfectados;
-        }
-        else
-        {
-            return "Registro no Existe";
-        }
+
     }
     public TipoEvento consultarTipoEvento(String idtipoevento){
 
@@ -507,22 +505,28 @@ public class ControlReserveLocal {
     public String eliminar(ReservaEvento reservaEvento){
 
 
-        String regAfectados="filas afectadas= ";
+        String regAfectados;
         int contador=0;
         //
         if(verificarIntegridad(reservaEvento, 8))
         {
-            String where="idReservaEvento='"+reservaEvento.getIdReservaEvento()+"'";
-            where=where+" AND codigoEscuela='"+reservaEvento.getCodigoEscuela()+"'";
-            where=where+" AND idTipoEvento='"+reservaEvento.getIdTipoEvento()+"'";
-            contador+=db.delete("reservaevento", where, null);
-            regAfectados+=contador;
+            if (verificarIntegridad(reservaEvento,13)){
+                regAfectados="No se puede eliminar. Tiene registros asociados. ";
+            }
+            else {
+                String where = "idReservaEvento='" + reservaEvento.getIdReservaEvento() + "'";
+                where = where + " AND codigoEscuela='" + reservaEvento.getCodigoEscuela() + "'";
+                where = where + " AND idTipoEvento='" + reservaEvento.getIdTipoEvento() + "'";
+                contador += db.delete("reservaevento", where, null);
+                regAfectados="Registro eliminado con éxito ";
+            }
+            return regAfectados ;
         }
         else
         {
             return "Registro con identificador " + reservaEvento.getCodigoEscuela() + " no existe";
         }
-        return regAfectados + "El registro se elimino";
+
     }
     public ReservaEvento consultarReserva(int idreservaevento){
 
@@ -860,7 +864,74 @@ public class ControlReserveLocal {
 
         return regAfectados;
     }
+    //------Escuela--------------------------------------------------------------------------
+    public String insertar(Escuela escuela){
 
+        String regInsertados;
+        long contador=0;
+        if(verificarIntegridad(escuela, 10))
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+            ContentValues escuela1 = new ContentValues();
+            escuela1.put("codigoEscuela", escuela.getCodigoEscuela());
+            escuela1.put("nomEscuela", escuela.getNomEscuela());
+            contador=db.insert("escuela", null, escuela1);
+            regInsertados="Insertado con exito.";
+        }
+
+        return regInsertados;
+    }
+    public String actualizar(Escuela escuela){
+
+        // * 2 Verificar que el registro que exista
+        if(verificarIntegridad(escuela, 10)){
+            String[] id = {escuela.getCodigoEscuela()};
+            ContentValues cv = new ContentValues();
+            cv.put("nomEscuela", escuela.getNomEscuela());
+            db.update("escuela", cv, "codigoEscuela = ? ", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
+    public String eliminar(Escuela escuela){
+
+        String regAfectados;
+        int contador=0;
+
+        if(verificarIntegridad(escuela, 10))
+        {
+            if (verificarIntegridad(escuela,11)){
+                regAfectados="No puede eliminar este resgistro, es usado en otra tabla";
+            }
+            else {
+                String where = "codigoEscuela='" + escuela.getCodigoEscuela() + "'";
+                contador += db.delete("escuela", where, null);
+                regAfectados="Registro eliminado";
+            }
+            return regAfectados;
+        }
+        else
+        {
+            return "Registro no Existe";
+        }
+    }
+    public Escuela consultarEscuela(String codEscuela){
+
+        String[] id = {codEscuela};
+        Cursor cursor = db.query("escuela", camposEscuela, "codigoEscuela = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Escuela escuela = new Escuela();
+            escuela.setCodigoEscuela(cursor.getString(0));
+            escuela.setNomEscuela(cursor.getString(1));
+            return escuela;
+        }else{
+            return null;
+        }
+    }
     //---------------------------------------------------------------------------------------
     private boolean verificarIntegridad(Object dato, int relacion) throws SQLException{
         switch (relacion){
@@ -973,6 +1044,44 @@ public class ControlReserveLocal {
                 }
                 return false;
             }
+            case 10:{
+                Escuela escuela = (Escuela) dato;
+                String[] ids = {escuela.getCodigoEscuela()};
+                abrir();
+                Cursor c = db.query("escuela", null, "codigoEscuela = ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 11:
+            {
+                Escuela escuela = (Escuela) dato;
+                Cursor c=db.query(true, "reservaevento", new String[] {"codigoEscuela" }, "codigoEscuela='"+escuela.getCodigoEscuela()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
+            case 12:
+            {
+                TipoEvento tipoEvento = (TipoEvento) dato;
+                Cursor c=db.query(true, "reservaevento", new String[] {"idtipoevento" }, "idtipoevento='"+tipoEvento.getIdTipoEvento()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
+            case 13:
+            {
+                ReservaEvento reservaEvento = (ReservaEvento) dato;
+                Cursor c=db.query(true, "detallereserva", new String[] {"idReservaEvento" }, "idReservaEvento='"+reservaEvento.getIdReservaEvento()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
             default:
                 return false;
         }
@@ -1068,6 +1177,10 @@ public class ControlReserveLocal {
         //tipo de local
         final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
 
+        //Tabla escuela
+        final String[] VEcodigoEscuel={"EISI", "EII", "EIQA"};
+        final String[] VEnombreEscuela={"Escuela de Ingenieria de Sistemas Informaticos", "Escuela de Ingenieria Industrial", "Escuela de Ingernieria Quimica y Alimentos"};
+
         abrir();
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
@@ -1076,6 +1189,8 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM docente;");
         db.execSQL("DELETE FROM rolDocente;");
         db.execSQL("DELETE FROM tipoLocal;");
+
+        db.execSQL("DELETE FROM escuela");
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
@@ -1131,6 +1246,14 @@ public class ControlReserveLocal {
         for (int i=0;i<4;i++){
             tipoLocal.setNomTipoLocal(V_TPnomTipoLocal[i]);
             insertar(tipoLocal);
+        }
+
+        //Llenado de la tabla escuela
+        Escuela escuela=new Escuela();
+        for(int i=0; i<3; i++){
+            escuela.setCodigoEscuela(VEcodigoEscuel[i]);
+            escuela.setNomEscuela(VEnombreEscuela[i]);
+            insertar(escuela);
         }
 
         cerrar();
