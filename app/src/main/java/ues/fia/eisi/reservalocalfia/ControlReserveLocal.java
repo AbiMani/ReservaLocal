@@ -26,6 +26,7 @@ public class ControlReserveLocal {
     private static final String[]camposDocente = new String [] {"carnetDocente","nombreDocente","apellido", "rol", "nomEscuela"};
     private static final String[]camposRolDocente = new String [] {"idRolDocente","nomRolDocente"};
     private static final String[]camposTipoLocal = new String [] {"idTipoLocal","nomTipoLocal"};
+    private static final String[] camposEscuela= new String[] {"codigoEscuela", "nomEscuela"};
 
     private final Context context;
     private DatabaseHelper DBHelper;
@@ -34,6 +35,7 @@ public class ControlReserveLocal {
     private static final String DROP_TABLE1 ="DROP TABLE IF EXISTS detallereserva; ";
     private static final String DROP_TABLE2 ="DROP TABLE IF EXISTS reservaevento; ";
     private static final String DROP_TABLE3 ="DROP TABLE IF EXISTS tipoevento; ";
+
 
     public ControlReserveLocal(Context ctx) {
         this.context=ctx;
@@ -98,6 +100,45 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE reservaevento(idreservaevento INTEGER PRIMARY KEY AUTOINCREMENT,codigoescuela VARCHAR(20) NOT NULL,idtipoevento VARCHAR(2) NOT NULL,nombreevento VARCHAR(30),capacidadtotalevento INTEGER, fechareserva VARCHAR(10))");
                 db.execSQL("CREATE TABLE tipoevento(idtipoevento VARCHAR(2) NOT NULL ,nomtipoevento VARCHAR(30),PRIMARY KEY(idtipoevento))");
 
+                db.execSQL("CREATE TABLE escuela(codigoEscuela VARCHAR(20) PRIMARY KEY, nomEscuela VARCHAR(50))");
+
+                db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T1', 'Evaluacion')");
+                db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T2', 'Capacitacion')");
+                db.execSQL("INSERT INTO tipoevento(idtipoevento, nomtipoevento)  VALUES('T3', 'Clases')");
+                //TRIGGER VERIFICAR EXISTENCIA DE IDHORARIO EN TABLA HORARIO
+                db.execSQL("CREATE TRIGGER fk_horario_detallereserva\n" +
+                        "BEFORE INSERT ON detallereserva\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "    SELECT CASE\n" +
+                        "    WHEN ((SELECT idHorario FROM horario\n" +
+                        "          WHERE idHorario=new.idHorario)IS NULL )\n" +
+                        "     THEN RAISE(ABORT, 'No existe Horario')\n" +
+                        "    END;\n" +
+                        "END");
+                //TRIGGER EXISTENCIA DE CODIGO ESCUELA EN TABLA ESCUELA
+                db.execSQL("CREATE TRIGGER fk_escuela_reservaevento\n" +
+                        "BEFORE INSERT ON reservaevento\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "    SELECT CASE\n" +
+                        "    WHEN ((SELECT codigoEscuela FROM escuela\n" +
+                        "          WHERE codigoEscuela=new.codigoEscuela)IS NULL )\n" +
+                        "     THEN RAISE(ABORT, 'No existe codigo escuela')\n" +
+                        "    END;\n" +
+                        "END");
+                        //TIGGER EXISTENCIA DE CODIGOLOCAL EN TABLA LOCAL
+                 /*db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
+                       "BEFORE INSERT ON detallereserva\n" +
+                       "FOR EACH ROW\n" +
+                       "BEGIN\n" +
+                       "    SELECT CASE\n" +
+                       "    WHEN ((SELECT codigoLocal FROM Local\n" +
+                       "          WHERE codigoLocal=new.codigoLocal)IS NULL )\n" +
+                       "     THEN RAISE(ABORT, 'No existe el Local seleccionado')\n" +
+                       "    END;\n" +
+                       "END");
+                        */
                 //tabla docente
                 db.execSQL("CREATE TABLE docente(carnetDocente VARCHAR(7) NOT NULL,nombreDocente VARCHAR(30)," +
                         "apellido VARCHAR(30),rol VARCHAR(30),nomEscuela VARCHAR(30),PRIMARY KEY(carnetDocente));");
@@ -377,33 +418,27 @@ public class ControlReserveLocal {
     public String actualizar(TipoEvento tipoEvento){
 
         // * 2 Verificar que el registro que exista
-        if(verificarIntegridad(tipoEvento, 7)){
             String[] id = {tipoEvento.getIdTipoEvento()};
             ContentValues cv = new ContentValues();
             cv.put("nomtipoevento", tipoEvento.getNomTipoEvento());
             db.update("tipoEvento", cv, "idtipoevento = ? ", id);
             return "Registro Actualizado Correctamente";
-        }else{
-            return "Registro no Existe";
-        }
     }
     public String eliminar(TipoEvento tipoEvento){
 
-        String regAfectados="filas afectadas= ";
+        String regAfectados;
         int contador=0;
+        if (verificarIntegridad(tipoEvento, 12)){
+            regAfectados="El registro tiene dependencias en otra tabla ";
+        }
+        else {
+            String where = "idtipoevento='" + tipoEvento.getIdTipoEvento() + "'";
 
-        if(verificarIntegridad(tipoEvento, 7))
-        {
-            String where="idtipoevento='"+tipoEvento.getIdTipoEvento()+"'";
-
-            contador+=db.delete("tipoEvento", where, null);
-            regAfectados+=contador;
+            contador += db.delete("tipoEvento", where, null);
+            regAfectados="Registro eliminado";
+        }
             return regAfectados;
-        }
-        else
-        {
-            return "Registro no Existe";
-        }
+
     }
     public TipoEvento consultarTipoEvento(String idtipoevento){
 
@@ -431,6 +466,164 @@ public class ControlReserveLocal {
             lista.add(tipoEvento);
         }
         return lista;
+    }
+    //---------------------------------ReservaEvento------------------------------------------------------
+    public String insertar(ReservaEvento reservaEvento){
+        String regInsertados;
+        long contador=0;
+        ContentValues reservas = new ContentValues();
+        reservas.put("codigoEscuela", reservaEvento.getCodigoEscuela());
+        reservas.put("idTipoEvento", reservaEvento.getIdTipoEvento());
+        reservas.put("nombreEvento", reservaEvento.getNombreEvento());
+        reservas.put("capacidadTotalEvento", reservaEvento.getCapacidadTotalEvento());
+        reservas.put("fechaReserva", reservaEvento.getFechaReservaEvento());
+        contador = db.insert("reservaevento", "idReservaEvento", reservas);
+        if (contador==-1 || contador==0) {
+            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+
+            regInsertados = "Registro Insertado con exito.";
+        }
+        return regInsertados;
+
+    }
+
+    public String actualizar(ReservaEvento reservaEvento){
+        int contador=0;
+        String[] id = {String.valueOf(reservaEvento.getIdReservaEvento())};
+        ContentValues cv = new ContentValues();
+        cv.put("codigoEscuela", reservaEvento.getCodigoEscuela());
+        cv.put("idTipoevento", reservaEvento.getIdTipoEvento());
+        cv.put("nombreEvento", reservaEvento.getNombreEvento());
+        cv.put("capacidadTotalEvento", reservaEvento.getCapacidadTotalEvento());
+        cv.put("fechaReserva", reservaEvento.getFechaReservaEvento());
+        String where="idReservaEvento= ?";
+        contador+=db.update("reservaevento",cv, where, id);
+        return "Registro actualizado con exito";
+    }
+
+    public String eliminar(ReservaEvento reservaEvento){
+
+
+        String regAfectados;
+        int contador=0;
+        //
+        if(verificarIntegridad(reservaEvento, 8))
+        {
+            if (verificarIntegridad(reservaEvento,13)){
+                regAfectados="No se puede eliminar. Tiene registros asociados. ";
+            }
+            else {
+                String where = "idReservaEvento='" + reservaEvento.getIdReservaEvento() + "'";
+                where = where + " AND codigoEscuela='" + reservaEvento.getCodigoEscuela() + "'";
+                where = where + " AND idTipoEvento='" + reservaEvento.getIdTipoEvento() + "'";
+                contador += db.delete("reservaevento", where, null);
+                regAfectados="Registro eliminado con éxito ";
+            }
+            return regAfectados ;
+        }
+        else
+        {
+            return "Registro con identificador " + reservaEvento.getCodigoEscuela() + " no existe";
+        }
+
+    }
+    public ReservaEvento consultarReserva(int idreservaevento){
+
+        String[] id = {String.valueOf(idreservaevento)};
+        Cursor cursor = db.query("reservaevento", camposReservaEvento, "idReservaEvento = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            ReservaEvento reservaEvento = new ReservaEvento();
+            reservaEvento.setIdReservaEvento(cursor.getInt(0));
+            reservaEvento.setCodigoEscuela(cursor.getString(1));
+            reservaEvento.setIdTipoEvento(cursor.getString(2));
+            reservaEvento.setNombreEvento(cursor.getString(3));
+            reservaEvento.setCapacidadTotalEvento(cursor.getInt(4));
+            reservaEvento.setFechaReservaEvento(cursor.getString(5));
+            return reservaEvento;
+        }else{
+            return null;
+        }
+    }
+    public ArrayList<ReservaEvento> consultarReservas() {
+
+        abrirConsultar();
+        ReservaEvento reservaEvento;
+        ArrayList<ReservaEvento> lista = new ArrayList<ReservaEvento>();
+
+        Cursor cursor = abrirConsultar().rawQuery("SELECT * FROM reservaevento", null);
+        while(cursor.moveToNext()){
+            reservaEvento = new ReservaEvento();
+            reservaEvento.setIdReservaEvento(cursor.getInt(0));
+            lista.add(reservaEvento);
+        }
+        return lista;
+    }
+    //-----------------------DetalleReserva-----------------------------------------------------------------------
+    public String insertar(DetalleReservaEvento detalleReservaEvento){
+
+        String regInsertados;
+        long contador=0;
+
+
+        if (verificarIntegridad(detalleReservaEvento, 9)) {
+            regInsertados = "Error. Registro duplicado";
+        } else {
+            ContentValues detalle = new ContentValues();
+            detalle.put("idHorario", detalleReservaEvento.getIdHorario());
+            detalle.put("idReservaEvento", detalleReservaEvento.getIdReservaEvento());
+            detalle.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
+            contador = db.insert("detallereserva", null, detalle);
+            if (contador==-1){
+                regInsertados = "Error. No se encontro horario asignado";
+            }
+            else {
+                regInsertados = "Registro insertado exitosamente ";
+            }
+        }
+        return regInsertados;
+    }
+    public String actualizar(DetalleReservaEvento detalleReservaEvento){
+
+        String[] id = {String.valueOf(detalleReservaEvento.getIdReservaEvento())};
+        ContentValues reservas = new ContentValues();
+        reservas.put("idHorario", detalleReservaEvento.getIdHorario());
+        reservas.put("idReservaEvento", detalleReservaEvento.getIdReservaEvento());
+        reservas.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
+        db.update("detallereserva", reservas, "idReservaEvento = ?", id);
+        return "Registro Actualizado Correctamente";
+    }
+    public String eliminar(DetalleReservaEvento detalleReservaEvento){
+        String regAfectados="El registro se elimino ";
+        int contador=0;
+
+        if (verificarIntegridad(detalleReservaEvento,9)) {
+            String where="idHorario = '"+detalleReservaEvento.getIdHorario()+"'";
+            where+=" AND idReservaEvento = '"+detalleReservaEvento.getIdReservaEvento()+"'";
+            where+=" AND codigoLocal = '"+detalleReservaEvento.getCodigoLocal()+"'";
+            contador+=db.delete("detallereserva", where, null);
+            regAfectados+=contador;
+            return regAfectados;
+        }
+        else{
+            return "El registro no se encontró.";
+        }
+
+
+    }
+    public DetalleReservaEvento consultarDetalle( int idHorario, int idReservaEvento, String codLocal){
+        String[] id = {String.valueOf(idHorario), String.valueOf(idReservaEvento), codLocal};
+        Cursor cursor = db.query("detallereserva", camposDetalleReserva, "idHorario = ? AND idReservaEvento = ? AND codigoLocal= ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            DetalleReservaEvento detalleReservaEvento=new DetalleReservaEvento();
+            detalleReservaEvento.setIdHorario(cursor.getInt(0));
+            detalleReservaEvento.setIdReservaEvento(cursor.getInt(1));
+            detalleReservaEvento.setCodigoLocal(cursor.getString(2));
+
+            return detalleReservaEvento;
+        }else{
+            return null;
+        }
     }
 
     // Insertar Docente
@@ -671,7 +864,74 @@ public class ControlReserveLocal {
 
         return regAfectados;
     }
+    //------Escuela--------------------------------------------------------------------------
+    public String insertar(Escuela escuela){
 
+        String regInsertados;
+        long contador=0;
+        if(verificarIntegridad(escuela, 10))
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        }
+        else
+        {
+            ContentValues escuela1 = new ContentValues();
+            escuela1.put("codigoEscuela", escuela.getCodigoEscuela());
+            escuela1.put("nomEscuela", escuela.getNomEscuela());
+            contador=db.insert("escuela", null, escuela1);
+            regInsertados="Insertado con exito.";
+        }
+
+        return regInsertados;
+    }
+    public String actualizar(Escuela escuela){
+
+        // * 2 Verificar que el registro que exista
+        if(verificarIntegridad(escuela, 10)){
+            String[] id = {escuela.getCodigoEscuela()};
+            ContentValues cv = new ContentValues();
+            cv.put("nomEscuela", escuela.getNomEscuela());
+            db.update("escuela", cv, "codigoEscuela = ? ", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
+    public String eliminar(Escuela escuela){
+
+        String regAfectados;
+        int contador=0;
+
+        if(verificarIntegridad(escuela, 10))
+        {
+            if (verificarIntegridad(escuela,11)){
+                regAfectados="No puede eliminar este resgistro, es usado en otra tabla";
+            }
+            else {
+                String where = "codigoEscuela='" + escuela.getCodigoEscuela() + "'";
+                contador += db.delete("escuela", where, null);
+                regAfectados="Registro eliminado";
+            }
+            return regAfectados;
+        }
+        else
+        {
+            return "Registro no Existe";
+        }
+    }
+    public Escuela consultarEscuela(String codEscuela){
+
+        String[] id = {codEscuela};
+        Cursor cursor = db.query("escuela", camposEscuela, "codigoEscuela = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Escuela escuela = new Escuela();
+            escuela.setCodigoEscuela(cursor.getString(0));
+            escuela.setNomEscuela(cursor.getString(1));
+            return escuela;
+        }else{
+            return null;
+        }
+    }
     //---------------------------------------------------------------------------------------
     private boolean verificarIntegridad(Object dato, int relacion) throws SQLException{
         switch (relacion){
@@ -766,6 +1026,67 @@ public class ControlReserveLocal {
                     return true;
                 }
                 return false;
+            }
+            case 8:{
+                //verificar que exista codigoEscuela en ReservaEvento
+                ReservaEvento reserva1 = (ReservaEvento) dato;
+                String[] id = {String.valueOf(reserva1.getCodigoEscuela())};
+                abrir();
+                Cursor c2 = db.query("reservaevento", null, "codigoEscuela = ? ", id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro Alumno
+                    return true;
+                }
+                return false;
+            }
+            case 9: {
+                DetalleReservaEvento detalleReservaEvento = (DetalleReservaEvento) dato;
+                String[] ids = {String.valueOf(detalleReservaEvento.getIdHorario()),String.valueOf(detalleReservaEvento.getIdReservaEvento()), detalleReservaEvento.getCodigoLocal()};
+                abrir();
+                Cursor c = db.query("detallereserva", null, "idHorario = ? AND idReservaEvento = ? AND codigoLocal= ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 10:{
+                Escuela escuela = (Escuela) dato;
+                String[] ids = {escuela.getCodigoEscuela()};
+                abrir();
+                Cursor c = db.query("escuela", null, "codigoEscuela = ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 11:
+            {
+                Escuela escuela = (Escuela) dato;
+                Cursor c=db.query(true, "reservaevento", new String[] {"codigoEscuela" }, "codigoEscuela='"+escuela.getCodigoEscuela()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
+            case 12:
+            {
+                TipoEvento tipoEvento = (TipoEvento) dato;
+                Cursor c=db.query(true, "reservaevento", new String[] {"idtipoevento" }, "idtipoevento='"+tipoEvento.getIdTipoEvento()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
+            case 13:
+            {
+                ReservaEvento reservaEvento = (ReservaEvento) dato;
+                Cursor c=db.query(true, "detallereserva", new String[] {"idReservaEvento" }, "idReservaEvento='"+reservaEvento.getIdReservaEvento()+"'",null, null, null, null, null);
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
             }
             default:
                 return false;
@@ -862,6 +1183,10 @@ public class ControlReserveLocal {
         //tipo de local
         final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
 
+        //Tabla escuela
+        final String[] VEcodigoEscuel={"EISI", "EII", "EIQA"};
+        final String[] VEnombreEscuela={"Escuela de Ingenieria de Sistemas Informaticos", "Escuela de Ingenieria Industrial", "Escuela de Ingernieria Quimica y Alimentos"};
+
         abrir();
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
@@ -870,6 +1195,8 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM docente;");
         db.execSQL("DELETE FROM rolDocente;");
         db.execSQL("DELETE FROM tipoLocal;");
+
+        db.execSQL("DELETE FROM escuela");
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
@@ -925,6 +1252,14 @@ public class ControlReserveLocal {
             cargaAcademica.setcodigoCiclo(VCcodigoCiclo[i]);
             cargaAcademica.setcarnetDocente(VCcarnetDocente[i]);
             insertar(cargaAcademica);
+        }
+
+        //Llenado de la tabla escuela
+        Escuela escuela=new Escuela();
+        for(int i=0; i<3; i++){
+            escuela.setCodigoEscuela(VEcodigoEscuel[i]);
+            escuela.setNomEscuela(VEnombreEscuela[i]);
+            insertar(escuela);
         }
 
         cerrar();

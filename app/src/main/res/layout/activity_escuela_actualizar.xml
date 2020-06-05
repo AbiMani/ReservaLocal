@@ -10,38 +10,27 @@
 
     <TableRow>
 
-        <TextView android:text="Id reserva de evento : " />
-
-        <Spinner
-            android:id="@+id/spinnerREv"
-            android:inputType="number"
-            />
-    </TableRow>
-
-    <TableRow>
-
-        <TextView android:text="Id Horario : " />
+        <TextView android:text="Codigo escuela : " />
 
         <EditText
-            android:id="@+id/editidHorario"
-            android:inputType="number"
-            />
-    </TableRow>
-
-    <TableRow>
-
-        <TextView android:text="Codigo Local : " />
-
-        <EditText
-            android:id="@+id/editcodigoLocal"
+            android:id="@+id/codigoEscuela"
             android:inputType="text"
-            android:maxLength="10" />
+            android:maxLength="20" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="Nombre de la escuela : " />
+
+        <EditText
+            android:id="@+id/editNombreEscuela"
+            android:inputType="text" />
     </TableRow>
 
     <TableRow>
 
         <Button
-            android:onClick="actualizarDetalleReserva"
+            android:onClick="actualizarEscuela"
             android:text="@string/actualizar" />
     </TableRow>
 

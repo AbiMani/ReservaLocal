@@ -10,9 +10,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DetalleReservaMenuActivity extends ListActivity {
+public class EscuelaMenuActivity extends ListActivity {
+
     String[] menu={"Insertar Registro","Eliminar Registro","Consultar Registro", "Actualizar Registro"};
-    String[] activities={"DetalleReservaInsertarActivity","DetalleReservaEliminarActivity","DetalleReservaConsultarActivity", "DetalleReservaActualizarActivity"};
+    String[] activities={"EscuelaInsertarActivity","EscuelaEliminarActivity","EscuelaConsultarActivity", "EscuelaActualizarActivity"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class DetalleReservaMenuActivity extends ListActivity {
 
 
     @Override
-    protected void onListItemClick(ListView l,View v,int position,long id){
+    protected void onListItemClick(ListView l, View v, int position, long id){
         super.onListItemClick(l, v, position, id);
 
         String nombreValue=activities[position];
@@ -43,5 +44,4 @@ public class DetalleReservaMenuActivity extends ListActivity {
         }
 
     }
-
 }

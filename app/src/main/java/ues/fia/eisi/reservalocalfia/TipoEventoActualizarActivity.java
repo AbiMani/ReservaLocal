@@ -14,10 +14,9 @@ import java.util.ArrayList;
 
 public class TipoEventoActualizarActivity extends Activity {
     ControlReserveLocal helper;
-    EditText editidTipoEvento;
     EditText editnombreEvento;
     Spinner spinnerTipoEvento;
-    String[] items;
+    ArrayList<String> items=new ArrayList<String>();
     ArrayList<TipoEvento> list;
     TipoEvento tipoEvento=new TipoEvento();
 
@@ -29,10 +28,9 @@ public class TipoEventoActualizarActivity extends Activity {
         helper = new ControlReserveLocal(this);
 
         list = helper.ListTipoEventos();
-        items = new String[list.size()];
+        items.add("Seleccione...");
         for (int i=0;i<list.size();i++){
-            tipoEvento = list.get(i);
-            items[i] = String.valueOf(tipoEvento.getIdTipoEvento());
+            items.add(list.get(i).getIdTipoEvento());
         }
         spinnerTipoEvento=(Spinner) findViewById(R.id.spinner1);
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
@@ -45,20 +43,23 @@ public class TipoEventoActualizarActivity extends Activity {
         TipoEvento tipoEvento=new TipoEvento();
 
         String tipoEvento_id=spinnerTipoEvento.getSelectedItem().toString();
-        tipoEvento.setIdTipoEvento(tipoEvento_id);
-        tipoEvento.setNomTipoEvento(editnombreEvento.getText().toString());
+        if (tipoEvento_id.equals("Seleccione...") ||editnombreEvento.getText().toString().equals("") )
+        {Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show();}
+        else {
+            tipoEvento.setIdTipoEvento(tipoEvento_id);
+            tipoEvento.setNomTipoEvento(editnombreEvento.getText().toString());
 
-        helper.abrir();
-        String estado = helper.actualizar(tipoEvento);
-        helper.cerrar();
+            helper.abrir();
+            String estado = helper.actualizar(tipoEvento);
+            helper.cerrar();
 
-        Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void limpiarTexto(View v) {
         editnombreEvento.setText("");
-        //editidTipoEvento.setText("");
+       spinnerTipoEvento.setSelection(0);
     }
 
 }

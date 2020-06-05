@@ -32,12 +32,16 @@ public class TipoEventoInsertarActivity extends Activity {
         String nombreEvento=editnombreEvento.getText().toString();
 
         TipoEvento tipoEvento= new TipoEvento();
-        tipoEvento.setIdTipoEvento((idTipovento));
-        tipoEvento.setNomTipoEvento(nombreEvento);
-        helper.abrir();
-        regInsertados=helper.insertar(tipoEvento);
-        helper.cerrar();
-        Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
+        if (idTipovento.equals("") || nombreEvento.equals(""))
+        {Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
+        else {
+            tipoEvento.setIdTipoEvento((idTipovento));
+            tipoEvento.setNomTipoEvento(nombreEvento);
+            helper.abrir();
+            regInsertados = helper.insertar(tipoEvento);
+            helper.cerrar();
+            Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
