@@ -28,7 +28,7 @@ public class CargaAcademicaActualizarActivity extends Activity {
         cargaAcademica.setcodigoAsignatura(editCodigoAsignatura.getText().toString());
         cargaAcademica.setcarnetDocente(editCarnetDocente.getText().toString());
         cargaAcademica.setcodigoCiclo(editCodigoCiclo.getText().toString());
-        cargaAcademica.setidRolDocente(editIdRolDocente.getText().toString());
+        cargaAcademica.setidRolDocente(Integer.valueOf(editIdRolDocente.getText().toString()));
         helper.abrir();
         String estado = helper.actualizar(cargaAcademica);
         helper.cerrar();

@@ -54,7 +54,7 @@ public class ControlReserveLocal {
             try {
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
-                db.execSQL("CREATE TABLE cargaAcademica(idRolDocente VARCHAR(2) NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
+                db.execSQL("CREATE TABLE cargaAcademica(idRolDocente INTEGER NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
                 db.execSQL("CREATE TABLE dia(idDia VARCHAR(4) NOT NULL PRIMARY KEY,nomDia varchar(20) not null);");
                 //db.execSQL("CREATE TABLE rolDocente(idRolDocente VARCHAR(2) NOT NULL PRIMARY KEY,nomRolDocente VARCHAR(20) not null);");
                 db.execSQL("CREATE TABLE prioridad(idPrioridad VARCHAR(1) NOT NULL PRIMARY KEY, nivelPrioridad VARCHAR(20));");
@@ -203,7 +203,7 @@ public class ControlReserveLocal {
 
     public String actualizar(Horario horario){
         if(verificarIntegridad(horario,6)){
-            String [] id= {String.valueOf(horario.getidHorario())}; //error por ser entero
+            String [] id= {String.valueOf(horario.getidHorario())};
             ContentValues cv = new ContentValues();
             cv.put("idDia",horario.getidDia());
             cv.put("horaInicio",horario.gethoraInicio());
@@ -345,7 +345,7 @@ public class ControlReserveLocal {
             cargaAcademica.setcarnetDocente(cursor.getString(3));
             cargaAcademica.setcodigoAsignatura(cursor.getString(1));
             cargaAcademica.setcodigoCiclo(cursor.getString(2));
-            cargaAcademica.setidRolDocente(cursor.getString(0));
+            cargaAcademica.setidRolDocente(cursor.getInt(0));
             return cargaAcademica;
         }else {
             return null;
@@ -680,9 +680,15 @@ public class ControlReserveLocal {
                 //verificar que al insertar cargaAcademica exista codigoAsignatura de asignatura
                 CargaAcademica cargaAcademica = (CargaAcademica)dato;
                 String[] id1 = {cargaAcademica.getcodigoAsignatura()};
+                String[] id2 = {cargaAcademica.getcodigoCiclo()};
+                String[] id3 = {String.valueOf(cargaAcademica.getidRolDocente())};
+                String[] id4 = {cargaAcademica.getcarnetDocente()};
                 abrir();
                 Cursor cursor1 = db.query("asignatura", null, "codigoAsignatura = ?", id1, null, null, null);
-                if(cursor1.moveToFirst() ){
+                //Cursor cursor2 = db.query("ciclo", null, "codigoCiclo = ?", id2, null, null, null);
+                Cursor cursor3 = db.query("roldocente", null, "idroldocente = ?", id3, null, null, null);
+                Cursor cursor4 = db.query("docente", null, "carnetDocente = ?", id4, null, null, null);
+                if(cursor1.moveToFirst() && cursor3.moveToFirst() && cursor4.moveToFirst() ){
                     //Se encontraron datos
                     return true;
                 }
@@ -702,7 +708,7 @@ public class ControlReserveLocal {
                 return false;
             }
             case 3:
-            {
+            {// verifica que no exista para poder eliminar
                 Asignatura asignatura = (Asignatura)dato;
                 Cursor c=db.query(true, "cargaAcademica", new String[] {"codigoAsignatura" }, "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null, null, null, null, null);
                 //Cursor c1=db.query(true, "detalleGrupoReserva", new String[] {"idHorario" }, "codigoAsignatura='"+asignatura.getCodigoAsignatura()+"'",null, null, null, null, null);
@@ -714,7 +720,7 @@ public class ControlReserveLocal {
                     return false;
             }
             case 4:
-            {
+            {//verifica que no exista para poder eliminar
                 Horario horario = (Horario)dato;
                 Cursor dghor=db.query(true, "detalleGrupoReserva", new String[] {"idHorario" }, "idHorario='"+horario.getidHorario()+"'",null, null, null, null, null);
                 Cursor drhor=db.query(true, "detalleReservaEvento", new String[] {"idHorario" }, "idHorario='"+horario.getidHorario()+"'",null, null, null, null, null);
@@ -837,10 +843,10 @@ public class ControlReserveLocal {
         final String[] VHhoraFin = {"8:00","9:45","11:30","13:15"};
 
         // tabla CargaAcademica--------------------- 7 tuplas
-        final String[] VCidRolDocente = {"01","01","02","02","03","04","01"};
+        final Integer[] VCidRolDocente = {1,1,2,2,3,1,1};
         final String[] VCcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115","IEC115","MAT115","PRN115"};
         final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22020","22020","22016"};
-        final String[] VCcarnetDocente = {"vvvvvvv","fffffff","sssssss","eeeeeee","ttttttt","vvvvvvv","fffffff"};
+        final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","vvvvvvv","OO12035"};
 
         //Tabla docente
         final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
@@ -886,15 +892,6 @@ public class ControlReserveLocal {
             insertar(horario);
         }
 
-        //llenado tabla CargaAcademica
-        CargaAcademica cargaAcademica = new CargaAcademica();
-        for(int i=0;i<7;i++){ //i<7 porque son 7 tuplas los que se ingresan
-            cargaAcademica.setidRolDocente(VCidRolDocente[i]);
-            cargaAcademica.setcodigoAsignatura(VCcodigoAsignatura[i]);
-            cargaAcademica.setcodigoCiclo(VCcodigoCiclo[i]);
-            cargaAcademica.setcarnetDocente(VCcarnetDocente[i]);
-            insertar(cargaAcademica);
-        }
 
         //llenado de las tabla docente
         Docente docente = new Docente();
@@ -919,6 +916,15 @@ public class ControlReserveLocal {
         for (int i=0;i<4;i++){
             tipoLocal.setNomTipoLocal(V_TPnomTipoLocal[i]);
             insertar(tipoLocal);
+        }
+        //llenado tabla CargaAcademica
+        CargaAcademica cargaAcademica = new CargaAcademica();
+        for(int i=0;i<7;i++){ //i<7 porque son 7 tuplas los que se ingresan
+            cargaAcademica.setidRolDocente(VCidRolDocente[i]);
+            cargaAcademica.setcodigoAsignatura(VCcodigoAsignatura[i]);
+            cargaAcademica.setcodigoCiclo(VCcodigoCiclo[i]);
+            cargaAcademica.setcarnetDocente(VCcarnetDocente[i]);
+            insertar(cargaAcademica);
         }
 
         cerrar();

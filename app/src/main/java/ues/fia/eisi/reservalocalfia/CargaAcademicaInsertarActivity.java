@@ -26,7 +26,7 @@ public class CargaAcademicaInsertarActivity extends Activity {
         String codigoAsignatura=editCodigoAsignatura.getText().toString();
         String carnetDocente=editCarnetDocente.getText().toString();
         String codigoCiclo=editCodigoCiclo.getText().toString();
-        String idRolDocente=editIdRolDocente.getText().toString();
+        Integer idRolDocente=Integer.valueOf(editIdRolDocente.getText().toString());
         String regInsertados;
         CargaAcademica cargaAcademica=new CargaAcademica();
         cargaAcademica.setcodigoAsignatura(codigoAsignatura);

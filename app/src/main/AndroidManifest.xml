@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TipoLocalEliminarActivity"></activity>
+        <activity android:name=".ServiciosMenuActivity"></activity>
+        <activity android:name=".TipoLocalEliminarActivity" />
         <activity android:name=".TipoLocalActualizarActivity" />
         <activity android:name=".TipoLocalConsultarActivity" />
         <activity android:name=".TipoLocalInsertarActivity" />

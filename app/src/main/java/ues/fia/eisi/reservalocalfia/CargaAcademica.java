@@ -1,25 +1,25 @@
 package ues.fia.eisi.reservalocalfia;
 
 public class CargaAcademica {
-    private String idRolDocente;
+    private Integer idRolDocente;
     private String codigoCiclo;
     private String carnetDocente;
     private String codigoAsignatura;
 
     public CargaAcademica(){}
 
-    public CargaAcademica(String idRolDocente, String codigoAsignatura, String codigoCiclo, String carnetDocente){
+    public CargaAcademica(Integer idRolDocente, String codigoAsignatura, String codigoCiclo, String carnetDocente){
         this.idRolDocente = idRolDocente;
         this.codigoAsignatura = codigoAsignatura;
         this.codigoCiclo = codigoCiclo;
         this.carnetDocente = carnetDocente;
     }
 
-    public String getidRolDocente() {
+    public Integer getidRolDocente() {
         return idRolDocente;
     }
 
-    public void setidRolDocente(String idRolDocente) {
+    public void setidRolDocente(Integer idRolDocente) {
         this.idRolDocente = idRolDocente;
     }
 
