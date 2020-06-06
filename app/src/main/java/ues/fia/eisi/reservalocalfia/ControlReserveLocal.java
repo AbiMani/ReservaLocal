@@ -146,8 +146,9 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
                 //tabla rol docente
                 db.execSQL("CREATE TABLE rolDocente(idRolDocente INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomRolDocente varchar(30));");
-
-
+                //Tablas de login
+                db.execSQL("CREATE TABLE AccesoUsuario(idOpcion VARCHAR (3) NOT NULL, idUsuario VARCHAR(2) NOT NULL, PRIMARY KEY(idOpcion, idUsuario));");
+                db.execSQL("CREATE TABLE OpcionCrud(idOpcion VARCHAR(3) NOT NULL PRIMARY KEY, desOpcion VARCHAR(30), numCrud INTEGER);");
             }catch (SQLException e){
                 e.printStackTrace();
             }
