@@ -5,21 +5,28 @@
     android:paddingTop="30dip"
     android:stretchColumns="1" >
 
-    <TableRow>
-        <TextView android:text="Insertar Nuevo Rol para docente"/>
-        <EditText
-            android:id="@+id/editNomRolDocente"
-            android:inputType="text"
-            android:maxLength="30" />
-    </TableRow>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insertar Nuevo Rol para docente"/>
+    <EditText
+        android:id="@+id/editNomRolDocente"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:maxLength="30" />
 
-    <TableRow>
-        <TextView android:text="Descripcion del rol" />
-        <EditText
-            android:id="@+id/editDescripcionRol"
-            android:inputType="text"
-            android:maxLength="50" />
-    </TableRow>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descripcion del rol" />
+    <EditText
+        android:id="@+id/editDescripcionRol"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:maxLength="50" />
 
     <TableRow>
         <TextView android:text="@string/opciones" />
