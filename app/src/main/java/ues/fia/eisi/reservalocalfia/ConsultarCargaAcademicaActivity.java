@@ -57,7 +57,7 @@ public class ConsultarCargaAcademicaActivity extends AppCompatActivity {
         }
         String cargaacademicaExternas = ControladorServicio.obtenerRespuestaPeticion(url, this);
         try {
-            listaCargaAcademica.addAll(ControladorServicio.obtenerCargaAcademicasExterno(cargaacademicaExternas, this));
+            listaCargaAcademica.addAll(ControladorServicio.obtenerCargaAcademicaExterno(cargaacademicaExternas, this));
             actualizarListView();
         } catch (Exception e) {
             e.printStackTrace();

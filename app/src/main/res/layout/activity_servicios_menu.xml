@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="lanzarActividad"
-        android:text="@string/servicioWeb3"
+        android:text="Ingresar Rol Docente ws"
         android:layout_weight="0.06" />
     <Button
         android:id="@+id/button_sw4"

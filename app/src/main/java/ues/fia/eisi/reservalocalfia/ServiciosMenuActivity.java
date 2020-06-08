@@ -24,7 +24,7 @@ public class ServiciosMenuActivity extends AppCompatActivity {
                 i = new Intent(this,ConsultarCargaAcademicaActivity.class);
                 break;
             case R.id.button_sw3:
-                i = new Intent();
+                i = new Intent(this,RolDocenteInsertarWsActivity.class);
                 break;
             case R.id.button_sw4:
                 i = new Intent();

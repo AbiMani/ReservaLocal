@@ -144,13 +144,15 @@ public class ControlReserveLocal {
                        "    END;\n" +
                        "END");
                         */
-                //tabla docente
-                db.execSQL("CREATE TABLE docente(carnetDocente VARCHAR(7) NOT NULL,nombreDocente VARCHAR(30)," +
-                        "apellido VARCHAR(30),rol VARCHAR(30),nomEscuela VARCHAR(30),PRIMARY KEY(carnetDocente));");
+
                 //tabla tipo local
                 db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
                 //tabla rol docente
                 db.execSQL("CREATE TABLE rolDocente(idRolDocente INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomRolDocente varchar(30));");
+                //tabla docente
+                db.execSQL("CREATE TABLE docente(carnetDocente VARCHAR(7) NOT NULL,nombreDocente VARCHAR(30)," +
+                        "apellido VARCHAR(30),rol VARCHAR(30),nomEscuela VARCHAR(30),PRIMARY KEY(carnetDocente)," +
+                        "CONSTRAINT fk_docente_rolDocente FOREIGN KEY (rol) REFERENCES rolDocente(nomRolDocente) ON DELETE RESTRICT);");
                 //Tablas de login
                 db.execSQL("CREATE TABLE AccesoUsuario(idOpcion VARCHAR (3) NOT NULL, idUsuario VARCHAR(2) NOT NULL, PRIMARY KEY(idOpcion, idUsuario));");
                 db.execSQL("CREATE TABLE OpcionCrud(idOpcion VARCHAR(3) NOT NULL PRIMARY KEY, desOpcion VARCHAR(30), numCrud INTEGER);");
@@ -1072,6 +1074,22 @@ public class ControlReserveLocal {
 
         return regAfectados;
     }
+
+    //consultar todos los roles
+    public ArrayList<RolDocente> consultarTodosRol(){
+        abrir();
+        ArrayList<String> listaString =new ArrayList<String>();
+        Cursor cursor = db.rawQuery("SELECT * FROM rolDocente",null);
+        ArrayList<RolDocente> lista = new ArrayList<RolDocente>();
+        while(cursor.moveToNext()){
+            RolDocente rolDocente = new RolDocente();
+            rolDocente.setIdRolDocente(cursor.getInt(0));
+            rolDocente.setNomRolDocente(cursor.getString(1));
+            lista.add(rolDocente);
+        }
+        return lista;
+    }
+
     //------Escuela--------------------------------------------------------------------------
     public String insertar(Escuela escuela){
 
@@ -1495,19 +1513,19 @@ public class ControlReserveLocal {
         final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22020","22020","22016"};
         final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","vvvvvvv","OO12035"};
 
-        //Tabla docente
-        final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
-        final String[] VDnombreDocente = {"Oscar","Fatima","Sara","Gabriela"};
-        final String[] VDapellido = {"Rodriguez","Sanchez","Gonzales","Coto"};
-        final String[] VDrol = {"Docente","Docente","Asesor","Instructor"};
-        final String[] VDnomEscuela = {"Ing. Sistema Informatico","Ing. Sistema Informatico","Ing. Sistema informatico",
-                "Ing. Sistema Informatico"};
-
         //tabla rol docente
         final String[] VRDnomRolDocente = {"Docente","Docente","Jefe Catedra","Encargado de Laboratorio"};
 
         //tipo de local
         final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
+
+        //Tabla docente
+        final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
+        final String[] VDnombreDocente = {"Oscar","Fatima","Sara","Gabriela"};
+        final String[] VDapellido = {"Rodriguez","Sanchez","Gonzales","Coto"};
+        final String[] VDrol = {"Docente","Docente","Encargado de Laboratorio","Encargado de Laboratorio"};
+        final String[] VDnomEscuela = {"Ing. Sistema Informatico","Ing. Sistema Informatico","Ing. Sistema informatico",
+                "Ing. Sistema Informatico"};
 
         //Tabla escuela
         final String[] VEcodigoEscuel={"EISI", "EII", "EIQA"};
@@ -1538,9 +1556,9 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM horario");
         db.execSQL("DELETE FROM cargaAcademica");
 
-        db.execSQL("DELETE FROM docente;");
         db.execSQL("DELETE FROM rolDocente;");
         db.execSQL("DELETE FROM tipoLocal;");
+        db.execSQL("DELETE FROM docente;");
 
         db.execSQL("DELETE FROM escuela");
 
@@ -1569,18 +1587,6 @@ public class ControlReserveLocal {
             insertar(horario);
         }
 
-
-        //llenado de las tabla docente
-        Docente docente = new Docente();
-        for(int i=0;i<4;i++){
-            docente.setCarnetDocente(VDcarnetDocente[i]);
-            docente.setNombreDocente(VDnombreDocente[i]);
-            docente.setApellido(VDapellido[i]);
-            docente.setRol(VDrol[i]);
-            docente.setNomEscuela(VDnomEscuela[i]);
-            insertar(docente);
-        }
-
         //llenado de la tabla rol docente
         RolDocente rolDocente = new RolDocente();
         for(int i=0;i<4;i++){
@@ -1594,6 +1600,18 @@ public class ControlReserveLocal {
             tipoLocal.setNomTipoLocal(V_TPnomTipoLocal[i]);
             insertar(tipoLocal);
         }
+
+        //llenado de las tabla docente
+        Docente docente = new Docente();
+        for(int i=0;i<4;i++){
+            docente.setCarnetDocente(VDcarnetDocente[i]);
+            docente.setNombreDocente(VDnombreDocente[i]);
+            docente.setApellido(VDapellido[i]);
+            docente.setRol(VDrol[i]);
+            docente.setNomEscuela(VDnomEscuela[i]);
+            insertar(docente);
+        }
+
         //llenado tabla CargaAcademica
         CargaAcademica cargaAcademica = new CargaAcademica();
         for(int i=0;i<7;i++){ //i<7 porque son 7 tuplas los que se ingresan
