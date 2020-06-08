@@ -59,6 +59,10 @@
     <string name="codigoLocal">Codigo Local</string>
     <string name="codigoEscuela">Codigo Escuela</string>
     <string name="idPriodad">Prioridad</string>
+    <string name="id_dias_no_habiles">ID Dias No Habiles:</string>
+    <string name="nom_dias_no_habiles">Nombre de Dias No Habiles</string>
+    <string name="fecha_desde">Fecha de Inicio de dias no habiles</string>
+    <string name="fecha_hasta">Fecha de Fin de dias no habiles</string>
     <string name="idRolDocente">Rol Docente</string>
     <string name="carnetDocente">Carnet Docente</string>
     <string name="idHorario">Horario</string>
