@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.06"
         android:onClick="lanzarActividad"
-        android:text="@string/servicioWeb4" />
+        android:text="Ingresar Escuela" />
 
     <Button
         android:id="@+id/button_sw5"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="lanzarActividad"
-        android:text="@string/servicioWeb6"
+        android:text="Consultar listado de Reservas de eventos"
         android:layout_weight="0.06" />
     <Button
         android:id="@+id/button_sw7"
