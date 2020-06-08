@@ -76,19 +76,21 @@ public class ControladorServicio {
         return respuesta;
     }
 
-    public static List<CargaAcademica> obtenerCargaAcademicasExterno(String json, Context ctx) {
-        List<CargaAcademica> listacargaacademica = new ArrayList<CargaAcademica>();
+    public static List<CargaAcademica> obtenerCargaAcademicaExterno(String json, Context ctx) {
+        List<CargaAcademica> listaCargaAcademicas = new ArrayList<CargaAcademica>();
         try {
-            JSONArray cargaAcademicasJSON = new JSONArray(json);
-            for (int i = 0; i < cargaAcademicasJSON.length(); i++) {
-                JSONObject obj = cargaAcademicasJSON.getJSONObject(i);
+            JSONArray cargaAJSON = new JSONArray(json);
+            for (int i = 0; i < cargaAJSON.length(); i++) {
+                JSONObject obj = cargaAJSON.getJSONObject(i);
                 CargaAcademica cargaAcademica = new CargaAcademica();
-                cargaAcademica.setcodigoAsignatura(obj.getString("CODICOASIGANTURA"));
-                cargaAcademica.setcarnetDocente(obj.getString("CARNETDOCENTE"));
-                cargaAcademica.setidRolDocente(obj.getInt("IDROLDOCENTE"));
-                listacargaacademica.add(cargaAcademica);
+                cargaAcademica.setidRolDocente(obj.getInt("idRolDocente"));
+                cargaAcademica.setcodigoAsignatura(obj.getString("codigoAsignatura"));
+                cargaAcademica.setcodigoCiclo(obj.getString("codigoCiclo"));
+                cargaAcademica.setcarnetDocente(obj.getString("carnetDocente"));
+
+                listaCargaAcademicas.add(cargaAcademica);
             }
-            return listacargaacademica;
+            return listaCargaAcademicas;
         } catch (Exception e) {
             Toast.makeText(ctx, "Error en parseOO de JSON", Toast.LENGTH_LONG).show();
             return null;
