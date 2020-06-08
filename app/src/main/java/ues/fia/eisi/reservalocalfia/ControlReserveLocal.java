@@ -28,6 +28,11 @@ public class ControlReserveLocal {
     private static final String[]camposTipoLocal = new String [] {"idTipoLocal","nomTipoLocal"};
     private static final String[] camposEscuela= new String[] {"codigoEscuela", "nomEscuela"};
 
+    //campos tabla ciclo, grupo y dias no habiles
+    private static final String[]camposCiclo = new String [] {"codigoCiclo","Fechainicio","Fechafin"};
+    private static final String[]camposGrupo = new String [] {"idRolDocente","codigoAsignatura","codigoCiclo","carnetDocente","idGrupo","numMaximoEstudiantes"};
+    private static final String[] camposDiasNoHabiles = new String [] {"idDiasNoHabiles","codigoCiclo","nomDiasNoHabiles","fechaDesde","fechaHasta"};
+
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -149,6 +154,10 @@ public class ControlReserveLocal {
                 //Tablas de login
                 db.execSQL("CREATE TABLE AccesoUsuario(idOpcion VARCHAR (3) NOT NULL, idUsuario VARCHAR(2) NOT NULL, PRIMARY KEY(idOpcion, idUsuario));");
                 db.execSQL("CREATE TABLE OpcionCrud(idOpcion VARCHAR(3) NOT NULL PRIMARY KEY, desOpcion VARCHAR(30), numCrud INTEGER);");
+                //TABLAS CICLO, DIAS NO HABILES Y GROUP
+                db.execSQL("CREATE TABLE ciclo(codigociclo VARCHAR(7) NOT NULL PRIMARY KEY,fechainicio VARCHAR(10),fechafin VARCHAR(10));");
+                db.execSQL("CREATE TABLE grupo(idroldocente INTEGER NOT NULL,codigoasignatura VARCHAR(30) NOT NULL,codigociclo VARCHAR(1) NOT NULL,carnetdocente VARCHAR(7) NOT NULL,idgrupo VARCHAR(7) NOT NULL, nummaximoestudiantes INTEGER, PRIMARY KEY(idgrupo, idroldocente, codigoasignatura, codigociclo, carnetdocente));");
+                db.execSQL("CREATE TABLE diasnohabiles(iddiasnohabiles VARCHAR(2) NOT NULL PRIMARY KEY,codigociclo VARCHAR(7) NOT NULL ,nomdiasnohabiles VARCHAR(30) ,fechadesde VARCHAR(10), fechahasta VARCHAR(10));");
             }catch (SQLException e){
                 e.printStackTrace();
             }
@@ -172,6 +181,204 @@ public class ControlReserveLocal {
     public void cerrar(){
         DBHelper.close();
     }
+
+    ////////////////////////////////////CRUD DE TABLAS CICLO DIAS NO HABILES Y GRUPO /////////////////////////////////////////////////////////
+    public String insertar(Ciclo ciclo){
+        String regInsertados = "Registro Insertado Nº= ";
+        long contador = 0;
+        ContentValues cic = new ContentValues();
+        cic.put("codigoCiclo", ciclo.getCodigoCiclo());
+        cic.put("fechaInicio", ciclo.getFechaInicio());
+        cic.put("fechaFin", ciclo.getFechaFin());
+        contador = db.insert("ciclo", null, cic);
+        if (contador == -1 || contador == 0) {
+            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados = regInsertados + contador;
+        }
+        return regInsertados;
+    }
+
+    public String insertar(Grupo grupo){
+        String regInsertados = "Registro Insertado Nº= ";
+        long contador = 0;
+        if (verificarIntegridadLM(grupo, 2)) {
+            ContentValues grupos = new ContentValues();
+            grupos.put("idroldocente", grupo.getIdRolDocente());
+            grupos.put("codigoasignatura", grupo.getCodigoAsignatura());
+            grupos.put("codigociclo", grupo.getCodigoCiclo());
+            grupos.put("carnetdocente", grupo.getCarnetDocente());
+            grupos.put("idgrupo", grupo.getIdGrupo());
+            grupos.put("nummaximoestudiantes", grupo.getNumMaximoEstudiantes());
+            contador = db.insert("grupo", null, grupos);
+        }
+        if (contador == -1 || contador == 0) {
+            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados = regInsertados + contador;
+        }
+        return regInsertados;
+    }
+
+    public String insertar(DiasNoHabiles diasNoHabiles) {
+
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        if (verificarIntegridadLM(diasNoHabiles,7)){
+            return "registro ya existe";
+        }
+        else {
+            if (verificarIntegridadLM(diasNoHabiles, 1)) {
+                ContentValues diano = new ContentValues();
+                diano.put("iddiasnohabiles", diasNoHabiles.getIdDiasNoHabiles());
+                diano.put("codigociclo", diasNoHabiles.getCodigoCiclo());
+                diano.put("nomdiasnohabiles", diasNoHabiles.getNomDiasNoHabiles());
+                diano.put("fechadesde", diasNoHabiles.getFechaDesde());
+                diano.put("fechahasta", diasNoHabiles.getFechaHasta());
+                contador=db.insert("diasnohabiles", null, diano);
+            }
+            if(contador==-1 || contador==0) {
+                regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+            }
+            else {
+                regInsertados=regInsertados+contador;
+            }
+        }
+        return regInsertados;
+    }
+
+    public String actualizarC(Ciclo ciclo) {
+        if(verificarIntegridadLM(ciclo,4)){
+            String[] id = {ciclo.getCodigoCiclo()};
+            ContentValues cv = new ContentValues();
+            cv.put("fechainicio", ciclo.getFechaInicio());
+            cv.put("fechafin", ciclo.getFechaFin());
+            db.update("ciclo",cv, "codigoCiclo = ?", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro con codigoCiclo " + ciclo.getCodigoCiclo() + " no existe";
+        }
+    }
+
+    public String actualizarG(Grupo grupo) {
+
+        if(verificarIntegridadLM(grupo, 2)){
+            String[] id = {String.valueOf(grupo.getIdRolDocente()),grupo.getCodigoAsignatura(), grupo.getCodigoCiclo(),grupo.getCarnetDocente(),grupo.getIdGrupo()};
+            ContentValues cv = new ContentValues();
+            cv.put("nummaximoestudiantes", grupo.getNumMaximoEstudiantes());
+            db.update("grupo", cv, "idRolDocente = ? AND codigoasignatura = ? AND codigociclo = ? AND carnetDocente = ? AND idgrupo = ? ", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
+
+    public String actualizarD(DiasNoHabiles diasNoHabiles) {
+        if(verificarIntegridadLM(diasNoHabiles, 7)){
+            String[] id = {diasNoHabiles.getIdDiasNoHabiles()};
+            ContentValues cv = new ContentValues();
+            cv.put("nomdiasnohabiles", diasNoHabiles.getNomDiasNoHabiles());
+            cv.put("fechadesde", diasNoHabiles.getFechaDesde());
+            cv.put("fechahasta", diasNoHabiles.getFechaHasta());
+            db.update("diasnohabiles", cv, "iddiasnohabiles = ? ", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
+
+    public String eliminarCiclo(Ciclo ciclo) {
+        String regAfectados= "filas afectadas= ";
+        int contador=0;
+        if(verificarIntegridadLM(ciclo,4)){
+            if(verificarIntegridadLM(ciclo,3)){
+                regAfectados+="tiene dependencias";
+            }else{
+                contador+=db.delete("ciclo","codigociclo ='"+ciclo.getCodigoCiclo()+"'",null);
+                regAfectados+=contador;
+            }
+        }else{
+            return "Registro no existe";
+        }
+        return regAfectados;
+    }
+
+    public String eliminarG(Grupo grupo) {
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String where=" idroldocente='"+grupo.getIdRolDocente()+"'";
+        where=where+" AND codigoasignatura='"+grupo.getCodigoAsignatura()+"'";
+        where=where+" AND codigociclo='"+grupo.getCodigoCiclo()+"'";
+        where=where+" AND carnetdocente='"+grupo.getCarnetDocente()+"'";
+        where=where+" AND idgrupo="+grupo.getIdGrupo();
+        contador+=db.delete("grupo", where, null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+
+    public String eliminarD(DiasNoHabiles diasNoHabiles) {
+
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String where = "iddiasnohabiles='" + diasNoHabiles.getIdDiasNoHabiles() + "'";
+        if (verificarIntegridadLM(diasNoHabiles,7)) {
+            contador += db.delete("diasnohabiles", where, null);
+            regAfectados += contador;
+        }
+        else{
+            return "Registro" + diasNoHabiles.getIdDiasNoHabiles() + "no existe";
+        }
+        return regAfectados;
+    }
+
+    public Ciclo consultarCiclo(String codigociclo) {
+        String[] id = {codigociclo};
+        Cursor cursor = db.query("ciclo", camposCiclo, "codigociclo = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Ciclo ciclo01 = new Ciclo();
+            ciclo01.setCodigoCiclo(cursor.getString(0));
+            ciclo01.setFechaInicio(cursor.getString(1));
+            ciclo01.setFechaFin(cursor.getString(2));
+            return ciclo01;
+        }else{ return null;
+        }
+    }
+
+    public Grupo consultarGrupo(String idgrupo, String idroldocente, String codigoasignatura, String codigociclo, String carnetdocente) {
+
+        String[] id = {idgrupo,idroldocente, codigoasignatura, codigociclo,carnetdocente};
+        Cursor cursor = db.query("grupo", camposGrupo, "idgrupo = ? AND idroldocente = ? AND codigoasignatura = ?" +
+                " AND codigociclo = ? AND carnetdocente =? ", id, null, null, null);
+        if (cursor.moveToFirst()) {
+            Grupo grupo = new Grupo();
+            grupo.setIdRolDocente(cursor.getInt(0));
+            grupo.setCodigoAsignatura(cursor.getString(1));
+            grupo.setCodigoCiclo(cursor.getString(2));
+            grupo.setCarnetDocente(cursor.getString(3));
+            grupo.setIdGrupo(cursor.getString(4));
+            grupo.setNumMaximoEstudiantes(cursor.getInt(5));
+            return grupo;
+        } else {
+            return null;
+        }
+    }
+
+    public DiasNoHabiles consultarD(String iddiasnohabiles){
+        String[] id = {iddiasnohabiles};
+        Cursor cursor = db.query("diasnohabiles", camposDiasNoHabiles, "iddiasnohabiles = ?", id, null, null, null);
+        if (cursor.moveToFirst()) {
+            DiasNoHabiles diasno = new DiasNoHabiles();
+            diasno.setIdDiasNoHabiles(cursor.getString(0));
+            diasno.setCodigoCiclo(cursor.getString(1));
+            diasno.setNomDiasNoHabiles(cursor.getString(2));
+            diasno.setFechaDesde(cursor.getString(3));
+            diasno.setFechaHasta(cursor.getString(4));
+            return diasno;
+        } else {
+            return null;
+        }
+    }
+///////////////////////////////////////////////// FIN DEL CRUD DIAS NO HABILES, CICLO Y GRUPO ////////////////////////////////////////////////
 
     public String insertar(Asignatura asignatura){
 
@@ -1095,52 +1302,170 @@ public class ControlReserveLocal {
     }
 
     /*verificacion de integridad de javier */
-    private boolean verificarIntegridadJavier(Object dato, int relacion) throws SQLException{
+    private boolean verificarIntegridadJavier(Object dato, int relacion) throws SQLException {
 
-        switch(relacion){
+        switch (relacion) {
 
-            case 1:
-            {
+            case 1: {
                 //verificar que exista un docente
-                Docente docente2 = (Docente)dato;
+                Docente docente2 = (Docente) dato;
                 String[] id = {docente2.getCarnetDocente()};
                 abrir();
                 Cursor c2 = db.query("docente", null, "carnetDocente = ?", id, null, null, null);
-                if(c2.moveToFirst()){
+                if (c2.moveToFirst()) {
                     //Se encontro Docente
                     return true;
                 }
                 return false;
             }
 
-            case 2:
-            {
+            case 2: {
                 //verificar que exista un rol docente
-                RolDocente rolDocente2 = (RolDocente)dato;
+                RolDocente rolDocente2 = (RolDocente) dato;
                 String[] id = {rolDocente2.getNomRolDocente()};
                 abrir();
-                Cursor c2 = db.query("rolDocente", null, "nomRolDocente = ?",id, null, null, null);
-                if(c2.moveToFirst()){
+                Cursor c2 = db.query("rolDocente", null, "nomRolDocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
                     //Se encontro el rol docente
                     return true;
                 }
                 return false;
             }
 
-            case 3:
-            {
+            case 3: {
                 //verificar que exista el tipo de local
                 TipoLocal tipoLocal2 = (TipoLocal) dato;
                 String[] id = {tipoLocal2.getNomTipoLocal()};
                 abrir();
-                Cursor c2 = db.query("tipoLocal", null, "nomTipoLocal = ?",id, null, null, null);
-                if(c2.moveToFirst()){
+                Cursor c2 = db.query("tipoLocal", null, "nomTipoLocal = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
                     //Se encontro el rol docente
                     return true;
                 }
                 return false;
             }
+            default:
+                return false;
 
+        }
+
+
+    }
+
+
+    private boolean verificarIntegridadLM(Object dato, int relacion) throws SQLException{
+                switch(relacion){
+
+                    case 1:
+                    {
+//verificar que al insertar un dia no Habil exista un ciclo
+                        DiasNoHabiles dianohabil = (DiasNoHabiles) dato;
+                        String[] id1 = {dianohabil.getCodigoCiclo()
+                        };
+                        abrir();
+                        Cursor cursor1 = db.query("ciclo", null, "codigociclo = ?", id1, null, null, null);
+                        if (cursor1.moveToFirst()) {
+//Se encontraron datos
+                            return true;
+                        }
+                        return false;
+                    }
+                    case 2: {
+//verificar que al insertar grupo exista codigoAsignatura de asignatura y el codigoCiclo de ciclo
+                        Grupo grupo = (Grupo) dato;
+                        String[] id1 = {String.valueOf(grupo.getIdRolDocente())};
+                        String[] id2 = {grupo.getCodigoAsignatura()};
+                        String[] id3 = {grupo.getCodigoCiclo()};
+                        String[] id4 = {grupo.getCarnetDocente()};
+                        abrir();
+                        Cursor cursor1 = db.query("rolDocente", null, "idroldocente = ?", id1, null, null, null);
+                        Cursor cursor2 = db.query("asignatura", null, "codigoasignatura = ?", id2, null, null, null);
+                        Cursor cursor3 = db.query("ciclo", null, "codigociclo = ?", id3, null, null, null);
+                        Cursor cursor4 = db.query("docente", null, "carnetdocente = ?", id4, null, null, null);
+                        if (cursor1.moveToFirst()&& cursor2.moveToFirst() && cursor3.moveToFirst()&& cursor4.moveToFirst()) {
+//Se encontraron datos
+                            return true;
+                        }
+                        return false;
+                    }
+                    //verificar que no exista codigociclo en dias no habiles
+                    case 3:
+                    {
+                        Ciclo ciclo1 = (Ciclo)dato;
+                        abrir();
+                        Cursor c=db.query(true, "diasnohabiles", new String[] {
+                                "codigociclo" }, "codigociclo='"+ciclo1.getCodigoCiclo()+"'",null, null, null, null, null);
+                        if(c.moveToFirst())
+                            return true;
+                        else
+                            return false;
+                    }
+
+                    case 4:
+                    {
+//verificar que exista ciclo
+                        Ciclo ciclo = (Ciclo)dato;
+                        String[] id = {ciclo.getCodigoCiclo()};
+                        abrir();
+                        Cursor c2 = db.query("ciclo", null, "codigoCiclo = ?", id, null, null, null);
+                        if(c2.moveToFirst()){
+//Se encontro Ciclo
+                            return true;
+                        }
+                        return false;
+                    }
+                    case 5:
+                    {
+//verificar que exista Grupo
+                        Grupo grupo2 = (Grupo)dato;
+                        String[] idg = {grupo2.getIdGrupo()};
+                        abrir();
+                        Cursor cm = db.query("grupo", null, "idgrupo = ?", idg, null, null, null);
+                        if(cm.moveToFirst()){
+//Se encontro Grupo
+                            return true;
+                        }
+                        return false;
+                    }
+                    ///eliminar ciclo verificando que no este ni en dias no habiles ni en carga academinca  codigocilo
+                    case 6:
+                    {
+                        Ciclo ciclo2 = (Ciclo)dato;
+                        Cursor c=db.query(true, "dianohabil", new String[] {
+                                "codigociclo" }, "codigociclo='"+ciclo2.getCodigoCiclo()+"'",null, null, null, null, null);
+                        Cursor c1=db.query(true, "cargaacademica", new String[] {
+                                "codigociclo" }, "codigociclo='"+ciclo2.getCodigoCiclo()+"'",null, null, null, null, null);
+                        if(c.moveToFirst() && c1.moveToFirst())
+                            return true;
+                        else
+                            return false;
+                    }
+                    case 7:
+                    {
+//verificar que exista el dia no habil
+                        DiasNoHabiles dianohabi = (DiasNoHabiles) dato;
+                        String[] id2 = {dianohabi.getIdDiasNoHabiles()
+                        };
+                        abrir();
+                        Cursor cursor1 = db.query("diasnohabiles", null, "iddiasnohabiles = ?", id2, null, null, null);
+                        if (cursor1.moveToFirst()) {
+//Se encontraron datos
+                            return true;
+                        }
+                        return false;
+                    }
+                    case 8: {
+//verificar que al modificar grupo exista idroldocente y carnetdocente del docente, idgrupo de grupo, el codigo de asognatura y el codigo ciclo
+                        Grupo grupo1 = (Grupo) dato;
+                        String[] ids = {grupo1.getIdGrupo(), String.valueOf(grupo1.getIdRolDocente()), grupo1.getCodigoAsignatura(),grupo1.getCodigoCiclo(),grupo1.getCarnetDocente()};
+                        abrir();
+                        Cursor c = db.query("grupo", null, "idgrupo = ? AND idroldocente = ? AND codigoasignatura = ? AND codigociclo = ? AND carnetdocente = ?", ids, null, null, null);
+                        if (c.moveToFirst()) {
+//Se encontraron datos
+                            return true;
+                        }
+                        return false;
+                    }
             default:
                 return false;
 
@@ -1188,6 +1513,26 @@ public class ControlReserveLocal {
         final String[] VEcodigoEscuel={"EISI", "EII", "EIQA"};
         final String[] VEnombreEscuela={"Escuela de Ingenieria de Sistemas Informaticos", "Escuela de Ingenieria Industrial", "Escuela de Ingernieria Quimica y Alimentos"};
 
+        //TABLA CICLO
+        final String[] VAcodigo = {"1-2020","2-2020"};
+        final String[] VAfechainicio = {"2020-02-15","2020-08-07"};
+        final String[] VAfechafin = {"2020-02-15","2021-01-22"};
+
+        //TABLA DIAS NO HABILES
+        final String[] VDidDiasNoHabiles = {"1","2","3","4","5"};
+        final String[] VDCodigoClico = {"1-2020","2-2020","1-2020","2-2020","1-2020"};
+        final String[] VDnomDiasNoHabiles = {"Day of Mother","Day of Dead","Day of Work","Day of Ing. Student","Day of Father"};
+        final String[] VDfechaDesde = {"00:00:00 10-05-2020","00:00:00 02-10-2020","00:00:00 01-05-2020","00:00:00 07-08-2020","00:00:00 17-06-2020"};
+        final String[] VDfechaHasta = {"24:00:00 10-05-2020","24:00:00 02-10-2020","24:00:00 01-05-2020","24:00:00 07-08-2020","24:00:00 17-06-2020"};
+
+        //TABLA GRUPO
+        final Integer[] VGidRolDocente = {1,2,3};
+        final String[] VGcodigoAsignatura = {"MAT115","PRN115","IEC115"};
+        final String[] VGcodigoCiclo = {"1-2020","2-2020","1-2020"};
+        final String[] VGcarnetDocente = {"OO12035","OF12044","GG11098"};
+        final String[] VGidGrupo = {"1","2","3"};
+        final Integer[] VGnumMaximoEstudiantes = {100,60,89,90};
+
         abrir();
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
@@ -1198,6 +1543,10 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM tipoLocal;");
 
         db.execSQL("DELETE FROM escuela");
+
+        db.execSQL("DELETE FROM ciclo");
+        db.execSQL("DELETE FROM diasnohabiles");
+        db.execSQL("DELETE FROM grupo");
 
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
@@ -1262,7 +1611,35 @@ public class ControlReserveLocal {
             escuela.setNomEscuela(VEnombreEscuela[i]);
             insertar(escuela);
         }
-
+        //CICLO
+        Ciclo ciclo = new Ciclo();
+        for(int i=0;i<2;i++){
+            ciclo.setCodigoCiclo(VAcodigo[i]);
+            ciclo.setFechaInicio(VAfechainicio[i]);
+            ciclo.setFechaFin(VAfechafin[i]);
+            insertar(ciclo);
+        }
+        //DIAS NO HABILES
+        DiasNoHabiles dnh = new DiasNoHabiles();
+        for(int i=0;i<5;i++){
+            dnh.setIdDiasNoHabiles(VDidDiasNoHabiles[i]);
+            dnh.setCodigoCiclo(VDCodigoClico[i]);
+            dnh.setNomDiasNoHabiles(VDnomDiasNoHabiles[i]);
+            dnh.setFechaDesde(VDfechaDesde[i]);
+            dnh.setFechaHasta(VDfechaHasta[i]);
+            insertar(dnh);
+        }
+        //GRUPO
+        Grupo grup = new Grupo();
+        for(int i=0;i<3;i++){
+            grup.setIdRolDocente(VGidRolDocente[i]);
+            grup.setCodigoAsignatura(VGcodigoAsignatura[i]);
+            grup.setCodigoCiclo(VGcodigoCiclo[i]);
+            grup.setCarnetDocente(VGcarnetDocente[i]);
+            grup.setIdGrupo(VGidGrupo[i]);
+            grup.setNumMaximoEstudiantes(VGnumMaximoEstudiantes[i]);
+            insertar(grup);
+        }
         cerrar();
         return "Guardado Correctamente";
     }

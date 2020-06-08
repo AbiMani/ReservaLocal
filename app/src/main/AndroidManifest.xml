@@ -57,6 +57,21 @@
         <activity android:name=".CargaAcademicaMenuActivity" />
         <activity android:name=".HorarioMenuActivity" />
         <activity android:name=".AsignaturaMenuActivity" />
+        <activity android:name=".DiasNoHabilesActualizarActivity"/>
+        <activity android:name=".DiasNoHabilesConsultarActivity" />
+        <activity android:name=".DiasNoHabilesEliminarActivity" />
+        <activity android:name=".DiasNoHabilesInsertarActivity" />
+        <activity android:name=".GrupoActualizarActivity" />
+        <activity android:name=".GrupoConsultarActivity" />
+        <activity android:name=".GrupoEliminarActivity" />
+        <activity android:name=".GrupoInsertarActivity" />
+        <activity android:name=".CicloActualizarActivity" />
+        <activity android:name=".CicloConsultarActivity" />
+        <activity android:name=".CicloEliminarActivity" />
+        <activity android:name=".CicloInsertarActivity" />
+        <activity android:name=".DiasNoHabilesMenuActivity" />
+        <activity android:name=".CicloMenuActivity" />
+        <activity android:name=".GrupoMenuActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
