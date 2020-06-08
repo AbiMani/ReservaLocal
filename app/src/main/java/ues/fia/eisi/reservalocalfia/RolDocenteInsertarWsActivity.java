@@ -19,7 +19,7 @@ public class RolDocenteInsertarWsActivity extends AppCompatActivity {
     int idRolDocente=NULL;
     EditText editFecha_inicio;
     EditText editFecha_fin;
-    private final String urlHostingGratuito = "https://ah13059pdm115.000webhostapp.com/ws_rolDocente_insertar.php";
+    private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_rolDocente_insertar.php";
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,5 +47,10 @@ public class RolDocenteInsertarWsActivity extends AppCompatActivity {
         ciclo.setFecha_fin(fecha_fin);*/
         url = urlHostingGratuito+ "?idRolDocente=" + idRolDocente + "&nomRolDocente=" + nomRolDocente + "&descripcionRol=" + descripcionRol;
         ControladorServicioJavier.insertarCiclo(url, this);
+    }
+
+    public void limpiarTexto(View v) {
+        editDescripcionRol.setText("");
+        editNomRolDocente.setText("");
     }
 }
