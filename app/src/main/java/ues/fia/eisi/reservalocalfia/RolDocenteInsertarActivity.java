@@ -17,15 +17,20 @@ public class RolDocenteInsertarActivity extends Activity {
         helper = new ControlReserveLocal(this);
         editNomRolDocente = (EditText) findViewById(R.id.editNomRolDocente);
     }
+
     public void insertarRolDocente(View v) {
-        String nomRolDocente=editNomRolDocente.getText().toString();
-        String regInsertados;
-        RolDocente rol=new RolDocente();
-        rol.setNomRolDocente(nomRolDocente);
-        helper.abrir();
-        regInsertados=helper.insertar(rol);
-        helper.cerrar();
-        Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
+        if(editNomRolDocente.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Error Campos vacios no se puede ingresar registro",Toast.LENGTH_SHORT).show();
+        }else{
+            String nomRolDocente=editNomRolDocente.getText().toString();
+            String regInsertados;
+            RolDocente rol=new RolDocente();
+            rol.setNomRolDocente(nomRolDocente);
+            helper.abrir();
+            regInsertados=helper.insertar(rol);
+            helper.cerrar();
+            Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void limpiarTexto(View v) {
