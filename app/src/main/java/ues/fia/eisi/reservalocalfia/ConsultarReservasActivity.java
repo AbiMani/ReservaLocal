@@ -21,9 +21,7 @@ public class ConsultarReservasActivity extends AppCompatActivity {
     ControlReserveLocal db;
     static List<ReservaEvento> listaReservas;
     static List<String> nombreReservas;
-    EditText cicloTxt;
     ListView listViewReservas;
-    private final String urlLocal = "http://192.168.43.198/reservas_query.php";
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/reservas_query.php";
     private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_db_materia_fecha.php";
 
@@ -75,8 +73,8 @@ public class ConsultarReservasActivity extends AppCompatActivity {
         String dato = "";
         nombreReservas.clear();
         for (int i = 0; i < listaReservas.size(); i++) {
-            dato = listaReservas.get(i).getCodigoEscuela() + " " + listaReservas.get(i).getNombreEvento()+ " " + listaReservas.get(i).getCapacidadTotalEvento()
-                    + " " + listaReservas.get(i).getFechaReservaEvento();
+            dato = listaReservas.get(i).getIdReservaEvento() +"."+ " Codigo escuela: " + listaReservas.get(i).getCodigoEscuela() + " Descripción: " + listaReservas.get(i).getNombreEvento()+ " Capacidad:" + listaReservas.get(i).getCapacidadTotalEvento()
+                    + " Fecha: " + listaReservas.get(i).getFechaReservaEvento();
             nombreReservas.add(dato);
         }
         eliminarElementosDuplicados();
