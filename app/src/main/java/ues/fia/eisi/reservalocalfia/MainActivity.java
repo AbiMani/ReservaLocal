@@ -13,10 +13,10 @@ public class MainActivity extends ListActivity {
 
     String[] menu={"Asignatura","Carga Academica","Horario","Reserva de Evento","Detalle de reserva","Tipo de Evento","Tabla Local",
             "Tabla Encargado","Tabla Detalle Grupo Reserva",
-            "Gestion Docente","Gestion Rol de Docentes","Gestion del tipo de local","Tabla Ciclo","Tabla Grupo","Tabla Dias No Habiles","Gestion Escuela","Servicios Web","LLenar Base de Datos"};
+            "Gestion Docente","Gestion Rol de Docentes","Gestion del tipo de local","Tabla Ciclo","Tabla Grupo","Tabla Dias No Habiles","Gestion Escuela","Servicios Web","Gestion de Usuarios","LLenar Base de Datos"};
     String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity", "ReservaEventoMenuActivity",
             "DetalleReservaMenuActivity","TipoEventoMenuActivity","LocalMenuActivity","EncargadoMenuActivity","DetalleGrupoReservaMenuActivity",
-            "DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity","CicloMenuActivity","GrupoMenuActivity","DiasNoHabilesMenuActivity","EscuelaMenuActivity","ServiciosMenuActivity"};
+            "DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity","CicloMenuActivity","GrupoMenuActivity","DiasNoHabilesMenuActivity","EscuelaMenuActivity","ServiciosMenuActivity","UsuariosMenuActivity"};
     ControlReserveLocal BDhelper;
 
 
@@ -29,7 +29,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
         super.onListItemClick(l, v, position, id);
-        if(position!=17) {
+        if(position!=18) {
             String nombreValue = activities[position];
             try {
                 Class<?> clase = Class.forName("ues.fia.eisi.reservalocalfia." + nombreValue);

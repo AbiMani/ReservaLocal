@@ -167,6 +167,10 @@ public class ControlReserveLocal {
                         "apellido VARCHAR(30),rol VARCHAR(30),nomEscuela VARCHAR(30),PRIMARY KEY(carnetDocente)," +
                         "CONSTRAINT fk_docente_rolDocente FOREIGN KEY (rol) REFERENCES rolDocente(nomRolDocente) ON DELETE RESTRICT);");
                 //Tablas de login
+                //Usuario
+                db.execSQL("CREATE TABLE usuario(iduser integer not null primary key AUTOINCREMENT, username varchar(30) not null, password varchar(30) not null, is_admin varchar(4), " +
+                        "is_docente varchar(4), nombres varchar(30), apellidos varchar(30), correo varchar(30), carnetDocente VARCHAR(7)," +
+                        "constraint fk_docente_usuario foreign key(carnetDocente)references docente(carnetDocente) on delete restrict)");
                 db.execSQL("CREATE TABLE AccesoUsuario(idOpcion VARCHAR (3) NOT NULL, idUsuario VARCHAR(2) NOT NULL, PRIMARY KEY(idOpcion, idUsuario));");
                 db.execSQL("CREATE TABLE OpcionCrud(idOpcion VARCHAR(3) NOT NULL PRIMARY KEY, desOpcion VARCHAR(30), numCrud INTEGER);");
                 //TABLAS CICLO, DIAS NO HABILES Y GROUP
@@ -1132,6 +1136,153 @@ public class ControlReserveLocal {
         return lista;
     }
 
+    //Insertar Usuario
+    public String insertar(Usuario usuario){
+
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        // verificar que no exista el usuario
+        if(verificarIntegridadJavier(usuario,4))
+        {
+            regInsertados= "Error al Insertar el registro del Usuario, Registro Duplicado. Verificar inserción";
+        }else if(verificarIntegridadJavier(usuario,6)){
+            ContentValues cv = new ContentValues();
+            cv.put("username", usuario.getUsername());
+            cv.put("password", usuario.getPassword());
+            cv.put("is_admin", usuario.getIs_admin());
+            cv.put("is_docente", usuario.getIs_docente());
+            cv.put("nombres", usuario.getNombres());
+            cv.put("apellidos", usuario.getApellidos());
+            cv.put("correo", usuario.getCorreo());
+            cv.put("carnetDocente", usuario.getCarnetDocente());
+            contador=db.insert("usuario", "iduser", cv);
+            regInsertados=regInsertados+contador;
+        } else if (verificarIntegridadJavier(usuario,5)){
+            ContentValues cv = new ContentValues();
+            cv.put("username", usuario.getUsername());
+            cv.put("password", usuario.getPassword());
+            cv.put("is_admin", usuario.getIs_admin());
+            cv.put("is_docente", usuario.getIs_docente());
+            cv.put("nombres", usuario.getNombres());
+            cv.put("apellidos", usuario.getApellidos());
+            cv.put("correo", usuario.getCorreo());
+            cv.put("carnetDocente", usuario.getCarnetDocente());
+            contador=db.insert("usuario", "iduser", cv);
+            regInsertados=regInsertados+contador;
+        } else{
+            regInsertados = "Error al Insertar el registro el Carnet no existe, Verificar inserción";
+        }
+        return regInsertados;
+    }
+
+    //Actualizar Usuario
+    public String actualizar(Usuario usuario){
+        //Si existe
+        if(verificarIntegridadJavier(usuario, 4)){
+            String[] id = {usuario.getUsername()};
+            ContentValues cv = new ContentValues();
+            cv.put("password", usuario.getPassword());
+            cv.put("nombres", usuario.getNombres());
+            cv.put("apellidos", usuario.getApellidos());
+            cv.put("correo", usuario.getCorreo());
+            db.update("usuario", cv, "username = ?", id);
+            return "Registro del Docente se Actualizo Correctamente";
+        }else{
+            return "Registro con el Username: " + usuario.getUsername() + " no existe";
+        }
+    }
+
+    //Consultar Usuario
+    public Usuario consultarUsuario(String username){
+
+        String[] id = {username};
+        Cursor cursor = db.rawQuery("select password, nombres, apellidos, correo from usuario where username='"+username+"'", null  );
+        if(cursor.moveToFirst()){
+            Usuario u = new Usuario();
+            u.setPassword(cursor.getString(0));
+            u.setNombres(cursor.getString(1));
+            u.setApellidos(cursor.getString(2));
+            u.setCorreo(cursor.getString(3));
+            return u;
+        }else{
+            return null;
+        }
+    }
+
+    //Eliminar Usuario
+    public String eliminar(Usuario usuario){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        //Si existe usuario
+        if(verificarIntegridadJavier(usuario, 4))        {
+            contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'", null);
+            regAfectados+=contador;
+        }
+        else
+        {
+            return "Registro con username del Usuario:  " + usuario.getUsername() + " no existe";
+        }
+
+        return regAfectados;
+    }
+
+    //LOGIN
+    public boolean verificarUser(Usuario user){
+        String[] id = {user.getUsername()};
+        abrirConsultar();
+        Usuario u = new Usuario();
+        Cursor cursor = db.rawQuery("select username, password from usuario where username = '"+user.getUsername()+"' ",null);
+        if (cursor.moveToFirst()){
+
+            u.setUsername(cursor.getString(0));
+            u.setPassword(cursor.getString(1));
+        }
+
+        if(user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public Usuario verificarAdmin(Usuario user){
+        String [] id = {user.getUsername()};
+        Usuario u = new Usuario();
+        Cursor cursor = db.rawQuery("select is_admin,username,is_docente from usuario where username = '"+user.getUsername()+"' ",null);
+        if (cursor.moveToFirst()){
+            u.setIs_admin(cursor.getString(0));
+            u.setUsername(cursor.getString(1));
+            u.setIs_docente(cursor.getString(2));
+            return u;
+        }else {
+            return null;
+        }
+    }
+
+    public Usuario verificarCarnet(Usuario user){
+        String [] id = {user.getUsername()};
+        Usuario u = new Usuario();
+        Cursor cursor = db.rawQuery("select carnetDocente from usuario where username = '"+user.getUsername()+"' ",null);
+        if (cursor.moveToFirst()){
+            u.setCarnetDocente(cursor.getString(0));
+            return u;
+        }else {
+            return null;
+        }
+    }
+
+    public Docente verificarUsuarios(Usuario user){
+        String [] id = {user.getCarnetDocente()};
+        Docente d = new Docente();
+        Cursor cursor = db.rawQuery("select rol from docente where carnetDocente = '"+user.getCarnetDocente()+"' ",null);
+        if (cursor.moveToFirst()){
+            d.setRol(cursor.getString(0));
+            return d;
+        }else {
+            return null;
+        }
+    }
+
     //------Escuela--------------------------------------------------------------------------
     public String insertar(Escuela escuela){
 
@@ -1404,6 +1555,46 @@ public class ControlReserveLocal {
                 }
                 return false;
             }
+
+            case 4:
+            {
+                //verificar si exsite el usuario
+                Usuario usuario2 = (Usuario) dato;
+                String[] id = {usuario2.getUsername()};
+                abrir();
+                Cursor c2 = db.query("usuario", null, "username = ?",id, null, null, null);
+                if(c2.moveToFirst()){
+                    //el usuario ya existe
+                    return true;
+                }
+                return false;
+            }
+
+            case 5:
+            {
+                //verificar si carnet del docente
+                Usuario usuario2 = (Usuario) dato;
+                String[] id = {usuario2.getCarnetDocente()};
+                abrir();
+                Cursor c2 = db.query("docente", null, "carnetDocente = ?",id, null, null, null);
+                if(c2.moveToFirst()){
+                    //el carnet docente existe
+                    return true;
+                }
+                return false;
+            }
+
+            case 6:
+            {
+                Usuario usuario2 = (Usuario) dato;
+                //verifica si no es docente
+                if(usuario2.getIs_docente().equals("No")){
+                    //si no es docente
+                    return true;
+                }
+                return false;
+            }
+
             default:
                 return false;
 
@@ -1562,7 +1753,7 @@ public class ControlReserveLocal {
         final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","vvvvvvv","OO12035"};
 
         //tabla rol docente
-        final String[] VRDnomRolDocente = {"Docente","Docente","Jefe Catedra","Encargado de Laboratorio"};
+        final String[] VRDnomRolDocente = {"Administrador","Docente","Coordinador","Encargado de Laboratorio"};
 
         //tipo de local
         final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
@@ -1571,7 +1762,7 @@ public class ControlReserveLocal {
         final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
         final String[] VDnombreDocente = {"Oscar","Fatima","Sara","Gabriela"};
         final String[] VDapellido = {"Rodriguez","Sanchez","Gonzales","Coto"};
-        final String[] VDrol = {"Docente","Docente","Encargado de Laboratorio","Encargado de Laboratorio"};
+        final String[] VDrol = {"Coordinador","Administrador","Administrador","Coordinador"};
         final String[] VDnomEscuela = {"Ing. Sistema Informatico","Ing. Sistema Informatico","Ing. Sistema informatico",
                 "Ing. Sistema Informatico"};
 
@@ -1608,6 +1799,7 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM rolDocente;");
         db.execSQL("DELETE FROM tipoLocal;");
         db.execSQL("DELETE FROM docente;");
+        db.execSQL("DELETE FROM usuario;");
 
         db.execSQL("DELETE FROM escuela");
 
@@ -1671,6 +1863,17 @@ public class ControlReserveLocal {
             insertar(docente);
         }
 
+
+        //tabla Usuario
+        db.execSQL("insert into usuario(iduser, username, password, is_admin, is_docente, nombres, apellidos, correo, carnetDocente) " +
+                "values(1, 'admin', 'admin', 'Si', 'No', 'Administrador', 'Admin 1', 'Administrador@gmail.com', null)");
+        db.execSQL("insert into usuario(iduser, username, password, is_admin, is_docente, nombres, apellidos, correo, carnetDocente) " +
+                "values(2, 'docente', 'docente', 'No', 'Si', 'Oscar', 'Gonzales', 'Coordinador@gmail.com', 'OO12035')");
+        db.execSQL("insert into usuario(iduser, username, password, is_admin, is_docente, nombres, apellidos, correo, carnetDocente) " +
+                "values(3, 'docente1', 'docente1', 'No', 'Si', 'Fatima', 'Sanchez', 'FatimaSanchez1@gmail.com', 'OF12044')");
+        db.execSQL("insert into usuario(iduser, username, password, is_admin, is_docente, nombres, apellidos, correo, carnetDocente) " +
+                "values(4, 'usuario', 'usuario', 'No', 'No', 'Pablo', 'Marmol', 'Administrador1@gmail.com', null)");
+
         //llenado tabla CargaAcademica
         CargaAcademica cargaAcademica = new CargaAcademica();
         for(int i=0;i<7;i++){ //i<7 porque son 7 tuplas los que se ingresan
@@ -1717,6 +1920,9 @@ public class ControlReserveLocal {
             grup.setNumMaximoEstudiantes(VGnumMaximoEstudiantes[i]);
             insertar(grup);
         }
+
+
+
         cerrar();
         return "Guardado Correctamente";
     }

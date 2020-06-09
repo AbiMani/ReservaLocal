@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ues.fia.eisi.reservalocalfia">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,14 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DetalleGrupoReservaMenuActivity"></activity>
+        <activity android:name=".UsuariosMenuActivity"></activity>
+        <activity android:name=".UsuarioEliminarActivity" />
+        <activity android:name=".UsuarioConsultarActivity" />
+        <activity android:name=".UsuarioActualizarActivity" />
+        <activity android:name=".UsuarioInsertarActivity" />
+        <activity android:name=".DetalleGrupoReservaMenuActivity" />
         <activity android:name=".LocalActualizarActivity" />
         <activity android:name=".LocalConsultarActivity" />
         <activity android:name=".LocalEliminarActivity" />
         <activity android:name=".LocalInsertarActivity" />
         <activity android:name=".EncargadoMenuActivity" />
         <activity android:name=".LocalMenuActivity" />
-        <activity android:name=".DiaInsertActivity"/>
+        <activity android:name=".DiaInsertActivity" />
         <activity android:name=".InsertarEscuelaActivity" />
         <activity android:name=".ConsultarReservasActivity" />
         <activity android:name=".RolDocenteInsertarWsActivity" />
@@ -92,5 +95,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
