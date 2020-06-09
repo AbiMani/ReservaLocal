@@ -146,7 +146,7 @@ public class ControlReserveLocal {
                         "    END;\n" +
                         "END");
                         //TIGGER EXISTENCIA DE CODIGOLOCAL EN TABLA LOCAL
-                 /*db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
+                 db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
                        "BEFORE INSERT ON detallereserva\n" +
                        "FOR EACH ROW\n" +
                        "BEGIN\n" +
@@ -156,7 +156,7 @@ public class ControlReserveLocal {
                        "     THEN RAISE(ABORT, 'No existe el Local seleccionado')\n" +
                        "    END;\n" +
                        "END");
-                        */
+
 
                 //tabla tipo local
                 db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
@@ -822,7 +822,7 @@ public class ControlReserveLocal {
             detalle.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
             contador = db.insert("detallereserva", null, detalle);
             if (contador==-1){
-                regInsertados = "Error. No se encontro horario asignado o id de reserva";
+                regInsertados = "Error. No se encontro alguno de los valores insertados, verifique.";
             }
             else {
                 regInsertados = "Registro insertado exitosamente ";
