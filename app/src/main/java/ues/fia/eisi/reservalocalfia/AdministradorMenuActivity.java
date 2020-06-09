@@ -1,5 +1,6 @@
 package ues.fia.eisi.reservalocalfia;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,42 +9,52 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdministradorMenuActivity extends ListActivity  {   //cambiar activity correcto
+public class AdministradorMenuActivity extends Activity {   //cambiar activity correcto
 
-    //cambiar por los String correcto
-    String[] menu={"Menu Administrador","Gestion Usuario","2", "3"};
-    //ingresar la tabla AlumnoInsertarActivity
-    String[] activities={"InsertarActivity","UsuariosMenuActivity","ConsultarActivity", "ActualizarActivity"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new ArrayAdapter<String>(this,  android.R.layout.simple_list_item_1, menu));
+        setContentView(R.layout.activity_administrador_menu);
 
-        ListView listView = getListView();
-        listView.setBackgroundColor(Color.rgb(0, 0, 255));
-        //listView.setBackgroundColor(Color.rgb(0, 128, 64)); //para verde
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, menu);
-        setListAdapter(adapter);
     }
-
-    @Override
-    protected void onListItemClick(ListView l,View v,int position,long id){
-        super.onListItemClick(l, v, position, id);
-
-        String nombreValue=activities[position];
-
-        l.getChildAt(position).setBackgroundColor(Color.rgb(128, 128, 255));
-        //l.getChildAt(position).setBackgroundColor(Color.rgb(0, 128, 64)); //para verde
-
-        try{
-            Class<?> clase=Class.forName("ues.fia.eisi.reservalocalfia."+nombreValue); //cambiar por el paquete
-            Intent inte = new Intent(this,clase);
-            this.startActivity(inte);
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
+    public void lanzarMenuA(View v) {
+        Intent i = null;
+        switch (v.getId()) {
+            case R.id.button_A1:
+                i = new Intent(this, UsuariosMenuActivity.class);
+                break;
+            case R.id.button_A2:
+                i = new Intent(this,EscuelaMenuActivity.class);
+                break;
+            case R.id.button_A3:
+                i = new Intent(this,TipoLocalMenuActivity.class);
+                break;
+            case R.id.button_A4:
+                i = new Intent(this, DocenteMenuActivity.class);
+                break;
+            case R.id.button_A5:
+                i = new Intent(this,RolDocenteMenuActivity.class);
+                break;
+            case R.id.button_A6:
+                i = new Intent(this, AsignaturaMenuActivity.class);
+                break;
+            case R.id.button_A7:
+                i = new Intent(this,CicloMenuActivity.class);
+                break;
+            case R.id.button_A8:
+                i = new Intent(this, DiasNoHabilesMenuActivity.class);
+                break;
+            case R.id.button_A9:
+                i = new Intent(this, TipoEventoMenuActivity.class);
+                break;
+            case R.id.button_A10:
+                i = new Intent(this, LocalMenuActivity.class);
+                break;
         }
+        if (i != null) startActivity(i);
     }
+
+
 }
 

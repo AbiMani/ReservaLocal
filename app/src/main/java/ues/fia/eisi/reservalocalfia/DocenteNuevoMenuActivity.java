@@ -1,5 +1,6 @@
 package ues.fia.eisi.reservalocalfia;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,40 +9,40 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DocenteNuevoMenuActivity extends ListActivity {
+public class DocenteNuevoMenuActivity extends Activity {
 
-    String[] menu={"Coordinador Menu","1a","2b", "1c"};
-    //ingresar la tabla AlumnoInsertarActivity
-    String[] activities={"InsertarActivity","EliminarActivity","ConsultarActivity", "ActualizarActivity"};
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new ArrayAdapter<String>(this,  android.R.layout.simple_list_item_1, menu));
+        setContentView(R.layout.activity_docente_nuevo_menu);
 
-        ListView listView = getListView();
-        //listView.setBackgroundColor(Color.rgb(0, 0, 255));
-        listView.setBackgroundColor(Color.rgb(0, 128, 64)); //para verde
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, menu);
-        setListAdapter(adapter);
     }
-
-    @Override
-    protected void onListItemClick(ListView l,View v,int position,long id){
-        super.onListItemClick(l, v, position, id);
-
-        String nombreValue=activities[position];
-
-        //l.getChildAt(position).setBackgroundColor(Color.rgb(128, 128, 255));
-        l.getChildAt(position).setBackgroundColor(Color.rgb(0, 128, 64)); //para verde
-
-        try{
-            Class<?> clase=Class.forName("ues.fia.eisi.reservalocalfia."+nombreValue); //cambiar por el paquete
-            Intent inte = new Intent(this,clase);
-            this.startActivity(inte);
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
+    public void lanzarMenuD(View v) {
+        Intent i = null;
+        switch (v.getId()) {
+            case R.id.button_D1:
+                i = new Intent(this, ReservaEventoMenuActivity.class);
+                break;
+            case R.id.button_D2:
+                i = new Intent(this,DetalleReservaMenuActivity.class);
+                break;
+            case R.id.button_D3:
+                i = new Intent(this,GrupoMenuActivity.class);
+                break;
+            case R.id.button_D4:
+                i = new Intent(this, DetalleGrupoReservaMenuActivity.class);
+                break;
+            case R.id.button_D5:
+                i = new Intent(this,HorarioMenuActivity.class);
+                break;
+            case R.id.button_D6:
+                i = new Intent(this,CargaAcademicaMenuActivity.class);
+                break;
         }
+        if (i != null) startActivity(i);
     }
+
+
 }

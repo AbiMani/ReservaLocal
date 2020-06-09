@@ -133,4 +133,24 @@
     <string name="btn_text_login">Ingresar</string>
     <string name="msg_error_login">El usuario y/o la clave del mismo son invalidos</string>
 
+    <string name="ges_u">Gestión Usuario</string>
+    <string name="ges_e">Gestión Escuela</string>
+    <string name="ges_tl">Gestión Tipo Local</string>
+    <string name="ges_d">Gestión Docente</string>
+    <string name="ges_rol">Gestión Rol Docente</string>
+    <string name="ges_a">Gestión Asignatura</string>
+    <string name="ges_c">Gestión Ciclo</string>
+    <string name="ges_dian">Gestión Dias no Habiles</string>
+    <string name="ges_te">Gestión Tipo Evento</string>
+    <string name="ges_l">Gestión Local</string>
+
+    <string name="ges_re">Gestión Reserva Evento</string>
+    <string name="ges_dr">Gestión Detalle Reserva</string>
+    <string name="ges_g">Gestión Grupo</string>
+    <string name="ges_dg">Gestión Detalle Grupo</string>
+    <string name="ges_h">Gestión Horario</string>
+    <string name="ges_ca">Gestión Carga Academica</string>
+
+
+
 </resources>
