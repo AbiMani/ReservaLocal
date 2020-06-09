@@ -21,7 +21,6 @@ public class ConsultarReservasActivity extends AppCompatActivity {
     ControlReserveLocal db;
     static List<ReservaEvento> listaReservas;
     static List<String> nombreReservas;
-    EditText cicloTxt;
     ListView listViewReservas;
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/reservas_query.php";
     private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_db_materia_fecha.php";
