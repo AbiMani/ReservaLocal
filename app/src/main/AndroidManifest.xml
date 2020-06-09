@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ues.fia.eisi.reservalocalfia">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -10,7 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RolDocenteInsertarWsActivity"></activity>
+        <activity android:name=".DetalleGrupoReservaMenuActivity"></activity>
+        <activity android:name=".LocalActualizarActivity" />
+        <activity android:name=".LocalConsultarActivity" />
+        <activity android:name=".LocalEliminarActivity" />
+        <activity android:name=".LocalInsertarActivity" />
+        <activity android:name=".EncargadoMenuActivity" />
+        <activity android:name=".LocalMenuActivity" />
+        <activity android:name=".DiaInsertActivity"/>
+        <activity android:name=".InsertarEscuelaActivity" />
+        <activity android:name=".ConsultarReservasActivity" />
+        <activity android:name=".RolDocenteInsertarWsActivity" />
         <activity android:name=".ConsultarCargaAcademicaActivity" />
         <activity android:name=".ServiciosMenuActivity" />
         <activity android:name=".TipoLocalEliminarActivity" />
@@ -58,7 +69,7 @@
         <activity android:name=".CargaAcademicaMenuActivity" />
         <activity android:name=".HorarioMenuActivity" />
         <activity android:name=".AsignaturaMenuActivity" />
-        <activity android:name=".DiasNoHabilesActualizarActivity"/>
+        <activity android:name=".DiasNoHabilesActualizarActivity" />
         <activity android:name=".DiasNoHabilesConsultarActivity" />
         <activity android:name=".DiasNoHabilesEliminarActivity" />
         <activity android:name=".DiasNoHabilesInsertarActivity" />

@@ -96,6 +96,53 @@ public class ControladorServicio {
             return null;
         }
     }
+    public static void insertarDiaExterno(String peticion, Context ctx) {
+        String json = obtenerRespuestaPeticion(peticion, ctx);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(ctx, "Registro ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1) Toast.makeText(ctx, "Registro ingresado", Toast.LENGTH_LONG).show();
+            else Toast.makeText(ctx, "Error registro duplicado", Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertarEscuelaExterno(String peticion, Context ctx) {
+        String json = obtenerRespuestaPeticion(peticion, ctx);
+        try {
+            JSONObject resultado = new JSONObject(json);
+
+            Toast.makeText(ctx, "Registro ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1) Toast.makeText(ctx, "Registro ingresado", Toast.LENGTH_LONG).show();
+            else Toast.makeText(ctx, "Error registro duplicado", Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public static List<ReservaEvento> obtenerReservasExterno(String json, Context ctx) {
+        List<ReservaEvento> listaReservasEventos = new ArrayList<ReservaEvento>();
+        try {
+            JSONArray reservaJSON = new JSONArray(json);
+            for (int i = 0; i < reservaJSON.length(); i++) {
+                JSONObject obj = reservaJSON.getJSONObject(i);
+                ReservaEvento reservaEvento = new ReservaEvento();
+                reservaEvento.setIdReservaEvento(obj.getInt("idReservaEvento"));
+                reservaEvento.setCodigoEscuela(obj.getString("codigoEscuela"));
+                reservaEvento.setNombreEvento(obj.getString("nombreEvento"));
+                reservaEvento.setCapacidadTotalEvento(obj.getInt("capacidadEvento"));
+                reservaEvento.setFechaReservaEvento(obj.getString("fechaEvento"));
+
+                listaReservasEventos.add(reservaEvento);
+            }
+            return listaReservasEventos;
+        } catch (Exception e) {
+            Toast.makeText(ctx, "Error en parseOO de JSON", Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
 }
         
 

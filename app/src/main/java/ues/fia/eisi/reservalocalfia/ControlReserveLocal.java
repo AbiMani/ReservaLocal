@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
+    private static final String[] camposLocal = new String[]{"codigoLocal", "idEncargadoLocal", "idTipoLocal", "ubicacionLocal", "capacidadLocal"};
     private static final String[] camposAsignatura = new String[] {"codigoAsignatura","codigoLocal","codigoEscuela","nomAsignatura","idPrioridad"};
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
     private static final String[] camposHorario = new String[] {"idHorario","idDia","horaInicio","horaFin"};
@@ -59,6 +60,7 @@ public class ControlReserveLocal {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
+                db.execSQL("CREATE TABLE Local(codigoLocal VARCHAR(20) NOT NULL PRIMARY KEY,idEncargadoLocal VARCHAR(2),idTipoLocal VARCHAR(2),ubicacionLocal VARCHAR(40),capacidadLocal INTEGER);");
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
                 db.execSQL("CREATE TABLE cargaAcademica(idRolDocente INTEGER NOT NULL , codigoAsignatura VARCHAR(6) NOT NULL ,codigoCiclo VARCHAR(6) ,carnetDocente Varchar(7) ,PRIMARY KEY(codigoAsignatura,carnetDocente,codigoCiclo));");
@@ -132,8 +134,19 @@ public class ControlReserveLocal {
                         "     THEN RAISE(ABORT, 'No existe codigo escuela')\n" +
                         "    END;\n" +
                         "END");
+                //INTEGRIDAD RESERVA DE EVENTO Y DETALLE DE RESERVA
+                db.execSQL("CREATE TRIGGER fk_reserva_detallereserva\n" +
+                        "BEFORE INSERT ON detallereserva\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "    SELECT CASE\n" +
+                        "    WHEN ((SELECT idReservaEvento FROM reservaevento\n" +
+                        "          WHERE idReservaEvento=new.idReservaEvento)IS NULL )\n" +
+                        "     THEN RAISE(ABORT, 'No existe ID reserva de evento')\n" +
+                        "    END;\n" +
+                        "END");
                         //TIGGER EXISTENCIA DE CODIGOLOCAL EN TABLA LOCAL
-                 /*db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
+                 db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
                        "BEFORE INSERT ON detallereserva\n" +
                        "FOR EACH ROW\n" +
                        "BEGIN\n" +
@@ -143,7 +156,7 @@ public class ControlReserveLocal {
                        "     THEN RAISE(ABORT, 'No existe el Local seleccionado')\n" +
                        "    END;\n" +
                        "END");
-                        */
+
 
                 //tabla tipo local
                 db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
@@ -197,6 +210,24 @@ public class ControlReserveLocal {
             regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
         } else {
             regInsertados = regInsertados + contador;
+        }
+        return regInsertados;
+    }
+    public String insertar(Local local){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        ContentValues lol = new ContentValues();
+        lol.put("codigoLocal", local.getCodigoLocal());
+        lol.put("idEncargadoLocal", local.getIdEncargadoLocal());
+        lol.put("idTipoLocal", local.getIdTipoLocal());
+        lol.put("ubicacionLocal", local.getUbicacionLocal());
+        lol.put("capacidadLocal", local.getCapacidadLocal());
+        contador=db.insert("Local", null, lol);
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción"; }
+        else {
+            regInsertados=regInsertados+contador;
         }
         return regInsertados;
     }
@@ -689,7 +720,7 @@ public class ControlReserveLocal {
         reservas.put("fechaReserva", reservaEvento.getFechaReservaEvento());
         contador = db.insert("reservaevento", "idReservaEvento", reservas);
         if (contador==-1 || contador==0) {
-            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+            regInsertados = "Error al Insertar el registro, no se encontro codigo escuela";
         } else {
 
             regInsertados = "Registro Insertado con exito.";
@@ -709,7 +740,13 @@ public class ControlReserveLocal {
         cv.put("fechaReserva", reservaEvento.getFechaReservaEvento());
         String where="idReservaEvento= ?";
         contador+=db.update("reservaevento",cv, where, id);
-        return "Registro actualizado con exito";
+        if (contador==-1 || contador==0){
+            return "El codigo de escuela no se encontro";
+        }
+        else {
+            return "Registro actualizado con exito";
+        }
+
     }
 
     public String eliminar(ReservaEvento reservaEvento){
@@ -785,7 +822,7 @@ public class ControlReserveLocal {
             detalle.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
             contador = db.insert("detallereserva", null, detalle);
             if (contador==-1){
-                regInsertados = "Error. No se encontro horario asignado";
+                regInsertados = "Error. No se encontro alguno de los valores insertados, verifique.";
             }
             else {
                 regInsertados = "Registro insertado exitosamente ";
@@ -794,14 +831,19 @@ public class ControlReserveLocal {
         return regInsertados;
     }
     public String actualizar(DetalleReservaEvento detalleReservaEvento){
-
+        int contador=0;
         String[] id = {String.valueOf(detalleReservaEvento.getIdReservaEvento())};
         ContentValues reservas = new ContentValues();
         reservas.put("idHorario", detalleReservaEvento.getIdHorario());
         reservas.put("idReservaEvento", detalleReservaEvento.getIdReservaEvento());
         reservas.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
-        db.update("detallereserva", reservas, "idReservaEvento = ?", id);
-        return "Registro Actualizado Correctamente";
+        contador+=db.update("detallereserva", reservas, "idReservaEvento = ?", id);
+        if (contador==0 || contador==-1){
+            return "Error. Verifique que los datos sean correctos";
+        }
+        else {
+            return "Registro Actualizado Correctamente";
+        }
     }
     public String eliminar(DetalleReservaEvento detalleReservaEvento){
         String regAfectados="El registro se elimino ";
@@ -1493,6 +1535,12 @@ public class ControlReserveLocal {
     }
 
     public String llenarBD(){
+        // tabla local ------------------------- 4 tuplas
+        final String[] VLcodigoLocal = {"localesfia01","localesfia02","localesfia03","localesfia04"};
+        final String[] VLidEncargadoLocal = {"01","02","03","04"};
+        final String[] VLidTipoLocal = {"AU","AL","AL","AU"};
+        final String[] VLubicacionLocal = {"EDIFICIO D","EDIFICIO D","EDIFICIO C","EDIFICIO B"};
+        final Integer[] VLcapacidadLocal ={200,400,300,100};
 
         // tabla Asignatura--------------------- 4 tuplas
         final String[] VAcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115"};
@@ -1552,6 +1600,7 @@ public class ControlReserveLocal {
         final Integer[] VGnumMaximoEstudiantes = {100,60,89,90};
 
         abrir();
+        db.execSQL("DELETE FROM Local");
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
         db.execSQL("DELETE FROM cargaAcademica");
@@ -1575,6 +1624,16 @@ public class ControlReserveLocal {
             asignatura.setNomAsignatura(VAnomAsignatura[i]);
             asignatura.setIdPrioridad(VAidPrioridad[i]);
             insertar(asignatura);
+        }
+        // llenado tabla local
+        Local local = new Local();
+        for(int i=0;i<4;i++){
+            local.setCodigoLocal(VLcodigoLocal[i]);
+            local.setIdEncargadoLocal(VLidEncargadoLocal[i]);
+            local.setIdTipoLocal(VLidTipoLocal[i]);
+            local.setCapacidadLocal(VLcapacidadLocal[i]);
+            local.setUbicacionLocal(VLubicacionLocal[i]);
+            insertar(local);
         }
 
         //llenado tabla Horario
