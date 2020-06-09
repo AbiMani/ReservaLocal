@@ -30,7 +30,7 @@ public class ServiciosMenuActivity extends AppCompatActivity {
                 i = new Intent(this, InsertarEscuelaActivity.class);
                 break;
             case R.id.button_sw5:
-                i = new Intent();
+                i = new Intent(this,DiaInsertActivity.class);
                 break;
             case R.id.button_sw6:
                 i = new Intent(this, ConsultarReservasActivity.class);
