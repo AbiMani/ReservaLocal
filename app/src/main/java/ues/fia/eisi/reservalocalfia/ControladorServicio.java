@@ -129,6 +129,7 @@ public class ControladorServicio {
             for (int i = 0; i < reservaJSON.length(); i++) {
                 JSONObject obj = reservaJSON.getJSONObject(i);
                 ReservaEvento reservaEvento = new ReservaEvento();
+                reservaEvento.setIdReservaEvento(obj.getInt("idReservaEvento"));
                 reservaEvento.setCodigoEscuela(obj.getString("codigoEscuela"));
                 reservaEvento.setNombreEvento(obj.getString("nombreEvento"));
                 reservaEvento.setCapacidadTotalEvento(obj.getInt("capacidadEvento"));

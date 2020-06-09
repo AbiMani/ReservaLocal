@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 public class InsertarEscuelaActivity extends AppCompatActivity {
 
-    private final String urlLocal = "http://192.168.43.168/escuela_insertar.php";
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/escuela_insert.php";
     private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_nota_insert.php";
 
@@ -48,8 +47,13 @@ public class InsertarEscuelaActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_reservaLocalUES:
-                url = urlPublicoUES + "?codigoEscuela=" + codigoEsc  +  "&nombreEscuela="+ nombreEsc;
-                ControladorServicio.insertarEscuelaExterno(url, this);
+                if (codigoEsc.equals("") || nombreEsc1.equals(""))
+                {
+                    Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
+                else {
+                    url = urlPublicoUES + "?codigoEscuela=" + codigoEsc + "&nombreEscuela=" + nombreEsc;
+                    ControladorServicio.insertarEscuelaExterno(url, this);
+                }
                 break;
         }
     }
