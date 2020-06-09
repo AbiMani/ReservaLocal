@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
+
         <activity android:name=".DetalleGrupoReservaMenuActivity"></activity>
         <activity android:name=".LocalActualizarActivity" />
         <activity android:name=".LocalConsultarActivity" />
@@ -19,9 +19,9 @@
         <activity android:name=".LocalInsertarActivity" />
         <activity android:name=".EncargadoMenuActivity" />
         <activity android:name=".LocalMenuActivity" />
-=======
+
         <activity android:name=".DiaInsertActivity"/>
->>>>>>> 9807beae59d495bbd46bc3ab7e450bcb0fc67af6
+
         <activity android:name=".InsertarEscuelaActivity" />
         <activity android:name=".ConsultarReservasActivity" />
         <activity android:name=".RolDocenteInsertarWsActivity" />
