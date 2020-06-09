@@ -127,5 +127,10 @@
     <string name="formato_dia">D / D-D</string>
     <string name="ingresar_dia">Ingresar Dia</string>
 
+    <string name="text_login">Inicio de Sesión</string>
+    <string name="hint_username">Nombre de usuario</string>
+    <string name="hint_password">Contrasenia</string>
+    <string name="btn_text_login">Ingresar</string>
+    <string name="msg_error_login">El usuario y/o la clave del mismo son invalidos</string>
 
 </resources>

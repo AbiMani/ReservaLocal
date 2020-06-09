@@ -3,7 +3,10 @@ package ues.fia.eisi.reservalocalfia;
 
 import android.app.ListActivity;
 import android.content.Intent;
+//import androidx.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,13 +21,25 @@ public class MainActivity extends ListActivity {
             "DetalleReservaMenuActivity","TipoEventoMenuActivity","LocalMenuActivity","EncargadoMenuActivity","DetalleGrupoReservaMenuActivity",
             "DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity","CicloMenuActivity","GrupoMenuActivity","DiasNoHabilesMenuActivity","EscuelaMenuActivity","ServiciosMenuActivity","UsuariosMenuActivity"};
     ControlReserveLocal BDhelper;
-
+    ControlReserveLocal conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu));
-        BDhelper= new ControlReserveLocal(this);
+        //BDhelper= new ControlReserveLocal(this);
+
+        //INSTANCIACION de variables
+        conn = new ControlReserveLocal(this);
+
+        //REDIRRECION de activity
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+        conn.abrir();
+        conn.llenarBD();
+        conn.cerrar();
+
     }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
@@ -39,10 +54,10 @@ public class MainActivity extends ListActivity {
                 e.printStackTrace();
             }
         }else{
-             BDhelper.abrir();
+             /*BDhelper.abrir();
              String tost =BDhelper.llenarBD();
              BDhelper.cerrar();
-             Toast.makeText(this,tost, Toast.LENGTH_SHORT).show();
+             Toast.makeText(this,tost, Toast.LENGTH_SHORT).show();*/
         }
     }
 }

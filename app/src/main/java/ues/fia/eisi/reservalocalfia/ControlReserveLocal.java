@@ -1753,7 +1753,7 @@ public class ControlReserveLocal {
         final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","vvvvvvv","OO12035"};
 
         //tabla rol docente
-        final String[] VRDnomRolDocente = {"Administrador","Docente","Coordinador","Encargado de Laboratorio"};
+        final String[] VRDnomRolDocente = {"Administrador","Docente","Jefe de Catedra","Encargado de Laboratorio"};
 
         //tipo de local
         final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
@@ -1762,7 +1762,7 @@ public class ControlReserveLocal {
         final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
         final String[] VDnombreDocente = {"Oscar","Fatima","Sara","Gabriela"};
         final String[] VDapellido = {"Rodriguez","Sanchez","Gonzales","Coto"};
-        final String[] VDrol = {"Coordinador","Administrador","Administrador","Coordinador"};
+        final String[] VDrol = {"Docente","Administrador","Administrador","Docente"};
         final String[] VDnomEscuela = {"Ing. Sistema Informatico","Ing. Sistema Informatico","Ing. Sistema informatico",
                 "Ing. Sistema Informatico"};
 
