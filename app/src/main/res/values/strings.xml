@@ -1,8 +1,23 @@
 <resources>
     <string name="app_name">ReservaLocalFia</string>
+    <string name="title_activity_local_menu">LocalMenuActivity</string>
+    <string name="title_activity_Encargado_menu">EncargadoMenuActivity</string>
+    <string name="title_activity_Detalle_grupo_reserva_menu">DetalleReservaLocalMenuActivity</string>
     <string name="title_activity_asignatura_menu">AsignaturaMenuActivity</string>
     <string name="title_activity_carga_academica_menu">CargaAcademicaMenuActivity</string>
     <string name="title_activity_horario_menu">HorarioMenuActivity</string>
+    <string name="title_activity_local_insertar">LocalInsertarActivity</string>
+    <string name="title_activity_local_eliminar">LocalEliminarActivity</string>
+    <string name="title_activity_local_actualizar">LocalActualizarActivity</string>
+    <string name="title_activity_local_consultar">LocalConsultarActivity</string>
+    <string name="title_activity_encargado_insertar">EncargadoInsertarActivity</string>
+    <string name="title_activity_encargado_eliminar">EncargadoEliminarActivity</string>
+    <string name="title_activity_encargado_actualizar">EncargadoActualizarActivity</string>
+    <string name="title_activity_encargado_consultar">EncargadoConsultarActivity</string>
+    <string name="title_activity_Detalle_grupo_reserva_insertar">DetalleGrupoReservaInsertarActivity</string>
+    <string name="title_activity_Detalle_grupo_reserva_eliminar">DetalleGrupoREservaEliminarActivity</string>
+    <string name="title_activity_Detalle_grupo_reserva_actualizar">DetalleGrupoREservaActualizarActivity</string>
+    <string name="title_activity_Detalle_grupo_reserva_consultar">DetalleGrupoREservaConsultarActivity</string>
     <string name="title_activity_asignatura_insertar">AsignaturaInsertarActivity</string>
     <string name="title_activity_asignatura_eliminar">AsignaturaEliminarActivity</string>
     <string name="title_activity_asignatura_actualizar">AsignaturaActualizarActivity</string>
@@ -15,6 +30,8 @@
     <string name="title_activity_horario_eliminar">HorarioEliminarActivity</string>
     <string name="title_activity_horario_actualizar">HorarioActualizarActivity</string>
     <string name="title_activity_horario_consultar">HorarioConsultarActivity</string>
+
+
     <string name="title_activity_ciclo_menu">CicloMenuActivity</string>
     <string name="title_activity_grupo_menu">GrupoMenuActivity</string>
     <string name="title_activity_dias_no_habiles_menu">DiasNoHabilesMenuActivity</string>
@@ -33,7 +50,26 @@
     <string name="ciclo_menu">Función a Ejecutar Ciclo</string>
     <string name="grupo_menu">Función a Ejecutar grupo</string>
     <string name="dias_no_habiles_menu">Función a Ejecutar Dias No Habiles</string>
-    <string name="codigoCiclo">Codigo Ciclo:</string>
+    <string name="local_menu">Función a Ejecutar local</string>
+    <string name="encargado_menu">Función a Ejecutar Encargado</string>
+    <string name="Detalle_grupo_reserva_menu">Función a Ejecutar detalle </string>
+    <string name="CodigoLocal">CodigoLocal</string>
+    <string name="IdEncargadoLocal">IdEncargadoLocal</string>
+    <string name="IdTipoLocal">IdTipoLocal</string>
+    <string name="UbicacionLocal">UbicacionLocal</string>
+    <string name="CapacidadLocal">CapacidadLocal</string>
+
+    <string name="idEncargadoLocal">idEncargadoLocal</string>
+    <string name="NombreENcargadoLocal">NombreENcargadoLocal</string>
+    <string name="ApeEncargadoLocal">ApeEncargadoLocal</string>
+    <string name="IdHorario">codigo_horario</string>
+    <string name="IdRolDocente">Codigo Docente</string>
+    <string name="codigoAsignaturas">codigo Asignatura</string>
+    <string name="codigoCiclo">codigo Ciclo</string>
+    <string name="carnetDocentes">carnet Docente</string>
+    <string name="IdGrupo">codigo Grupo</string>
+    <string name="codigoLocales">codigo local</string>
+    <string name="CodigoCiclo">Codigo Ciclo:</string>
     <string name="fechaInicio">Fecha de Inicio</string>
     <string name="fechaFin">Fecha Fin</string>
     <string name="id_rol_docente">ID Rol Docente</string>
