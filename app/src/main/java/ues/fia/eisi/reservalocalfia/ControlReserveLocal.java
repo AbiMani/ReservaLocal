@@ -132,6 +132,17 @@ public class ControlReserveLocal {
                         "     THEN RAISE(ABORT, 'No existe codigo escuela')\n" +
                         "    END;\n" +
                         "END");
+                //INTEGRIDAD RESERVA DE EVENTO Y DETALLE DE RESERVA
+                db.execSQL("CREATE TRIGGER fk_reserva_detallereserva\n" +
+                        "BEFORE INSERT ON detallereserva\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "    SELECT CASE\n" +
+                        "    WHEN ((SELECT idReservaEvento FROM reservaevento\n" +
+                        "          WHERE idReservaEvento=new.idReservaEvento)IS NULL )\n" +
+                        "     THEN RAISE(ABORT, 'No existe ID reserva de evento')\n" +
+                        "    END;\n" +
+                        "END");
                         //TIGGER EXISTENCIA DE CODIGOLOCAL EN TABLA LOCAL
                  /*db.execSQL("CREATE TRIGGER fk_local_detallereserva\n" +
                        "BEFORE INSERT ON detallereserva\n" +
@@ -689,7 +700,7 @@ public class ControlReserveLocal {
         reservas.put("fechaReserva", reservaEvento.getFechaReservaEvento());
         contador = db.insert("reservaevento", "idReservaEvento", reservas);
         if (contador==-1 || contador==0) {
-            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+            regInsertados = "Error al Insertar el registro, no se encontro codigo escuela";
         } else {
 
             regInsertados = "Registro Insertado con exito.";
@@ -709,7 +720,13 @@ public class ControlReserveLocal {
         cv.put("fechaReserva", reservaEvento.getFechaReservaEvento());
         String where="idReservaEvento= ?";
         contador+=db.update("reservaevento",cv, where, id);
-        return "Registro actualizado con exito";
+        if (contador==-1 || contador==0){
+            return "El codigo de escuela no se encontro";
+        }
+        else {
+            return "Registro actualizado con exito";
+        }
+
     }
 
     public String eliminar(ReservaEvento reservaEvento){
@@ -785,7 +802,7 @@ public class ControlReserveLocal {
             detalle.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
             contador = db.insert("detallereserva", null, detalle);
             if (contador==-1){
-                regInsertados = "Error. No se encontro horario asignado";
+                regInsertados = "Error. No se encontro horario asignado o id de reserva";
             }
             else {
                 regInsertados = "Registro insertado exitosamente ";
@@ -794,14 +811,19 @@ public class ControlReserveLocal {
         return regInsertados;
     }
     public String actualizar(DetalleReservaEvento detalleReservaEvento){
-
+        int contador=0;
         String[] id = {String.valueOf(detalleReservaEvento.getIdReservaEvento())};
         ContentValues reservas = new ContentValues();
         reservas.put("idHorario", detalleReservaEvento.getIdHorario());
         reservas.put("idReservaEvento", detalleReservaEvento.getIdReservaEvento());
         reservas.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
-        db.update("detallereserva", reservas, "idReservaEvento = ?", id);
-        return "Registro Actualizado Correctamente";
+        contador+=db.update("detallereserva", reservas, "idReservaEvento = ?", id);
+        if (contador==0 || contador==-1){
+            return "Error. Verifique que los datos sean correctos";
+        }
+        else {
+            return "Registro Actualizado Correctamente";
+        }
     }
     public String eliminar(DetalleReservaEvento detalleReservaEvento){
         String regAfectados="El registro se elimino ";
