@@ -53,6 +53,13 @@
         android:layout_weight="0.06"
         android:onClick="lanzarMenuD"
         android:text="@string/ges_ca" />
+    <Button
+        android:id="@+id/button_D7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.06"
+        android:onClick="lanzarMenuD"
+        android:text="@string/ges_s" />
 
 
 

@@ -51,6 +51,9 @@ public class AdministradorMenuActivity extends Activity {   //cambiar activity c
             case R.id.button_A10:
                 i = new Intent(this, LocalMenuActivity.class);
                 break;
+            case R.id.button_A11:
+                i = new Intent(this, ServiciosMenuActivity.class);
+                break;
         }
         if (i != null) startActivity(i);
     }

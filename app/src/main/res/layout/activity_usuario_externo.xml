@@ -46,6 +46,13 @@
         android:layout_weight="0.06"
         android:onClick="lanzarMenuU"
         android:text="@string/ges_h" />
+    <Button
+        android:id="@+id/button_6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.06"
+        android:onClick="lanzarMenuU"
+        android:text="@string/ges_s" />
 
 
 </LinearLayout>

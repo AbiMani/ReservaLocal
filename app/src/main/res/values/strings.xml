@@ -143,6 +143,7 @@
     <string name="ges_dian">Gestión Dias no Habiles</string>
     <string name="ges_te">Gestión Tipo Evento</string>
     <string name="ges_l">Gestión Local</string>
+    <string name="ges_s">Servicios WEB</string>
 
     <string name="ges_re">Gestión Reserva Evento</string>
     <string name="ges_dr">Gestión Detalle Reserva</string>

@@ -37,6 +37,9 @@ public class UsuarioExternoActivity extends Activity {   //cambiar activity corr
             case R.id.button_5:
                 i = new Intent(this,HorarioMenuActivity.class);
                 break;
+            case R.id.button_6:
+                i = new Intent(this,ServiciosMenuActivity.class);
+                break;
         }
         if (i != null) startActivity(i);
     }
