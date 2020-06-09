@@ -15,8 +15,8 @@ public class MainActivity extends ListActivity {
             "Tabla Encargado","Tabla Detalle Grupo Reserva",
             "Gestion Docente","Gestion Rol de Docentes","Gestion del tipo de local","Tabla Ciclo","Tabla Grupo","Tabla Dias No Habiles","Gestion Escuela","Servicios Web","LLenar Base de Datos"};
     String[] activities={"AsignaturaMenuActivity","CargaAcademicaMenuActivity","HorarioMenuActivity", "ReservaEventoMenuActivity",
-            "LocalMenuActivity","EncargadoMenuActivity","DetalleGrupoReservaMenuActivity",
-            "DetalleReservaMenuActivity","TipoEventoMenuActivity","DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity","CicloMenuActivity","GrupoMenuActivity","DiasNoHabilesMenuActivity","EscuelaMenuActivity","ServiciosMenuActivity"};
+            "DetalleReservaMenuActivity","TipoEventoMenuActivity","LocalMenuActivity","EncargadoMenuActivity","DetalleGrupoReservaMenuActivity",
+            "DocenteMenuActivity", "RolDocenteMenuActivity","TipoLocalMenuActivity","CicloMenuActivity","GrupoMenuActivity","DiasNoHabilesMenuActivity","EscuelaMenuActivity","ServiciosMenuActivity"};
     ControlReserveLocal BDhelper;
 
 
