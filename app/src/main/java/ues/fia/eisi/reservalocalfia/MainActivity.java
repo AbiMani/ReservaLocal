@@ -29,7 +29,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
         super.onListItemClick(l, v, position, id);
-        if(position!=14) {
+        if(position!=17) {
             String nombreValue = activities[position];
             try {
                 Class<?> clase = Class.forName("ues.fia.eisi.reservalocalfia." + nombreValue);
