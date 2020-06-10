@@ -20,6 +20,11 @@
         <activity android:name=".LocalMenuActivity" />
         <activity android:name=".DiaInsertActivity"/>
         <activity android:name=".InsertarEscuelaActivity" />
+        <activity android:name=".EscuelaMenuActivity"/>
+        <activity android:name=".EscuelaInsertarActivity"/>
+        <activity android:name=".EscuelaEliminarActivity"/>
+        <activity android:name=".EscuelaConsultarActivity"/>
+        <activity android:name=".EscuelaActualizarActivity"/>
         <activity android:name=".ConsultarReservasActivity" />
         <activity android:name=".RolDocenteInsertarWsActivity" />
         <activity android:name=".ConsultarCargaAcademicaActivity" />
