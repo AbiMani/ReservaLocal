@@ -42,18 +42,17 @@ public class InsertReservaActivity extends AppCompatActivity {
         String capacidad=editCapacidad.getText().toString();
         String fechaEve=editFechaEvento.getText().toString();
         String idTipoEve=editidtipoevento.getText().toString();
-        String nombreEve=nomEve.replace(" ", "%20");
         String url = null;
         JSONObject datosReserva = new JSONObject();
         JSONObject reserva = new JSONObject();
         switch (v.getId()) {
             case R.id.btn_reservaPhp:
-                if (codigoEsc.equals("") || nombreEve.equals("") ||capacidad.equals("") || fechaEve.equals("") || idTipoEve.equals("") )
+                if (codigoEsc.equals("") || nomEve.equals("") ||capacidad.equals("") || fechaEve.equals("") || idTipoEve.equals("") )
                 {
                     Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
                 else {
-                    url = urlHostingGratuito + "?codigoEscuela=" + codigoEsc + "&nombreEvento=" + nombreEve + "?capacidad="
-                            + capacidad + "&fechaEvento=" + fechaEve + "?idTipoEvento=" + idTipoEve ;
+                    url = urlHostingGratuito + "?codigoEscuela=" + codigoEsc + "?idTipoEvento=" + idTipoEve + "&nombreEvento=" + nomEve + "?capacidadEvento="
+                            + capacidad + "&fechaEvento=" + fechaEve  ;
                     ControladorServicio.insertarReservaExterno(url, this);
                 }
                 break;
@@ -62,8 +61,8 @@ public class InsertReservaActivity extends AppCompatActivity {
                 {
                     Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
                 else {
-                    url = urlPublicoUES + "?codigoEscuela=" + codigoEsc + "&nombreEscuela=" + nombreEve+ "?capacidad="
-                            + capacidad + "&fechaEvento=" + fechaEve + "?idTipoEvento=" + idTipoEve;
+                    url = urlPublicoUES +  "?codigoEscuela=" + codigoEsc + "?idTipoEvento=" + idTipoEve + "&nombreEvento=" + nomEve + "?capacidadEvento="
+                            + capacidad + "&fechaEvento=" + fechaEve;
                     ControladorServicio.insertarReservaExterno(url, this);
                 }
                 break;
