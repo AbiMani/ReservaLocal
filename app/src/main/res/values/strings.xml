@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ReservaLocalFia</string>
+    <string name="app_name">Reserva Local FIA</string>
     <string name="title_activity_local_menu">LocalMenuActivity</string>
     <string name="title_activity_Encargado_menu">EncargadoMenuActivity</string>
     <string name="title_activity_Detalle_grupo_reserva_menu">DetalleReservaLocalMenuActivity</string>
@@ -107,7 +107,7 @@
     <string name="horaFin">Hora Finalizacion</string>
     <string name="idTipoEvento" />
     <string name="nombreEvento" />
-    <string name="servicioWeb1">Servicio Web 1</string>
+    <string name="servicioWeb1">Insgresar Reserva Local</string>
     <string name="servicioWeb2">Consultar Carga Academica x Ciclo</string>
     <string name="servicioWeb3">Servicio Web 3</string>
     <string name="servicioWeb4">Servicio Web 4</string>
@@ -120,7 +120,7 @@
     <string name="servicio_PublicoUES">EISI Publico</string>
 
     <string name="indicacion_ciclo">Cual ciclo desea consultar la carga academica?</string>
-    <string name="formato_ciclo">c/aaaa</string>
+    <string name="formato_ciclo">c-aaaa</string>
     <string name="guardar">Guardar</string>
     <string name="iddia">ID Dia</string>
     <string name="nomdia">Nombre Dia</string>
@@ -151,7 +151,6 @@
     <string name="ges_dg">Gestión Detalle Grupo</string>
     <string name="ges_h">Gestión Horario</string>
     <string name="ges_ca">Gestión Carga Academica</string>
-
 
 
 </resources>
