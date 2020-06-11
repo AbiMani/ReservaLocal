@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".InsertReservaActivity"></activity>
+        <activity android:name=".CicloInsertWActivity"></activity>
+        <activity android:name=".InsertReservaActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".UsuarioExternoActivity" />
         <activity android:name=".DocenteNuevoMenuActivity" />
