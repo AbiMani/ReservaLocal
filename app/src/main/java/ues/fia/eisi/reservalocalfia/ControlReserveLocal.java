@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
+    private static final String[] camposEncargado = new String[]{"idEncargadoLocal", "NomEncargadoLocal", "ApeEncargadoLocal"};
     private static final String[] camposLocal = new String[]{"codigoLocal", "idEncargadoLocal", "idTipoLocal", "ubicacionLocal", "capacidadLocal"};
     private static final String[] camposAsignatura = new String[] {"codigoAsignatura","codigoLocal","codigoEscuela","nomAsignatura","idPrioridad"};
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
@@ -60,6 +61,7 @@ public class ControlReserveLocal {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
+                db.execSQL("CREATE TABLE Encargado(idEncargadoLocal VARCHAR(2) NOT NULL PRIMARY KEY,nomEncargadoLocal VARCHAR(30),apeEncargadoLocall VARCHAR(30));");
                 db.execSQL("CREATE TABLE Local(codigoLocal VARCHAR(20) NOT NULL PRIMARY KEY,idEncargadoLocal VARCHAR(2),idTipoLocal VARCHAR(2),ubicacionLocal VARCHAR(40),capacidadLocal INTEGER);");
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
@@ -231,6 +233,47 @@ public class ControlReserveLocal {
         }
         return regInsertados;
     }
+    public String insertar(Encargado encargado){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        ContentValues enc = new ContentValues();
+        enc.put("idEncargadoLocal", encargado.getIdEncargadoLocal());
+        enc.put("nomEncargadoLocal", encargado.getNomEncargadoLocal());
+        enc.put("apeEncargadoLocal", encargado.getApeEncargadoLocal());
+
+        contador=db.insert("Encargado", null, enc);
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción"; }
+        else {
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
+    public Encargado consultarEncargado(String idEncargadoLocal){
+        String[] id = {idEncargadoLocal};
+        Cursor cursor = db.query("ENcargado", camposEncargado, "idEncargadoLocal = ?",
+                id, null, null, null);
+        if(cursor.moveToFirst()){
+            Encargado encargado = new Encargado();
+            encargado.setIdEncargadoLocal(cursor.getString(0));
+            encargado.setNomEncargadoLocal(cursor.getString(1));
+            encargado.setApeEncargadoLocal(cursor.getString(2));
+
+            return encargado;
+        }else{
+            return null; } }
+    public String actualizar(Encargado encargado){
+        if(verificarIntegridad(encargado, 16)){
+            String[] id = {encargado.getIdEncargadoLocal()};
+            ContentValues cv = new ContentValues();
+            cv.put("nomEncargadoLocal", encargado.getNomEncargadoLocal());
+            cv.put("apeEncargadoLocal", encargado.getApeEncargadoLocal());
+            ;
+            db.update("Encargado", cv, "idEncargadoLocal = ?", id);
+            return "Registro Actualizado Correctamente"; }else{
+            return "Registro con codigo de encargado " + encargado.getIdEncargadoLocal() + " no  existe";
+                     } }
 
     public String insertar(Grupo grupo){
         String regInsertados = "Registro Insertado Nº= ";
@@ -432,6 +475,34 @@ public class ControlReserveLocal {
         }
         return regInsertados;
     }
+    public Local consultarLocal(String codigoLocal){
+        String[] id = {codigoLocal};
+        Cursor cursor = db.query("Local", camposLocal, "codigoLocal = ?",
+                id, null, null, null);
+        if(cursor.moveToFirst()){
+            Local local = new Local();
+            local.setCodigoLocal(cursor.getString(0));
+            local.setIdEncargadoLocal(cursor.getString(1));
+            local.setIdTipoLocal(cursor.getString(2));
+            local.setUbicacionLocal(cursor.getString(3));
+            local.setCapacidadLocal(cursor.getInt(4));
+            return local;
+        }else{
+            return null; } }
+
+    public String actualizar(Local local){
+        if(verificarIntegridad(local, 15)){
+            String[] id = {local.getCodigoLocal()};
+            ContentValues cv = new ContentValues();
+            cv.put("idEncargadoLocal", local.getIdEncargadoLocal());
+            cv.put("idTipoLocal", local.getIdTipoLocal());
+            cv.put("ubicacionLocal", local.getUbicacionLocal());
+            cv.put("capacidadLocal", local.getCapacidadLocal());
+            db.update("Local", cv, "codigoLocal = ?", id);
+            return "Registro Actualizado Correctamente"; }else{
+            return "Registro con codigo " + local.getCodigoLocal() + " no existe"; }
+    }
+
 
     public String insertar(CargaAcademica cargaAcademica){
         String regInsertados = "Registro Insertado No= ";
@@ -450,6 +521,16 @@ public class ControlReserveLocal {
             regInsertados= regInsertados+contador;
         }
         return regInsertados;
+    }
+    public String eliminar(Local local){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        if (verificarIntegridad(local,14)) {
+            contador+=db.delete("DetalleGrupoReserva", "carnet='"+local.getCodigoLocal()+"'", null);
+        }
+        contador+=db.delete("Local", "codigoLocal='"+local.getCodigoLocal()+"'", null);
+        regAfectados+=contador;
+        return regAfectados;
     }
 
     public String insertar(Horario horario){
@@ -1200,6 +1281,16 @@ public class ControlReserveLocal {
             return null;
         }
     }
+    public String eliminar(Encargado encargado){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        if (verificarIntegridad(encargado,17)) {
+            contador+=db.delete("Local", "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'", null);
+        }
+        contador+=db.delete("Encargado", "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'", null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
     //---------------------------------------------------------------------------------------
     private boolean verificarIntegridad(Object dato, int relacion) throws SQLException{
         switch (relacion){
@@ -1356,6 +1447,55 @@ public class ControlReserveLocal {
                 else
                     return false;
             }
+            case 14:
+            {
+                Local local = (Local) dato;
+                Cursor c=db.query(true, "DetalleGrupoReserva", new String[] {
+                                "codigoLocal" }, "codigoLocal='"+local.getCodigoLocal()+"'",null,
+                        null, null, null, null);
+                if(c.moveToFirst())
+                    return true;
+                else
+                    return false; }
+            case 15:
+            {
+//verificar que exista alumno
+                Local local2 = (Local) dato;
+                String[] id = {local2.getCodigoLocal()};
+                abrir();
+                Cursor c2 = db.query("Local", null, "codigoLocal = ?", id, null, null,
+                        null);
+                if(c2.moveToFirst()){
+//Se encontro Alumno
+                    return true; }
+                return false; }
+            case 16:
+            {
+//verificar que exista alumno
+                Encargado encargado2 = (Encargado) dato;
+                String[] id = {encargado2.getIdEncargadoLocal()};
+                abrir();
+                Cursor c2 = db.query("encargado", null, "idEncargadoLocal = ?", id, null, null,
+                        null);
+                if(c2.moveToFirst()){
+//Se encontro Alumno
+                    return true; }
+                return false; }
+
+            case 17:
+            {
+                Encargado encargado = (Encargado) dato;
+                Cursor c=db.query(true, "Local", new String[] {"idEncargadoLocal" }, "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'",null,
+                        null, null, null, null);
+                if(c.moveToFirst())
+                    return true;
+                else
+                    return false; }
+
+
+
+
+
             default:
                 return false;
         }
@@ -1535,7 +1675,11 @@ public class ControlReserveLocal {
     }
 
     public String llenarBD(){
-        // tabla local ------------------------- 4 tuplas
+        // tabla encargado ------------------- 3 tuplas
+        final String[] VEidEncargadoLocal = {"O1","02","03","04"};
+        final String[] VEnomEncargadoLocal = {"Carlos","Pedro","Sara","Gabriela"};
+        final String[] VEapeEncargadoLocal = {"Orantes","Ortiz","Gonzales","Coto"};
+        // tabla local ------------------------- 5 tuplas
         final String[] VLcodigoLocal = {"localesfia01","localesfia02","localesfia03","localesfia04"};
         final String[] VLidEncargadoLocal = {"01","02","03","04"};
         final String[] VLidTipoLocal = {"AU","AL","AL","AU"};
@@ -1600,6 +1744,7 @@ public class ControlReserveLocal {
         final Integer[] VGnumMaximoEstudiantes = {100,60,89,90};
 
         abrir();
+        db.execSQL("DELETE FROM Encargado");
         db.execSQL("DELETE FROM Local");
         db.execSQL("DELETE FROM asignatura");
         db.execSQL("DELETE FROM horario");
@@ -1624,6 +1769,14 @@ public class ControlReserveLocal {
             asignatura.setNomAsignatura(VAnomAsignatura[i]);
             asignatura.setIdPrioridad(VAidPrioridad[i]);
             insertar(asignatura);
+        }
+        // llenado de tabla encargado
+        Encargado encargado = new Encargado();
+        for(int i=0;i<2;i++) {
+            encargado.setIdEncargadoLocal(VEidEncargadoLocal[i]);
+            encargado.setNomEncargadoLocal(VEnomEncargadoLocal[i]);
+            encargado.setApeEncargadoLocal(VEapeEncargadoLocal[i]);
+            insertar(encargado);
         }
         // llenado tabla local
         Local local = new Local();

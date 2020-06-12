@@ -66,4 +66,7 @@ public class Local {
     }
 
     private Integer capacidadLocal;
+
+    public void setCapacidadLocal(String toString) {
+    }
 }

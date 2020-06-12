@@ -10,10 +10,10 @@
     <string name="title_activity_local_eliminar">LocalEliminarActivity</string>
     <string name="title_activity_local_actualizar">LocalActualizarActivity</string>
     <string name="title_activity_local_consultar">LocalConsultarActivity</string>
-    <string name="title_activity_encargado_insertar">EncargadoInsertarActivity</string>
-    <string name="title_activity_encargado_eliminar">EncargadoEliminarActivity</string>
-    <string name="title_activity_encargado_actualizar">EncargadoActualizarActivity</string>
-    <string name="title_activity_encargado_consultar">EncargadoConsultarActivity</string>
+    <string name="title_activity_encargadoLocal_insertar">EncargadoInsertarActivity</string>
+    <string name="title_activity_encargadoLocal_eliminar">EncargadoEliminarActivity</string>
+    <string name="title_activity_encargadoLocal_actualizar">EncargadoActualizarActivity</string>
+    <string name="title_activity_encargadoLocal_consultar">EncargadoConsultarActivity</string>
     <string name="title_activity_Detalle_grupo_reserva_insertar">DetalleGrupoReservaInsertarActivity</string>
     <string name="title_activity_Detalle_grupo_reserva_eliminar">DetalleGrupoREservaEliminarActivity</string>
     <string name="title_activity_Detalle_grupo_reserva_actualizar">DetalleGrupoREservaActualizarActivity</string>
@@ -58,9 +58,8 @@
     <string name="IdTipoLocal">IdTipoLocal</string>
     <string name="UbicacionLocal">UbicacionLocal</string>
     <string name="CapacidadLocal">CapacidadLocal</string>
-
     <string name="idEncargadoLocal">idEncargadoLocal</string>
-    <string name="NombreENcargadoLocal">NombreENcargadoLocal</string>
+    <string name="NomEncargadoLocal">NomEncargadoLocal</string>
     <string name="ApeEncargadoLocal">ApeEncargadoLocal</string>
     <string name="IdHorario">codigo_horario</string>
     <string name="IdRolDocente">Codigo Docente</string>
