@@ -12,12 +12,13 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 public class InsertReservaActivity extends AppCompatActivity {
-    ControlReserveLocal db;
+
     EditText editCodigoEscuela;
-    EditText editnombreEvento;
-    EditText editCapacidad;
+    EditText editIdTipoEvento;
+    EditText editNombreEvento;
+    EditText editCapacidadEvento;
     EditText editFechaEvento;
-    EditText editidtipoevento;
+
     private final String urlLocal = "http://192.168.1.6/ws_reserva_insert.php";
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_reserva_insert.php";
     private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi04/BV12004/ws_reserva_insert.php";
@@ -28,52 +29,49 @@ public class InsertReservaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_insert_reserva);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        editCodigoEscuela = (EditText) findViewById(R.id.editCodigoEscuela);
+        editIdTipoEvento=(EditText) findViewById(R.id.editidTipoEvento);
+        editNombreEvento=(EditText) findViewById(R.id.editnombreevento);
+        editCapacidadEvento=(EditText) findViewById(R.id.editCapacidadEvento);
+        editFechaEvento=(EditText) findViewById(R.id.editFechaEvento);
 
-        editnombreEvento = (EditText) findViewById(R.id.editNombreEvento);
-        editCapacidad=(EditText) findViewById(R.id.editCapacidad);
-        editFechaEvento=(EditText) findViewById(R.id.editFecha);
-        editCodigoEscuela=(EditText) findViewById(R.id.editCodigoEscuela);
-        editidtipoevento=(EditText) findViewById(R.id.editidTipoEvento);
     }
-
-    public void insertarReservaWS(View v) {
-        String codigoEsc=editCodigoEscuela.getText().toString();
-        String nomEve=editnombreEvento.getText().toString();
-        String capacidad=editCapacidad.getText().toString();
-        String fechaEve=editFechaEvento.getText().toString();
-        String idTipoEve=editidtipoevento.getText().toString();
+    public void insertarR(View v) {
+        String codigoescuela= editCodigoEscuela.getText().toString();
+        String tipoevento = editIdTipoEvento.getText().toString();
+        String nombreevento = editNombreEvento.getText().toString();
+        String capacitadevento= editCapacidadEvento.getText().toString();
+        String fechaevento= editFechaEvento.getText().toString();
         String url = null;
-        JSONObject datosReserva = new JSONObject();
-        JSONObject reserva = new JSONObject();
+        JSONObject datosReser = new JSONObject();
+        JSONObject reser = new JSONObject();
         switch (v.getId()) {
-            case R.id.btn_reservaPhp:
-                if (codigoEsc.equals("") || nomEve.equals("") ||capacidad.equals("") || fechaEve.equals("") || idTipoEve.equals("") )
-                {
-                    Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
-                else {
-                    url = urlHostingGratuito + "?codigoEscuela=" + codigoEsc + "?idTipoEvento=" + idTipoEve + "&nombreEvento=" + nomEve + "?capacidadEvento="
-                            + capacidad + "&fechaEvento=" + fechaEve  ;
-                    ControladorServicio.insertarReservaExterno(url, this);
-                }
+            case R.id.btn_cicloLocal:
+                url = urlLocal + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+                        + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
+                ControladorServicio.insertarReservaExterno(url, this);
                 break;
-            case R.id.btn_reservaLocalUES:
-                if (codigoEsc.equals("") || nomEve.equals("") ||capacidad.equals("") || fechaEve.equals("") || idTipoEve.equals(""))
-                {
-                    Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();}
-                else {
-                    url = urlPublicoUES +  "?codigoEscuela=" + codigoEsc + "?idTipoEvento=" + idTipoEve + "&nombreEvento=" + nomEve + "?capacidadEvento="
-                            + capacidad + "&fechaEvento=" + fechaEve;
-                    ControladorServicio.insertarReservaExterno(url, this);
-                }
+            case R.id.btn_cicloPublicoUES:
+                url = urlPublicoUES + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+                        + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
+                ControladorServicio.insertarReservaExterno(url, this);
+                break;
+            case R.id.btn_cicloExterno:
+                url = urlHostingGratuito + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+                        + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
+                ControladorServicio.insertarReservaExterno(url, this);
                 break;
         }
     }
+
+
     public void limpiarTexto(View v) {
         editCodigoEscuela.setText("");
-        editnombreEvento.setText("");
+        editIdTipoEvento.setText("");
+        editNombreEvento.setText("");
         editFechaEvento.setText("");
-        editCapacidad.setText("");
-        editidtipoevento.setText("");
+        editCapacidadEvento.setText("");
+
 
     }
 }
