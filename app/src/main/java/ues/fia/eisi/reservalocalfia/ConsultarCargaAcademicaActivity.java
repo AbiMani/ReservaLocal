@@ -23,8 +23,8 @@ public class ConsultarCargaAcademicaActivity extends AppCompatActivity {
     EditText cicloTxt;
     ListView listViewCargaAcademica;
     private final String urlLocal = "http://192.168.1.6/ws_consultar_cargaacademica.php";
-    private final String urlHostingGratuito = "https://bv12004pdm115.000webhostapp.com/ws_consultar_cargaacademica.php";
-    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_db_materia_fecha.php";
+    private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_consultar_cargaacademica.php";
+    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi04/BV12004/ws_consultar_cargaacademica.php";
 
     @SuppressLint("NewApi")
 
@@ -79,7 +79,7 @@ public class ConsultarCargaAcademicaActivity extends AppCompatActivity {
         String dato = "";
         nombreCargaAcademica.clear();
         for (int i = 0; i < listaCargaAcademica.size(); i++) {
-            dato = listaCargaAcademica.get(i).getcodigoAsignatura() + " " + listaCargaAcademica.get(i).getcarnetDocente()+ " " + listaCargaAcademica.get(i).getidRolDocente();
+            dato= "Asignatura: " + listaCargaAcademica.get(i).getcodigoAsignatura() + "  Carnet Docente: " + listaCargaAcademica.get(i).getcarnetDocente()+ "  Rol Docente: " + listaCargaAcademica.get(i).getidRolDocente();
             nombreCargaAcademica.add(dato);
         }
         eliminarElementosDuplicados();

@@ -122,6 +122,19 @@ public class ControladorServicio {
             e.printStackTrace();
         }
     }
+    public static void insertarReservaExterno(String peticion, Context ctx) {
+        String json = obtenerRespuestaPeticion(peticion, ctx);
+        try {
+            JSONObject resultado = new JSONObject(json);
+
+            Toast.makeText(ctx, "Registro ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1) Toast.makeText(ctx, "Registro ingresado", Toast.LENGTH_LONG).show();
+            else Toast.makeText(ctx, "Error registro duplicado", Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public static List<ReservaEvento> obtenerReservasExterno(String json, Context ctx) {
         List<ReservaEvento> listaReservasEventos = new ArrayList<ReservaEvento>();
         try {
@@ -141,6 +154,18 @@ public class ControladorServicio {
         } catch (Exception e) {
             Toast.makeText(ctx, "Error en parseOO de JSON", Toast.LENGTH_LONG).show();
             return null;
+        }
+    }
+    public static void insertarCicloExterno(String peticion, Context ctx) {
+        String json = obtenerRespuestaPeticion(peticion, ctx);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(ctx, "Registro ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1) Toast.makeText(ctx, "Registro ingresado", Toast.LENGTH_LONG).show();
+            else Toast.makeText(ctx, "Error registro duplicado", Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

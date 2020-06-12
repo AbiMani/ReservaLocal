@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ReservaLocalFia</string>
+    <string name="app_name">Reserva Local FIA</string>
     <string name="title_activity_local_menu">LocalMenuActivity</string>
     <string name="title_activity_Encargado_menu">EncargadoMenuActivity</string>
     <string name="title_activity_Detalle_grupo_reserva_menu">DetalleReservaLocalMenuActivity</string>
@@ -106,25 +106,50 @@
     <string name="horaFin">Hora Finalizacion</string>
     <string name="idTipoEvento" />
     <string name="nombreEvento" />
-    <string name="servicioWeb1">Servicio Web 1</string>
+    <string name="servicioWeb1">Ingresar Reserva Local</string>
     <string name="servicioWeb2">Consultar Carga Academica x Ciclo</string>
     <string name="servicioWeb3">Servicio Web 3</string>
     <string name="servicioWeb4">Servicio Web 4</string>
     <string name="servicioWeb5">Ingresar Día</string>
     <string name="servicioWeb6">Servicio Web 6</string>
-    <string name="servicioWeb7">Servicio Web 7</string>
+    <string name="servicioWeb7">Ingresar Ciclo</string>
     <string name="servicioWeb8">Servicio Web 8</string>
     <string name="servicio_PHPexterno">Servicio PHP Externo</string>
     <string name="servicio_PHPlocal">Servicio PHP Local</string>
     <string name="servicio_PublicoUES">EISI Publico</string>
 
     <string name="indicacion_ciclo">Cual ciclo desea consultar la carga academica?</string>
-    <string name="formato_ciclo">c/aaaa</string>
+    <string name="formato_ciclo">c-aaaa</string>
     <string name="guardar">Guardar</string>
     <string name="iddia">ID Dia</string>
     <string name="nomdia">Nombre Dia</string>
     <string name="formato_dia">D / D-D</string>
     <string name="ingresar_dia">Ingresar Dia</string>
+
+    <string name="text_login">Inicio de Sesión</string>
+    <string name="hint_username">Nombre de usuario</string>
+    <string name="hint_password">Contrasenia</string>
+    <string name="btn_text_login">Ingresar</string>
+    <string name="msg_error_login">El usuario y/o la clave del mismo son invalidos</string>
+
+    <string name="ges_u">Gestión Usuario</string>
+    <string name="ges_e">Gestión Escuela</string>
+    <string name="ges_tl">Gestión Tipo Local</string>
+    <string name="ges_d">Gestión Docente</string>
+    <string name="ges_rol">Gestión Rol Docente</string>
+    <string name="ges_a">Gestión Asignatura</string>
+    <string name="ges_c">Gestión Ciclo</string>
+    <string name="ges_dian">Gestión Dias no Habiles</string>
+    <string name="ges_te">Gestión Tipo Evento</string>
+    <string name="ges_l">Gestión Local</string>
+    <string name="ges_s">Servicios WEB</string>
+
+    <string name="ges_re">Gestión Reserva Evento</string>
+    <string name="ges_dr">Gestión Detalle Reserva</string>
+    <string name="ges_g">Gestión Grupo</string>
+    <string name="ges_dg">Gestión Detalle Grupo</string>
+    <string name="ges_h">Gestión Horario</string>
+    <string name="ges_ca">Gestión Carga Academica</string>
 
 
 </resources>

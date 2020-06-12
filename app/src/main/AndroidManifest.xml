@@ -11,10 +11,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".EncargadoConsultarActivity"></activity>
         <activity android:name=".EncargadoActualizarActivity" />
         <activity android:name=".EncargadoEliminarActivity" />
         <activity android:name=".EncargadoInsertarActivity" />
+
+        <activity android:name=".CicloInsertWActivity"></activity>
+        <activity android:name=".InsertReservaActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".UsuarioExternoActivity" />
+        <activity android:name=".DocenteNuevoMenuActivity" />
+        <activity android:name=".AdministradorMenuActivity" />
+        <activity android:name=".UsuariosMenuActivity" />
+        <activity android:name=".UsuarioEliminarActivity" />
+        <activity android:name=".UsuarioConsultarActivity" />
+        <activity android:name=".UsuarioActualizarActivity" />
+        <activity android:name=".UsuarioInsertarActivity" />
+        <activity android:name=".EscuelaActualizarActivity" />
+        <activity android:name=".EscuelaConsultarActivity" />
+        <activity android:name=".EscuelaEliminarActivity" />
+        <activity android:name=".EscuelaInsertarActivity" />
+        <activity android:name=".EscuelaMenuActivity" />
+
         <activity android:name=".DetalleGrupoReservaMenuActivity" />
         <activity android:name=".LocalActualizarActivity" />
         <activity android:name=".LocalConsultarActivity" />
