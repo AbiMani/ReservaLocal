@@ -49,6 +49,8 @@ public class ControlReserveLocal {
         DBHelper = new DatabaseHelper(context);
     }
 
+
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         private static final String BASE_DATOS = "reserveLocal.s3db"; //nombre de la base de datos SQLite
@@ -1435,11 +1437,17 @@ public class ControlReserveLocal {
     public String eliminar(Encargado encargado){
         String regAfectados="filas afectadas= ";
         int contador=0;
-        if (verificarIntegridad(encargado,17)) {
-            contador+=db.delete("Local", "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'", null);
+        //Si existe carnet
+        if(verificarIntegridad(encargado, 17))        {
+
+            contador+=db.delete("Encargado", "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'", null);
+            regAfectados+=contador;
         }
-        contador+=db.delete("Encargado", "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'", null);
-        regAfectados+=contador;
+        else
+        {
+            return "Registro con carnet del Docente  " + encargado.getIdEncargadoLocal() + " no existe";
+        }
+
         return regAfectados;
     }
     //---------------------------------------------------------------------------------------
@@ -1635,14 +1643,17 @@ public class ControlReserveLocal {
 
             case 17:
             {
-                Encargado encargado = (Encargado) dato;
-                Cursor c=db.query(true, "Local", new String[] {"idEncargadoLocal" }, "idEncargadoLocal='"+encargado.getIdEncargadoLocal()+"'",null,
-                        null, null, null, null);
-                if(c.moveToFirst())
+                //verificar que exista un docente
+                Encargado encargado2 = (Encargado) dato;
+                String[] id = {encargado2.getIdEncargadoLocal()};
+                abrir();
+                Cursor c2 = db.query("Encargado", null, "IdEncargadoLocal = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Docente
                     return true;
-                else
-                    return false; }
-
+                }
+                return false;
+            }
 
 
 

@@ -26,7 +26,7 @@ public class EncargadoActualizarActivity extends Activity {
         editApeENcargadoLocal = (EditText) findViewById(R.id.editApellido);
 
     }
-    public void actualizarAlumno(View v) {
+    public void actualizarEncargado(View v) {
         Encargado encargado = new Encargado();
         encargado.setIdEncargadoLocal(editIdEncargadoLocal.getText().toString());
         encargado.setNomEncargadoLocal(editNomEncargadoLocal.getText().toString());
