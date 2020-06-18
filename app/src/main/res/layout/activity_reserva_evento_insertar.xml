@@ -27,12 +27,23 @@
             android:layout_height="wrap_content" />
     </TableRow>
 
-    <TableRow>
-        <TextView android:text="Nombre del evento : " />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="Nombre del evento : "
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <EditText
             android:id="@+id/editNombreEvento"
             android:inputType="text"
-            android:maxLength="60" />
+            android:maxLength="60"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </TableRow>
 
     <TableRow>

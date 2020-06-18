@@ -799,18 +799,23 @@ public class ControlReserveLocal {
     public String insertar(ReservaEvento reservaEvento){
         String regInsertados;
         long contador=0;
-        ContentValues reservas = new ContentValues();
-        reservas.put("codigoEscuela", reservaEvento.getCodigoEscuela());
-        reservas.put("idTipoEvento", reservaEvento.getIdTipoEvento());
-        reservas.put("nombreEvento", reservaEvento.getNombreEvento());
-        reservas.put("capacidadTotalEvento", reservaEvento.getCapacidadTotalEvento());
-        reservas.put("fechaReserva", reservaEvento.getFechaReservaEvento());
-        contador = db.insert("reservaevento", "idReservaEvento", reservas);
-        if (contador==-1 || contador==0) {
-            regInsertados = "Error al Insertar el registro, no se encontro codigo escuela";
-        } else {
+        if (verificarIntegridad(reservaEvento, 18)){
+            regInsertados="Datos duplicados";
+        }
+        else {
+            ContentValues reservas = new ContentValues();
+            reservas.put("codigoEscuela", reservaEvento.getCodigoEscuela());
+            reservas.put("idTipoEvento", reservaEvento.getIdTipoEvento());
+            reservas.put("nombreEvento", reservaEvento.getNombreEvento());
+            reservas.put("capacidadTotalEvento", reservaEvento.getCapacidadTotalEvento());
+            reservas.put("fechaReserva", reservaEvento.getFechaReservaEvento());
+            contador = db.insert("reservaevento", "idReservaEvento", reservas);
+            if (contador == -1 || contador == 0) {
+                regInsertados = "Error al Insertar el registro, no se encontró"  + reservaEvento.getCodigoEscuela();
+            } else {
 
-            regInsertados = "Registro Insertado con exito.";
+                regInsertados = "Registro Insertado con exito.";
+            }
         }
         return regInsertados;
 
@@ -1654,10 +1659,17 @@ public class ControlReserveLocal {
                 }
                 return false;
             }
-
-
-
-
+            case 18:{
+                ReservaEvento reservaEvento = (ReservaEvento) dato;
+                String[] ids = {reservaEvento.getCodigoEscuela(), reservaEvento.getIdTipoEvento(), reservaEvento.getFechaReservaEvento()};
+                abrir();
+                Cursor c = db.query("reservaevento", null, "codigoEscuela = ? AND idtipoevento = ? AND fechareserva = ? ", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
             default:
                 return false;
         }
@@ -1961,8 +1973,9 @@ public class ControlReserveLocal {
 
         db.execSQL("DELETE FROM ciclo");
         db.execSQL("DELETE FROM diasnohabiles");
-        db.execSQL("DELETE FROM grupo");
 
+        db.execSQL("DELETE FROM reservaevento");
+        db.execSQL("DELETE FROM detallereserva");
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
         for(int i=0;i<4;i++){
