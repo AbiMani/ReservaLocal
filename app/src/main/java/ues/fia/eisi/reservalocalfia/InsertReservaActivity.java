@@ -42,22 +42,23 @@ public class InsertReservaActivity extends AppCompatActivity {
         String nombreevento = editNombreEvento.getText().toString();
         String capacitadevento= editCapacidadEvento.getText().toString();
         String fechaevento= editFechaEvento.getText().toString();
+        String nomEvento=nombreevento.replace(" ", "%20");
         String url = null;
         JSONObject datosReser = new JSONObject();
         JSONObject reser = new JSONObject();
         switch (v.getId()) {
-            case R.id.btn_cicloLocal:
-                url = urlLocal + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+            case R.id.btn_reservaLocal:
+                url = urlLocal + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nomEvento
                         + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
                 ControladorServicio.insertarReservaExterno(url, this);
                 break;
-            case R.id.btn_cicloPublicoUES:
-                url = urlPublicoUES + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+            case R.id.btn_reservaPublicoUES:
+                url = urlPublicoUES + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nomEvento
                         + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
                 ControladorServicio.insertarReservaExterno(url, this);
                 break;
-            case R.id.btn_cicloExterno:
-                url = urlHostingGratuito + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nombreevento
+            case R.id.btn_reservaExterno:
+                url = urlHostingGratuito + "?codigoescuela=" + codigoescuela + "&idtipoevento=" + tipoevento + "&nombreevento=" + nomEvento
                         + "&capacidadevento=" + capacitadevento + "&fechaevento=" + fechaevento;
                 ControladorServicio.insertarReservaExterno(url, this);
                 break;

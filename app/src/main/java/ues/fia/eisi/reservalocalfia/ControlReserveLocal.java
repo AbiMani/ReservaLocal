@@ -1031,12 +1031,17 @@ public class ControlReserveLocal {
         int contador=0;
         //Si existe carnet
         if(verificarIntegridadJavier(docente, 1))        {
-            //si tiene registros relacionados, se eliminan primero
-            /*if (verificarIntegridad(alumno,3)) {
-                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
-            }*/
-            contador+=db.delete("docente", "carnetDocente='"+docente.getCarnetDocente()+"'", null);
-            regAfectados+=contador;
+            //si tiene registros relacionados, no permitira eliminar el docente
+            if (verificarIntegridadJavier(docente,7)) {
+                return "no se puede eliminar hay registro existente en la tabla usuario";
+            }else if(verificarIntegridadJavier(docente,8)){
+                return "no se puede eliminar hay registro existente en la tabla carga academica";
+            }else if(verificarIntegridadJavier(docente,9)){
+                return "no se puede eliminar hay registro existente en la tabla grupo";
+            }else {
+                contador += db.delete("docente", "carnetDocente='" + docente.getCarnetDocente() + "'", null);
+                regAfectados += contador + " el registro eliminado con exito";
+            }
         }
         else
         {
@@ -1115,14 +1120,22 @@ public class ControlReserveLocal {
     public String eliminar(RolDocente rolDocente){
         String regAfectados="filas afectadas= ";
         int contador=0;
-        //Si existe carnet
+        //Si existe rol Docente
         if(verificarIntegridadJavier(rolDocente, 2))        {
-            //si tiene registros relacionados, se eliminan primero
-            /*if (verificarIntegridad(alumno,3)) {
-                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
-            }*/
-            contador+=db.delete("rolDocente", "nomRolDocente='"+rolDocente.getNomRolDocente()+"'", null);
-            regAfectados+=contador;
+            //si tiene registros relacionados
+            if (verificarIntegridadJavier(rolDocente,10)) {
+                return "Registro relacionados con la tabla Docente no se puede eliminar";
+            }else {
+                rolDocente = verificarIdRolD(rolDocente);
+                if(verificarIntegridadJavier(rolDocente,11)){
+                    return "Registro relacionados con la tabla carga academica no se puede eliminar";
+                }else if(verificarIntegridadJavier(rolDocente,12)){
+                    return "Registro relacionado con la tabla grupo no se puede eliminar";
+                }else {
+                    contador += db.delete("rolDocente", "nomRolDocente='" + rolDocente.getNomRolDocente() + "'", null);
+                    regAfectados +=  contador+" el Registro eliminado con exito ";
+                }
+            }
         }
         else
         {
@@ -1183,18 +1196,14 @@ public class ControlReserveLocal {
 
     }
 
-    //eliminar el rol del Docente
+    //eliminar el tipo local
     public String eliminar(TipoLocal tipoLocal){
         String regAfectados="filas afectadas= ";
         int contador=0;
-        //Si existe carnet
+        //Si existe el tipo local
         if(verificarIntegridadJavier(tipoLocal, 3))        {
-            //si tiene registros relacionados, se eliminan primero
-            /*if (verificarIntegridad(alumno,3)) {
-                contador+=db.delete("nota", "carnet='"+alumno.getCarnet()+"'", null);
-            }*/
             contador+=db.delete("tipoLocal", "nomTipoLocal='"+tipoLocal.getNomTipoLocal()+"'", null);
-            regAfectados+=contador;
+            regAfectados+=contador + "el registro tipo local eliminado con exito";
         }
         else
         {
@@ -1299,7 +1308,7 @@ public class ControlReserveLocal {
         //Si existe usuario
         if(verificarIntegridadJavier(usuario, 4))        {
             contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'", null);
-            regAfectados+=contador;
+            regAfectados+=contador + " el registro usuario eliminado con exito";
         }
         else
         {
@@ -1361,6 +1370,19 @@ public class ControlReserveLocal {
         if (cursor.moveToFirst()){
             d.setRol(cursor.getString(0));
             return d;
+        }else {
+            return null;
+        }
+    }
+
+    public RolDocente verificarIdRolD(RolDocente rolDocente){
+        //String [] id = {user.getCarnetDocente()};
+        RolDocente r = new RolDocente();
+        Cursor cursor = db.rawQuery("select idRolDocente,nomRolDocente from rolDocente where nomRolDocente = '"+rolDocente.getNomRolDocente()+"' ",null);
+        if (cursor.moveToFirst()){
+            r.setIdRolDocente(cursor.getInt(0));
+            r.setNomRolDocente(cursor.getString(1));
+            return r;
         }else {
             return null;
         }
@@ -1746,6 +1768,84 @@ public class ControlReserveLocal {
                 return false;
             }
 
+            case 7: {
+                //verificar que exista un docente relacionado con usuario
+                Docente docente2 = (Docente) dato;
+                String[] id = {docente2.getCarnetDocente()};
+                abrir();
+                Cursor c2 = db.query("usuario", null, "carnetDocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Docente relacionado con usuario
+                    return true;
+                }
+                return false;
+            }
+
+            case 8: {
+                //verificar que exista un docente relacionado con carga Academica
+                Docente docente2 = (Docente) dato;
+                String[] id = {docente2.getCarnetDocente()};
+                abrir();
+                Cursor c2 = db.query("cargaAcademica", null, "carnetDocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Docente relacionado con carga academica
+                    return true;
+                }
+                return false;
+            }
+
+            case 9: {
+                //verificar que exista un docente relacionado con la tabla grupo
+                Docente docente2 = (Docente) dato;
+                String[] id = {docente2.getCarnetDocente()};
+                abrir();
+                Cursor c2 = db.query("grupo", null, "carnetdocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Docente relacionado con grupo
+                    return true;
+                }
+                return false;
+            }
+
+            case 10: {
+                //verificar que exista un docentes relacionado con la tabla rol
+                RolDocente rol = (RolDocente) dato;
+                String[] id = {rol.getNomRolDocente()};
+                abrir();
+                Cursor c2 = db.query("docente", null, "rol = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Docente relacionado con rol
+                    return true;
+                }
+                return false;
+            }
+
+            case 11: {
+                //verificar que exista un rol docentes relacionado con la tabla carga academica
+                RolDocente rol = (RolDocente) dato;
+                String[] id = {String.valueOf(rol.getIdRolDocente())};
+                abrir();
+                Cursor c2 = db.query("cargaAcademica", null, "idRolDocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Rol Docente relacionado con tabla carga academica
+                    return true;
+                }
+                return false;
+            }
+
+            case 12: {
+                //verificar que exista un rol docentes relacionado con la tabla grupo
+                RolDocente rol = (RolDocente) dato;
+                String[] id = {String.valueOf(rol.getIdRolDocente())};
+                abrir();
+                Cursor c2 = db.query("grupo", null, "idroldocente = ?", id, null, null, null);
+                if (c2.moveToFirst()) {
+                    //Se encontro Rol Docente relacionado con la tabla grupo
+                    return true;
+                }
+                return false;
+            }
+
             default:
                 return false;
 
@@ -1902,16 +2002,16 @@ public class ControlReserveLocal {
         final String[] VHhoraFin = {"8:00","9:45","11:30","13:15"};
 
         // tabla CargaAcademica--------------------- 7 tuplas
-        final Integer[] VCidRolDocente = {1,1,2,2,3,1,1};
+        final Integer[] VCidRolDocente = {1,1,2,2,3,1,3};
         final String[] VCcodigoAsignatura = {"MAT115","PRN115","IEC115","TSI115","IEC115","MAT115","PRN115"};
         final String[] VCcodigoCiclo = {"12016","12016","22016","22016","22020","22020","22016"};
-        final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","vvvvvvv","OO12035"};
+        final String[] VCcarnetDocente = {"vvvvvvv","OO12035","sssssss","OF12044","ttttttt","CC12021","OO12035"};
 
         //tabla rol docente
         final String[] VRDnomRolDocente = {"Administrador","Docente","Jefe de Catedra","Encargado de Laboratorio"};
 
         //tipo de local
-        final String[] V_TPnomTipoLocal = {"B11","C11","D11","Lcomp1"};
+        final String[] V_TPnomTipoLocal = {"Clases","Conferencias","Laboratorio de Computacion","Capacitaciones"};
 
         //Tabla docente
         final String[] VDcarnetDocente = {"OO12035","OF12044","GG11098","CC12021"};
@@ -1938,7 +2038,7 @@ public class ControlReserveLocal {
         final String[] VDfechaHasta = {"24:00:00 10-05-2020","24:00:00 02-10-2020","24:00:00 01-05-2020","24:00:00 07-08-2020","24:00:00 17-06-2020"};
 
         //TABLA GRUPO
-        final Integer[] VGidRolDocente = {1,2,3};
+        final Integer[] VGidRolDocente = {1,2,4};
         final String[] VGcodigoAsignatura = {"MAT115","PRN115","IEC115"};
         final String[] VGcodigoCiclo = {"1-2020","2-2020","1-2020"};
         final String[] VGcarnetDocente = {"OO12035","OF12044","GG11098"};
