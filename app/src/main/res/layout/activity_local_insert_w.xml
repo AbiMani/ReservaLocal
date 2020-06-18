@@ -9,58 +9,56 @@
     android:stretchColumns="1" >
 
     <TableRow>
-        <TextView android:text="@string/codigoEscuela" />
+        <TextView android:text="@string/codigoLocal" />
         <EditText
-            android:id="@+id/editCodigoEscuela"
+            android:id="@+id/editCodigoLocal"
             android:inputType="text"
             android:maxLength="20" />
     </TableRow>
 
     <TableRow>
-        <TextView android:text="Tipo Evento" />
+        <TextView android:text="@string/idEncargadoLocal" />
         <EditText
-            android:id="@+id/editidTipoEvento"
+            android:id="@+id/editIdEncargadoLocal"
             android:inputType="text"
-            android:maxLength="60" />
+            android:maxLength="2" />
+    </TableRow>
+
+    <TableRow>
+        <TextView android:text="@string/IdTipoLocal" />
+        <EditText
+            android:id="@+id/editIdTipoLocal"
+            android:inputType="text"
+            android:maxLength="2" />
+    </TableRow>
+
+    <TableRow>
+        <TextView android:text="@string/UbicacionLocal" />
+        <EditText
+            android:id="@+id/editUbicacionLocal"
+            android:inputType="text"
+            android:maxLength="30" />
     </TableRow>
     <TableRow>
-        <TextView android:text="Nombre Evento" />
+        <TextView android:text="@string/CapacidadLocal" />
         <EditText
-            android:id="@+id/editnombreevento"
+            android:id="@+id/editCapacidadLocal"
             android:inputType="text"
-            android:maxLength="60" />
-    </TableRow>
-    <TableRow>
-        <TextView android:text="Capacidad" />
-        <EditText
-            android:id="@+id/editCapacidadEvento"
-            android:inputType="text"
-            android:maxLength="10" />
-    </TableRow>
-    <TableRow>
-        <TextView android:text="Fecha Evento" />
-        <EditText
-            android:id="@+id/editFechaEvento"
-            android:inputType="text"
-            android:hint="@string/formato_fecha"
-            android:maxLength="10" />
+            android:maxLength="30" />
     </TableRow>
     <TableRow>
         <TextView android:text="@string/opciones" />
     </TableRow>
 
     <Button
-        android:id="@+id/btn_reservaLocal"
-        android:onClick="insertarR"
+        android:id="@+id/btn_localesLocal"
+        android:onClick="insertarTipoLocal"
         android:text="@string/servicio_PHPlocal" />
     <Button
-        android:id="@+id/btn_reservaExterno"
-        android:onClick="insertarR"
+        android:id="@+id/btn_localExterno"
+        android:onClick="insertarTipoLocal"
         android:text="@string/servicio_PHPexterno" />
-    <Button
-        android:id="@+id/btn_reservaPublicoUES"
-        android:onClick="insertarR"
-        android:text="@string/servicio_PublicoUES" />
+
     <Button
         android:onClick="limpiarTexto"
         android:text="@string/limpiar" />

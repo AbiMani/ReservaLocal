@@ -14,9 +14,9 @@ public class CicloInsertWActivity extends AppCompatActivity {
     EditText codigocicloTxt;
     EditText fechainicioTxt;
     EditText fechafinTxt;
-    private final String urlLocal = "http://192.168.1.6/ws_dia_insert.php";
+    private final String urlLocal = "http://192.168.1.6/ws_ciclo_insert.php";
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_ciclo_insert.php";
-    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_dia_insert.php";
+    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MS10047/ws_ciclo_insert.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

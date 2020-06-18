@@ -114,12 +114,14 @@
     <string name="servicioWeb6">Servicio Web 6</string>
     <string name="servicioWeb7">Ingresar Ciclo</string>
     <string name="servicioWeb8">Servicio Web 8</string>
+    <string name="servicioWeb9"> servicio we 9</string>
     <string name="servicio_PHPexterno">Servicio PHP Externo</string>
     <string name="servicio_PHPlocal">Servicio PHP Local</string>
     <string name="servicio_PublicoUES">EISI Publico</string>
 
     <string name="indicacion_ciclo">Cual ciclo desea consultar la carga academica?</string>
     <string name="formato_ciclo">c-aaaa</string>
+    <string name="formato_fecha">dd/mm/aaaa</string>
     <string name="guardar">Guardar</string>
     <string name="iddia">ID Dia</string>
     <string name="nomdia">Nombre Dia</string>
@@ -142,6 +144,7 @@
     <string name="ges_dian">Gestión Dias no Habiles</string>
     <string name="ges_te">Gestión Tipo Evento</string>
     <string name="ges_l">Gestión Local</string>
+    <string name="ges_enc">Gestion Encargado</string>
     <string name="ges_s">Servicios WEB</string>
 
     <string name="ges_re">Gestión Reserva Evento</string>
