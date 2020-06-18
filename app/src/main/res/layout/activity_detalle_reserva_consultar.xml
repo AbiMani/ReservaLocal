@@ -195,6 +195,27 @@
             android:cursorVisible="false"
             android:longClickable="false"/>
     </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ubicacion del local "/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/editUbiLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled ="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:cursorVisible="false"
+                android:longClickable="false"/>
+        </TableRow>
     </LinearLayout>
     </ScrollView>
 </TableLayout>

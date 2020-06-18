@@ -55,9 +55,9 @@ public class DetalleReservaInsertarActivity extends Activity {
             Local local = helper.consultarLocal(codigoLocal);
             ReservaEvento reservaEvento=helper.consultarReserva(Integer.valueOf(reserva_id));
             helper.cerrar();
-            if (local.getCapacidadLocal() < reservaEvento.getCapacidadTotalEvento())
-            {Toast.makeText(this, "El local " + codigoLocal  + " no tiene la capacidad para el evento", Toast.LENGTH_LONG).show();}
-            else {
+           // if (local.getCapacidadLocal() < reservaEvento.getCapacidadTotalEvento())
+            //{Toast.makeText(this, "El local " + codigoLocal  + " no tiene la capacidad para el evento", Toast.LENGTH_LONG).show();}
+            //else {
                 detalleReservaEvento.setIdHorario(Integer.valueOf(idhorario));
                 detalleReservaEvento.setIdReservaEvento(Integer.valueOf(reserva_id));
                 detalleReservaEvento.setCodigoLocal(codigoLocal);
@@ -65,7 +65,7 @@ public class DetalleReservaInsertarActivity extends Activity {
                 regInsertados = helper.insertar(detalleReservaEvento);
                 helper.cerrar();
                 Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
-            }
+            //}
         }
     }
 
