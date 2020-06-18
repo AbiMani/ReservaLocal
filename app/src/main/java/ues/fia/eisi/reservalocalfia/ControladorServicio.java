@@ -180,27 +180,60 @@ public class ControladorServicio {
             e.printStackTrace();
         }
     }
-    public static List<Local> obtenerLocalesExterno(String json, Context ctx) {
-        List<Local> listaLocal = new ArrayList<Local>();
+    public static List<Encargado> obtenerEncargadoExterno(String json, Context ctx) {
+        List<Encargado> listaEncargado = new ArrayList<Encargado>();
         try {
-            JSONArray localJSON = new JSONArray(json);
-            for (int i = 0; i < localJSON.length(); i++) {
-                JSONObject obj = localJSON.getJSONObject(i);
-                Local local = new Local();
-                local.setCodigoLocal(obj.getString("codigoLocal"));
-                local.setIdEncargadoLocal(obj.getString("idEncargadoLocal"));
-                local.setIdTipoLocal(obj.getString("idtipolocal"));
-                local.setCapacidadLocal(obj.getInt("capacidadLocal"));
-                local.setUbicacionLocal(obj.getString("ubicacionLocal"));
+            JSONArray encargadoJSON = new JSONArray(json);
+            for (int i = 0; i < encargadoJSON.length(); i++) {
+                JSONObject obj = encargadoJSON.getJSONObject(i);
+                Encargado encargado = new Encargado();
+                encargado.setIdEncargadoLocal(obj.getString("idEncargadoLocal"));
+                encargado.setNomEncargadoLocal(obj.getString("nomEncargadoLocal"));
+                encargado.setApeEncargadoLocal(obj.getString("apeEncargadoLocal"));
 
-                listaLocal.add(local);
+
+                listaEncargado.add(encargado);
             }
-            return listaLocal;
+            return listaEncargado;
 
         } catch (Exception e) {
             Toast.makeText(ctx, "Error en parseOO de JSON", Toast.LENGTH_LONG).show();
             return null;
         }
+    }
+        public static void insertarEncargadoExterno(String peticion, Context ctx) {
+            String json = obtenerRespuestaPeticion(peticion, ctx);
+            try {
+                JSONObject resultado = new JSONObject(json);
+                Toast.makeText(ctx, "Registro ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+                int respuesta = resultado.getInt("resultado");
+                if (respuesta == 1) Toast.makeText(ctx, "Registro ingresado", Toast.LENGTH_LONG).show();
+                else Toast.makeText(ctx, "Error registro duplicado", Toast.LENGTH_LONG).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        public static List<Local> obtenerLocalesExterno(String json, Context ctx) {
+            List<Local> listaLocal = new ArrayList<Local>();
+            try {
+                JSONArray localJSON = new JSONArray(json);
+                for (int i = 0; i < localJSON.length(); i++) {
+                    JSONObject obj = localJSON.getJSONObject(i);
+                    Local local = new Local();
+                    local.setCodigoLocal(obj.getString("codigoLocal"));
+                    local.setIdEncargadoLocal(obj.getString("idEncargadoLocal"));
+                    local.setIdTipoLocal(obj.getString("idtipolocal"));
+                    local.setCapacidadLocal(obj.getInt("capacidadLocal"));
+                    local.setUbicacionLocal(obj.getString("ubicacionLocal"));
+
+                    listaLocal.add(local);
+                }
+                return listaLocal;
+
+            } catch (Exception e) {
+                Toast.makeText(ctx, "Error en parseOO de JSON", Toast.LENGTH_LONG).show();
+                return null;
+            }
     }
 
 

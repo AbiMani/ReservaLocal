@@ -63,7 +63,7 @@ public class ControlReserveLocal {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
-                db.execSQL("CREATE TABLE Encargado(idEncargadoLocal VARCHAR(2) NOT NULL PRIMARY KEY,nomEncargadoLocal VARCHAR(30),apeEncargadoLocall VARCHAR(30));");
+                db.execSQL("CREATE TABLE Encargado(idEncargadoLocal VARCHAR(2) NOT NULL PRIMARY KEY,nomEncargadoLocal VARCHAR(30),apeEncargadoLocal VARCHAR(30));");
                 db.execSQL("CREATE TABLE Local(codigoLocal VARCHAR(20) NOT NULL PRIMARY KEY,idEncargadoLocal VARCHAR(2),idTipoLocal VARCHAR(2),ubicacionLocal VARCHAR(40),capacidadLocal INTEGER);");
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
