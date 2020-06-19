@@ -69,15 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.06"
         android:onClick="lanzarActividad"
-        android:text="@string/servicioWeb9"
-        tools:ignore="OnClick" />
-
-    <Button
-        android:id="@+id/button_sw8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.06"
-        android:onClick="lanzarActividad"
         android:text="@string/servicioWeb8"
         tools:ignore="OnClick" />
 
