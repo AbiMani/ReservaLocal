@@ -60,24 +60,32 @@ public class ReservaEventoActualizarActivity extends Activity {
         String reserva_id=(spinnerReserva.getSelectedItem().toString());
         String tipoEvento_id=spinnerTipoevento.getSelectedItem().toString();
 
+        helper.abrir();
+        String codigoE=(editCodigoEscuela.getText().toString());
+        Escuela escuela=helper.consultarEscuela(codigoE);
+        helper.cerrar();
+
         if (editCodigoEscuela.getText().toString().equals("") || editFechaEvento.getText().toString().equals("") ||spinnerReserva.getSelectedItem().toString().equals(0) || spinnerTipoevento.getSelectedItem().toString().equals("Seleccione...") ){
             Toast.makeText(this, "Debe rellenar todos los campos", Toast.LENGTH_SHORT).show();
         }
         else {
-            reservaEvento.setIdReservaEvento(Integer.valueOf(reserva_id));
-            reservaEvento.setCodigoEscuela(editCodigoEscuela.getText().toString());
-            reservaEvento.setIdTipoEvento(tipoEvento_id);
-            reservaEvento.setNombreEvento(editnombreEvento.getText().toString());
-            reservaEvento.setCapacidadTotalEvento(Integer.valueOf(editCapacidad.getText().toString()));
-            reservaEvento.setFechaReservaEvento(editFechaEvento.getText().toString());
+            if (escuela == null) {
+                Toast.makeText(this, "El codigo de escuela no se encontro ", Toast.LENGTH_SHORT).show();
+            } else {
+                reservaEvento.setIdReservaEvento(Integer.valueOf(reserva_id));
+                reservaEvento.setCodigoEscuela(editCodigoEscuela.getText().toString());
+                reservaEvento.setIdTipoEvento(tipoEvento_id);
+                reservaEvento.setNombreEvento(editnombreEvento.getText().toString());
+                reservaEvento.setCapacidadTotalEvento(Integer.valueOf(editCapacidad.getText().toString()));
+                reservaEvento.setFechaReservaEvento(editFechaEvento.getText().toString());
 
-            helper.abrir();
-            String estado = helper.actualizar(reservaEvento);
-            helper.cerrar();
+                helper.abrir();
+                String estado = helper.actualizar(reservaEvento);
+                helper.cerrar();
 
-            Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
+            }
         }
-
     }
 
     public void limpiarTexto(View v) {

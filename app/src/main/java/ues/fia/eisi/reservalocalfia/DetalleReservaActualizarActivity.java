@@ -43,20 +43,29 @@ public class DetalleReservaActualizarActivity extends Activity {
 
     public void actualizarDetalleReserva(View v) {
         DetalleReservaEvento detalleReservaEvento = new DetalleReservaEvento();
+        helper.abrir();
+        String codigoL= (editcodigoLocal.getText().toString());
+        String horario=(editidHorario.getText().toString());
+        Local local=helper.consultarLocal(codigoL);
+        Horario horario1=helper.consultarHorario(horario);
+        helper.cerrar();
 
         if (idReservaEvento.getSelectedItem().toString().equals(0) || editidHorario.getText().toString().equals("")|| editcodigoLocal.getText().toString().equals("")){
             Toast.makeText(this, "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
         }
         else {
-            detalleReservaEvento.setIdHorario(Integer.valueOf(editidHorario.getText().toString()));
-            detalleReservaEvento.setIdReservaEvento(Integer.valueOf(idReservaEvento.getSelectedItem().toString()));
-            detalleReservaEvento.setCodigoLocal(editcodigoLocal.getText().toString());
-            helper.abrir();
-            String estado = helper.actualizar(detalleReservaEvento);
-            helper.cerrar();
+            if (local==null || horario1==null){
+                Toast.makeText(this, "No se encontraron algunos datos", Toast.LENGTH_LONG).show();
+            }else {
+                detalleReservaEvento.setIdHorario(Integer.valueOf(editidHorario.getText().toString()));
+                detalleReservaEvento.setIdReservaEvento(Integer.valueOf(idReservaEvento.getSelectedItem().toString()));
+                detalleReservaEvento.setCodigoLocal(editcodigoLocal.getText().toString());
+                helper.abrir();
+                String estado = helper.actualizar(detalleReservaEvento);
+                helper.cerrar();
 
-            Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, estado, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
