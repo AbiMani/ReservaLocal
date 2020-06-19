@@ -17,29 +17,29 @@ public class Encargado {
 
     public Encargado(String idEncargadoLocal, String nomEncargadoLocal, String apeEncargadoLocal) {
         this.idEncargadoLocal = idEncargadoLocal;
-        NomEncargadoLocal = nomEncargadoLocal;
-        ApeEncargadoLocal = apeEncargadoLocal;
+        nomEncargadoLocal = nomEncargadoLocal;
+        apeEncargadoLocal = apeEncargadoLocal;
     }
 
     public String getNomEncargadoLocal() {
-        return NomEncargadoLocal;
+        return nomEncargadoLocal;
     }
 
     public void setNomEncargadoLocal(String nomEncargadoLocal) {
-        NomEncargadoLocal = nomEncargadoLocal;
+        nomEncargadoLocal = nomEncargadoLocal;
     }
 
-    private String NomEncargadoLocal;
+    private String nomEncargadoLocal;
 
     public String getApeEncargadoLocal() {
-        return ApeEncargadoLocal;
+        return apeEncargadoLocal;
     }
 
     public void setApeEncargadoLocal(String apeEncargadoLocal) {
-        ApeEncargadoLocal = apeEncargadoLocal;
+        apeEncargadoLocal = apeEncargadoLocal;
     }
 
-    private String ApeEncargadoLocal;
+    private String apeEncargadoLocal;
 
 }
 

@@ -9,19 +9,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LocalEliminarActivity extends Activity {
-    EditText editCarnet;
+    EditText editlocal;
     ControlReserveLocal controlhelper;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_eliminar);
         controlhelper=new ControlReserveLocal  (this);
-        editCarnet=(EditText)findViewById(R.id.editCodigoLocal);
+        editlocal=(EditText)findViewById(R.id.editCodigoLocal);
     }
     public void eliminarLocal(View v){
         String regEliminadas;
         Local local=new Local();
-        local.setCodigoLocal(editCarnet.getText().toString());
+        local.setCodigoLocal(editlocal.getText().toString());
         controlhelper.abrir();
         regEliminadas=controlhelper.eliminar(local);
         controlhelper.cerrar();

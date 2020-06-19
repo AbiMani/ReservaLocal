@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
-    private static final String[] camposEncargado = new String[]{"idEncargadoLocal", "NomEncargadoLocal", "ApeEncargadoLocal"};
+    private static final String[] camposEncargado = new String[]{"idEncargadoLocal", "nomEncargadoLocal", "apeEncargadoLocal"};
     private static final String[] camposLocal = new String[]{"codigoLocal", "idEncargadoLocal", "idTipoLocal", "ubicacionLocal", "capacidadLocal"};
     private static final String[] camposAsignatura = new String[] {"codigoAsignatura","codigoLocal","codigoEscuela","nomAsignatura","idPrioridad"};
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
@@ -63,7 +63,7 @@ public class ControlReserveLocal {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
-                db.execSQL("CREATE TABLE Encargado(idEncargadoLocal VARCHAR(2) NOT NULL PRIMARY KEY,nomEncargadoLocal VARCHAR(30),apeEncargadoLocal VARCHAR(30));");
+                db.execSQL("CREATE TABLE Encargado(idEncargadoLocal VARCHAR(2) NOT NULL PRIMARY KEY,nomEncargadoLocal VARCHAR(30), apeEncargadoLocal VARCHAR(30));");
                 db.execSQL("CREATE TABLE Local(codigoLocal VARCHAR(20) NOT NULL PRIMARY KEY,idEncargadoLocal VARCHAR(2),idTipoLocal VARCHAR(2),ubicacionLocal VARCHAR(40),capacidadLocal INTEGER);");
                 db.execSQL("CREATE TABLE asignatura(codigoAsignatura VARCHAR(6) NOT NULL PRIMARY KEY, codigoLocal VARCHAR(20),codigoEscuela VARCHAR(20),nomAsignatura VARCHAR(30),idPrioridad Varchar(1) not null);");
                 db.execSQL("CREATE TABLE horario(idHorario INTEGER NOT NULL PRIMARY KEY,idDia VARCHAR(1),horaInicio VARCHAR(30),horaFin VARCHAR(30));");
@@ -239,26 +239,10 @@ public class ControlReserveLocal {
         }
         return regInsertados;
     }
-    public String insertar(Encargado encargado){
-        String regInsertados="Registro Insertado Nº= ";
-        long contador=0;
-        ContentValues enc = new ContentValues();
-        enc.put("idEncargadoLocal", encargado.getIdEncargadoLocal());
-        enc.put("nomEncargadoLocal", encargado.getNomEncargadoLocal());
-        enc.put("apeEncargadoLocal", encargado.getApeEncargadoLocal());
 
-        contador=db.insert("Encargado", null, enc);
-        if(contador==-1 || contador==0)
-        {
-            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción"; }
-        else {
-            regInsertados=regInsertados+contador;
-        }
-        return regInsertados;
-    }
     public Encargado consultarEncargado(String idEncargadoLocal){
         String[] id = {idEncargadoLocal};
-        Cursor cursor = db.query("ENcargado", camposEncargado, "idEncargadoLocal = ?",
+        Cursor cursor = db.query("Encargado", camposEncargado, "idEncargadoLocal = ?",
                 id, null, null, null);
         if(cursor.moveToFirst()){
             Encargado encargado = new Encargado();
@@ -269,6 +253,22 @@ public class ControlReserveLocal {
             return encargado;
         }else{
             return null; } }
+
+    public String insertar(Encargado encargado){
+        String regInsertados = "Registro Insertado Nº= ";
+        long contador = 0;
+        ContentValues cic = new ContentValues();
+        cic.put("idEncargadoLocal", encargado.getIdEncargadoLocal());
+        cic.put("nomEncargadoLocal", encargado.getNomEncargadoLocal());
+        cic.put("apeEncargadoLocal", encargado.getApeEncargadoLocal());
+        contador = db.insert("Encargado", null, cic);
+        if (contador == -1 || contador == 0) {
+            regInsertados = "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados = regInsertados + contador;
+        }
+        return regInsertados;
+    }
     public String actualizar(Encargado encargado){
         if(verificarIntegridad(encargado, 16)){
             String[] id = {encargado.getIdEncargadoLocal()};
@@ -481,20 +481,21 @@ public class ControlReserveLocal {
         }
         return regInsertados;
     }
-    public Local consultarLocal(String codigoLocal){
+    public Local consultarLocal(String codigoLocal) {
         String[] id = {codigoLocal};
-        Cursor cursor = db.query("Local", camposLocal, "codigoLocal = ?",
-                id, null, null, null);
-        if(cursor.moveToFirst()){
+        Cursor cursor = db.query("Local", camposLocal, "codigoLocal = ?", id, null, null, null);
+        if (cursor.moveToFirst()) {
             Local local = new Local();
             local.setCodigoLocal(cursor.getString(0));
             local.setIdEncargadoLocal(cursor.getString(1));
             local.setIdTipoLocal(cursor.getString(2));
             local.setUbicacionLocal(cursor.getString(3));
-            local.setCapacidadLocal(cursor.getInt(4));
+            local.setCapacidadLocal(cursor.getString(4));
             return local;
-        }else{
-            return null; } }
+        } else {
+            return null;
+        }
+    }
 
     public String actualizar(Local local){
         if(verificarIntegridad(local, 15)){
@@ -507,6 +508,21 @@ public class ControlReserveLocal {
             db.update("Local", cv, "codigoLocal = ?", id);
             return "Registro Actualizado Correctamente"; }else{
             return "Registro con codigo " + local.getCodigoLocal() + " no existe"; }
+    }
+    public String eliminar(Local local){
+        String regAfectados= "filas afectadas= ";
+        int contador=0;
+        if(verificarIntegridad(local,19)) {
+            if (verificarIntegridad(local, 17)) {
+                regAfectados += "No se puede eliminar, Tiene dependencias en otra tabla";
+            } else {
+                contador += db.delete("Local", "codigoLocal='" + local.getCodigoLocal() + "'", null);
+                regAfectados += contador;
+            }
+        }else{
+            return "Registro no existe";
+        }
+        return regAfectados;
     }
 
 
@@ -528,16 +544,7 @@ public class ControlReserveLocal {
         }
         return regInsertados;
     }
-    public String eliminar(Local local){
-        String regAfectados="filas afectadas= ";
-        int contador=0;
-        if (verificarIntegridad(local,14)) {
-            contador+=db.delete("DetalleGrupoReserva", "carnet='"+local.getCodigoLocal()+"'", null);
-        }
-        contador+=db.delete("Local", "codigoLocal='"+local.getCodigoLocal()+"'", null);
-        regAfectados+=contador;
-        return regAfectados;
-    }
+
 
     public String insertar(Horario horario){
         String regInsertados = "Registro Insertado No= ";
@@ -1638,18 +1645,30 @@ public class ControlReserveLocal {
                     return true;
                 else
                     return false; }
-            case 15:
+            case 19:
             {
-//verificar que exista alumno
+                //verificar que exista local
                 Local local2 = (Local) dato;
                 String[] id = {local2.getCodigoLocal()};
                 abrir();
-                Cursor c2 = db.query("Local", null, "codigoLocal = ?", id, null, null,
-                        null);
+                Cursor c2 = db.query("Local", null, "codigoLocal = ?", id, null, null, null);
                 if(c2.moveToFirst()){
-//Se encontro Alumno
-                    return true; }
-                return false; }
+                    //Se encontro local
+                    return true;
+                }
+                return false;
+            }
+
+            case 15:
+            {// verifica que no exista para poder eliminar
+                Local local = (Local) dato;
+                Cursor c=db.query(true, "Encargado", new String[] {"codigoLocal" }, "codigoLocal='"+local.getCodigoLocal()+"'",null, null, null, null, null);
+
+                if(c.moveToFirst())
+                    return true; //Se encontraron datos
+                else
+                    return false;
+            }
             case 16:
             {
 //verificar que exista alumno
@@ -1982,7 +2001,7 @@ public class ControlReserveLocal {
         final String[] VEnomEncargadoLocal = {"Carlos","Pedro","Sara","Gabriela"};
         final String[] VEapeEncargadoLocal = {"Orantes","Ortiz","Gonzales","Coto"};
         // tabla local ------------------------- 5 tuplas
-        final String[] VLcodigoLocal = {"localesfia01","localesfia02","localesfia03","localesfia04"};
+        final String[] VLcodigoLocal = {"B11","C11","D11","B21"};
         final String[] VLidEncargadoLocal = {"01","02","03","04"};
         final String[] VLidTipoLocal = {"AU","AL","AL","AU"};
         final String[] VLubicacionLocal = {"EDIFICIO D","EDIFICIO D","EDIFICIO C","EDIFICIO B"};
