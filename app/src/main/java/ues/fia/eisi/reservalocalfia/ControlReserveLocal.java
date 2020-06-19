@@ -2019,7 +2019,7 @@ public class ControlReserveLocal {
         final String[] VLcodigoLocal = {"B11","C11","D11","B21"};
         final String[] VLidEncargadoLocal = {"01","02","03","04"};
         final String[] VLidTipoLocal = {"AU","AL","AL","AU"};
-        final String[] VLubicacionLocal = {"EDIFICIO D","EDIFICIO D","EDIFICIO C","EDIFICIO B"};
+        final String[] VLubicacionLocal = {"EDIFICIO B","EDIFICIO C","EDIFICIO D","EDIFICIO B"};
         final Integer[] VLcapacidadLocal ={200,400,300,100};
 
         // tabla Asignatura--------------------- 4 tuplas
