@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
@@ -8,6 +8,13 @@
     android:weightSum="1"
     tools:context=".MainActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <Button
         android:id="@+id/button_A1"
         android:layout_width="match_parent"
@@ -97,5 +104,6 @@
         android:layout_weight="0.06"
         android:onClick="lanzarMenuA"
         android:text="@string/ges_s" />
-
 </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

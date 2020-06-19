@@ -23,7 +23,7 @@ public class ConsultarReservasActivity extends AppCompatActivity {
     static List<String> nombreReservas;
     ListView listViewReservas;
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/reservas_query.php";
-    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_db_materia_fecha.php";
+    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi04/RC15076/reservas_query.php";
 
     @SuppressLint("NewApi")
 
