@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class InsertarEscuelaActivity extends AppCompatActivity {
 
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/escuela_insert.php";
-    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_nota_insert.php";
+    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi04/RC15076/escuela_insertar.php";
 
     EditText editCodigoEscuela;
     EditText editNombreEsc;

@@ -14,14 +14,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtreservas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:text="Reservas de eventos"
-            android:textSize="15dp" />
         <Button
             android:id="@+id/button1"
             android:layout_width="fill_parent"
@@ -35,7 +27,15 @@
             android:layout_height="wrap_content"
             android:onClick="servicioPHP"
             android:text="Servicio PHP EISI" />
-
+        <TextView
+            android:id="@+id/txtreservas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Reservas de eventos (Aquí se mostrara una lista)"
+            android:textSize="15dp"
+            android:textStyle="bold|italic"/>
 
         <ListView
             android:id="@+id/lstReservas"

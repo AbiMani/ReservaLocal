@@ -26,15 +26,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </TableRow>
-
-    <TableRow>
-        <TextView android:text="Nombre del evento : " />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="Nombre del evento : "
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </TableRow>
+    <TableRow
+        android:layout_width="350dp"
+        android:layout_height="match_parent">
         <EditText
             android:id="@+id/editNombreEvento"
             android:inputType="text"
-            android:maxLength="60" />
+            android:maxLength="60"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </TableRow>
-
+    </LinearLayout>
     <TableRow>
         <TextView android:text="Capacidad del evento : " />
         <EditText

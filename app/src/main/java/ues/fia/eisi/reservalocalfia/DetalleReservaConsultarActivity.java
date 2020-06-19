@@ -18,6 +18,7 @@ public class DetalleReservaConsultarActivity extends Activity {
     EditText dia, horaI, horaF;
     EditText editcodigoLocal;
     EditText nomEvento , capacidadEvento, fechaEv;
+    EditText  ubicacionLocal;
 
     Spinner spinner;
     ArrayList<ReservaEvento> list;
@@ -50,6 +51,7 @@ public class DetalleReservaConsultarActivity extends Activity {
         nomEvento=(EditText) findViewById(R.id.editNombreEv);
         capacidadEvento=(EditText) findViewById(R.id.editCapaEvento);
         fechaEv=(EditText) findViewById(R.id.editFechaEv);
+        ubicacionLocal=(EditText) findViewById(R.id.editUbiLocal);
     }
 
     public void consultarDetalle(View v) {
@@ -62,6 +64,7 @@ public class DetalleReservaConsultarActivity extends Activity {
             DetalleReservaEvento detalleReservaEvento = helper.consultarDetalle(Integer.valueOf(editidHorario.getText().toString()), Integer.valueOf(spinner.getSelectedItem().toString()), editcodigoLocal.getText().toString());
             ReservaEvento reservaEvento=helper.consultarReserva(Integer.valueOf(spinner.getSelectedItem().toString()));
             Horario horario=helper.consultarHorario((editidHorario.getText().toString()));
+            Local local=helper.consultarLocal(editcodigoLocal.getText().toString());
             helper.cerrar();
             if (detalleReservaEvento == null) {
                 Toast.makeText(this, "Detalles no registrados", Toast.LENGTH_SHORT).show();
@@ -72,6 +75,7 @@ public class DetalleReservaConsultarActivity extends Activity {
                 nomEvento.setText(reservaEvento.getNombreEvento());
                 capacidadEvento.setText(String.valueOf(reservaEvento.getCapacidadTotalEvento()));
                 fechaEv.setText(reservaEvento.getFechaReservaEvento());
+                ubicacionLocal.setText(local.getUbicacionLocal());
             }
         }
     }
