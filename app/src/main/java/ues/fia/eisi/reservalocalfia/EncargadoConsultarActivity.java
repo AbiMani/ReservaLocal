@@ -21,9 +21,9 @@ public class EncargadoConsultarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encargado_consultar);
         helper = new  ControlReserveLocal (this);
-        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoLocal);
-        editNomEncargadoLocal = (EditText) findViewById(R.id.editNomEncargadoLocal);
-        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoLocal);
+        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoCons);
+        editNomEncargadoLocal = (EditText) findViewById(R.id.editNomEncargadoCons);
+        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoCons);
 
     }
     public void consultarEncargado  (View v) {

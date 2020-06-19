@@ -30,7 +30,7 @@ public class LocalInsertarActivity extends Activity {
         String IdEncargadoLocal=editIdEncargadoLocal.getText().toString();
         String IdTipoLocal=editIdTipoLocal.getText().toString();
         String ubicacionLocal=editUbicacionLocal.getText().toString();
-        Float capacidadLocal=Float.valueOf(editCapacidadLocal.getText().toString());
+        int capacidadLocal=Integer.valueOf(editCapacidadLocal.getText().toString());
         String regInsertados;
         Local local=new Local();
         local.setCodigoLocal(codigoLocal);

@@ -34,12 +34,10 @@
     </TableRow>
     <TableRow>
         <TextView android:text="@string/UbicacionLocal" />
-        <Spinner
+        <EditText
             android:id="@+id/editUbicacionLocal"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_width="wrap_content" />
     </TableRow>
     <TableRow>
         <Button android:onClick="actualizarLocal"

@@ -37,7 +37,7 @@ public class LocalActualizarActivity extends Activity {
         local.setCodigoLocal(editCodigoLocal.getText().toString());
         local.setIdEncargadoLocal(editIdEncargadoLocal.getText().toString());
         local.setIdTipoLocal(editIdTipoLocal.getText().toString());
-        local.setCapacidadLocal(editCapacidadLocal.getText().toString());
+        local.setCapacidadLocal(Integer.valueOf(editCapacidadLocal.getText().toString()));
         local.setUbicacionLocal(editUbicacionLocal.getText().toString());
         helper.abrir();
         String estado = helper.actualizar(local);

@@ -18,18 +18,13 @@
         android:layout_width="fill_parent"
 
         android:layout_height="wrap_content">
+
         <Button
-            android:id="@+id/botonConsultar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_activity_local_consultar"
-            android:onClick="consultarLocal"/>
-<Button
         android:id="@+id/botonConsultar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/consultar"
-        android:onClick="consultar"/>
+        android:onClick="consultarLocal"/>
 
         <Button
             android:id="@+id/botonLimpiar"

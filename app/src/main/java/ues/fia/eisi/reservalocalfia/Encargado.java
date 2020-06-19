@@ -1,6 +1,9 @@
 package ues.fia.eisi.reservalocalfia;
 
 public class Encargado {
+    private String idEncargadoLocal;
+    private String nomEncargadoLocal;
+    private String apeEncargadoLocal;
     public Encargado() {
 
     }
@@ -13,12 +16,12 @@ public class Encargado {
         this.idEncargadoLocal = idEncargadoLocal;
     }
 
-    private String idEncargadoLocal;
+
 
     public Encargado(String idEncargadoLocal, String nomEncargadoLocal, String apeEncargadoLocal) {
         this.idEncargadoLocal = idEncargadoLocal;
-        nomEncargadoLocal = nomEncargadoLocal;
-        apeEncargadoLocal = apeEncargadoLocal;
+        this.nomEncargadoLocal = nomEncargadoLocal;
+        this.apeEncargadoLocal = apeEncargadoLocal;
     }
 
     public String getNomEncargadoLocal() {
@@ -26,20 +29,20 @@ public class Encargado {
     }
 
     public void setNomEncargadoLocal(String nomEncargadoLocal) {
-        nomEncargadoLocal = nomEncargadoLocal;
+        this.nomEncargadoLocal = nomEncargadoLocal;
     }
 
-    private String nomEncargadoLocal;
+
 
     public String getApeEncargadoLocal() {
         return apeEncargadoLocal;
     }
 
     public void setApeEncargadoLocal(String apeEncargadoLocal) {
-        apeEncargadoLocal = apeEncargadoLocal;
+        this.apeEncargadoLocal = apeEncargadoLocal;
     }
 
-    private String apeEncargadoLocal;
+
 
 }
 

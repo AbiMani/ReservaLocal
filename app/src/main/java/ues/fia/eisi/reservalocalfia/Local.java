@@ -1,8 +1,20 @@
 package ues.fia.eisi.reservalocalfia;
 
 public class Local {
+    private String codigoLocal;
+    private String idEncargadoLocal;
+    private String ubicacionLocal;
+    private int capacidadLocal;
+    private String idTipoLocal;
     public Local() {
 
+    }
+    public Local(String codigoLocal, String idEncargadoLocal, String idTipoLocal, String ubicacionLocal, Integer capacidadLocal) {
+        this.codigoLocal = codigoLocal;
+        this.idEncargadoLocal = idEncargadoLocal;
+        this.idTipoLocal = idTipoLocal;
+        this.ubicacionLocal = ubicacionLocal;
+        this.capacidadLocal = capacidadLocal;
     }
 
     public String getCodigoLocal() {
@@ -13,20 +25,6 @@ public class Local {
         this.codigoLocal = codigoLocal;
     }
 
-    private String codigoLocal;
-
-    public void setCapacidadLocal(Integer capacidadLocal) {
-        this.capacidadLocal = capacidadLocal;
-    }
-
-    public Local(String codigoLocal, String idEncargadoLocal, String idTipoLocal, String ubicacionLocal, Integer capacidadLocal) {
-        this.codigoLocal = codigoLocal;
-        this.idEncargadoLocal = idEncargadoLocal;
-        this.idTipoLocal = idTipoLocal;
-        this.ubicacionLocal = ubicacionLocal;
-        this.capacidadLocal = capacidadLocal;
-    }
-
     public String getIdEncargadoLocal() {
         return idEncargadoLocal;
     }
@@ -34,18 +32,6 @@ public class Local {
     public void setIdEncargadoLocal(String idEncargadoLocal) {
         this.idEncargadoLocal = idEncargadoLocal;
     }
-
-    private String idEncargadoLocal;
-
-    public String getIdTipoLocal() {
-        return idTipoLocal;
-    }
-
-    public void setIdTipoLocal(String idTipoLocal) {
-
-    }
-
-    private String idTipoLocal;
 
     public String getUbicacionLocal() {
         return ubicacionLocal;
@@ -55,18 +41,19 @@ public class Local {
         this.ubicacionLocal = ubicacionLocal;
     }
 
-    private String ubicacionLocal;
-
-    public Integer getCapacidadLocal() {
+    public int getCapacidadLocal() {
         return capacidadLocal;
     }
 
-    public void setCapacidadLocal(Float capacidadLocal) {
-
+    public void setCapacidadLocal(int capacidadLocal) {
+        this.capacidadLocal = capacidadLocal;
     }
 
-    private Integer capacidadLocal;
+    public String getIdTipoLocal() {
+        return idTipoLocal;
+    }
 
-    public void setCapacidadLocal(String toString) {
+    public void setIdTipoLocal(String idTipoLocal) {
+        this.idTipoLocal = idTipoLocal;
     }
 }

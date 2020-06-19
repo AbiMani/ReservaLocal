@@ -18,9 +18,9 @@ public class EncargadoInsertarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encargado_insertar);
         helper = new  ControlReserveLocal (this);
-        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoLocal);
-        editNomEncargadoLocal = (EditText) findViewById(R.id.editNombreEncargadoLocal);
-        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoLocal);
+        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoinsertar);
+        editNomEncargadoLocal = (EditText) findViewById(R.id.editNomEncargadoinsertar);
+        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoinsertar);
 
     }
     public void insertarEncargado(View v) {

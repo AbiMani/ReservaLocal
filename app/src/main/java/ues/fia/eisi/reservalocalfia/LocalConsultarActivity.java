@@ -44,7 +44,7 @@ public class LocalConsultarActivity extends Activity {
             editIdEncargadoLocal.setText(local.getIdEncargadoLocal());
             editIdTipoLocal.setText(local.getIdTipoLocal());
             editUbicacionLocal.setText(local.getUbicacionLocal());
-
+            editCapacidadLocal.setText(String.valueOf(local.getCapacidadLocal()));
         }
     }
 

@@ -252,7 +252,9 @@ public class ControlReserveLocal {
 
             return encargado;
         }else{
-            return null; } }
+            return null;
+        }
+    }
 
     public String insertar(Encargado encargado){
         String regInsertados = "Registro Insertado Nº= ";
@@ -490,7 +492,7 @@ public class ControlReserveLocal {
             local.setIdEncargadoLocal(cursor.getString(1));
             local.setIdTipoLocal(cursor.getString(2));
             local.setUbicacionLocal(cursor.getString(3));
-            local.setCapacidadLocal(cursor.getString(4));
+            local.setCapacidadLocal(cursor.getInt(4));
             return local;
         } else {
             return null;
@@ -498,7 +500,7 @@ public class ControlReserveLocal {
     }
 
     public String actualizar(Local local){
-        if(verificarIntegridad(local, 15)){
+        if(verificarIntegridad(local, 19)){
             String[] id = {local.getCodigoLocal()};
             ContentValues cv = new ContentValues();
             cv.put("idEncargadoLocal", local.getIdEncargadoLocal());
@@ -1711,6 +1713,7 @@ public class ControlReserveLocal {
                 }
                 return false;
             }
+
             default:
                 return false;
         }

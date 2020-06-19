@@ -19,11 +19,11 @@ public class EncargadoActualizarActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ciclo_actualizar);
+        setContentView(R.layout.activity_encargado_actualizar);
         helper = new ControlReserveLocal(this);
-        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoLocales);
-        editNomEncargadoLocal = (EditText) findViewById(R.id.editNomEncargadoLocal);
-        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoLocal);
+        editIdEncargadoLocal = (EditText) findViewById(R.id.editIdEncargadoAct);
+        editNomEncargadoLocal = (EditText) findViewById(R.id.editNomEncargadoAct);
+        editApeEncargadoLocal = (EditText) findViewById(R.id.editApeEncargadoAct);
     }
 
     public void actualizarEncargado(View v) {

@@ -6,21 +6,21 @@
     android:stretchColumns="1" >
     <TableRow> <TextView android:text="@string/idEncargadoLocal"/>
         <EditText
-            android:id="@+id/editIdEncargadoLocales"
+            android:id="@+id/editIdEncargadoinsertar"
             android:inputType="text"
             android:maxLength="2" />
     </TableRow>
     <TableRow>
         <TextView android:text="@string/NomEncargadoLocal" />
         <EditText
-            android:id="@+id/editNomEncargadoLocal"
+            android:id="@+id/editNomEncargadoinsertar"
             android:inputType="text"
             android:maxLength="30" />
     </TableRow>
     <TableRow>
         <TextView android:text="@string/ApeEncargadoLocal" />
         <EditText
-            android:id="@+id/editApeEncargadoLocal"
+            android:id="@+id/editApeEncargadoinsertar"
             android:inputType="text"
             android:maxLength="30" />
     </TableRow>
@@ -28,8 +28,9 @@
     <TableRow>
         <TextView android:text="@string/opciones" />
     </TableRow>
-    <TableRow> <Button
-        android:onClick="insertarLocal"
+    <TableRow>
+        <Button
+        android:onClick="insertarEncargado"
         android:text="@string/insertar" />
         <Button
             android:onClick="limpiarTexto"
