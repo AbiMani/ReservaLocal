@@ -160,8 +160,28 @@ public class ControlReserveLocal {
                        "     THEN RAISE(ABORT, 'No existe el Local seleccionado')\n" +
                        "    END;\n" +
                        "END");
-
-
+                 //TRIGGER DE ACTUALIZACION EN RESERVAEVENTO
+                db.execSQL("CREATE TRIGGER update_reservaevento\n" +
+                        "AFTER UPDATE OF codigoEscuela ON reservaevento\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "      SELECT CASE\n" +
+                        "      WHEN((SELECT codigoEscuela FROM escuela\n" +
+                        "      WHERE codigoEscuela=new.codigoEscuela) IS NULL)\n" +
+                        "      THEN RAISE(ABORT, 'No existe codigo escuela')\n" +
+                        "END;\n" +
+                        "END;");
+                //TRIGGER DE ACTUALIZACION
+                db.execSQL("CREATE TRIGGER update_detallereserva\n" +
+                        "AFTER UPDATE OF codigoLocal ON detallereserva\n" +
+                        "FOR EACH ROW\n" +
+                        "BEGIN\n" +
+                        "      SELECT CASE\n" +
+                        "      WHEN((SELECT codigoLocal FROM Local\n" +
+                        "      WHERE codigoLocal=new.codigoLocal) IS NULL)\n" +
+                        "      THEN RAISE(ABORT, 'No existe codigo de local')\n" +
+                        "END;\n" +
+                        "END;");
                 //tabla tipo local
                 db.execSQL("CREATE TABLE tipoLocal(idTipoLocal INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nomTipoLocal varchar(30));");
                 //tabla rol docente
@@ -922,8 +942,8 @@ public class ControlReserveLocal {
             detalle.put("idReservaEvento", detalleReservaEvento.getIdReservaEvento());
             detalle.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
             contador = db.insert("detallereserva", null, detalle);
-            if (contador==-1){
-                regInsertados = "Error. No se encontro alguno de los valores insertados, verifique.";
+            if (contador==-1 || contador==0){
+                regInsertados = "Error. No se encontro el id de horario, verifique.";
             }
             else {
                 regInsertados = "Registro insertado exitosamente ";
@@ -940,7 +960,7 @@ public class ControlReserveLocal {
         reservas.put("codigoLocal", detalleReservaEvento.getCodigoLocal());
         contador+=db.update("detallereserva", reservas, "idReservaEvento = ?", id);
         if (contador==0 || contador==-1){
-            return "Error. Verifique que los datos sean correctos";
+            return "Error. No existe codigo de local ";
         }
         else {
             return "Registro Actualizado Correctamente";
