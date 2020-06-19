@@ -14,7 +14,7 @@ public class DiaInsertActivity extends AppCompatActivity {
     EditText nomdiaTxt;
     private final String urlLocal = "http://192.168.1.6/ws_dia_insert.php";
     private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_dia_insert.php";
-    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_dia_insert.php";
+    private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi04/BV12004/ws_dia_insert.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

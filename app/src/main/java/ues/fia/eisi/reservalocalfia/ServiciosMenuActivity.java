@@ -42,10 +42,6 @@ public class ServiciosMenuActivity extends AppCompatActivity {
                 i = new Intent(this,LocalInsertWActivity.class);
                 break;
 
-            case R.id.button_sw8:
-                i = new Intent();
-                break;
-
         }
         if (i != null) startActivity(i);
     }

@@ -18,8 +18,8 @@ public class LocalInsertWActivity extends AppCompatActivity {
         EditText capacidadlocaltxt;
 
 
-        private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_ciclo_insert.php";
-        private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/MQ25001/ws_dia_insert.php";
+        private final String urlHostingGratuito = "https://reservalocalfia04.000webhostapp.com/ws_local_insert.php";
+        private String urlPublicoUES = "https://eisi.fia.ues.edu.sv/eisi25/AV10001/ws_local_insert.php";
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
