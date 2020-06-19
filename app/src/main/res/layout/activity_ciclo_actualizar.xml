@@ -1,39 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dip"
     android:stretchColumns="1" >
-    <TableRow> <TextView android:text="@string/codigoLocal" />
+    <TableRow>
+        <TextView android:text="@string/codigoCiclo" />
         <EditText
-            android:id="@+id/editCodigoLocal"
+            android:id="@+id/editCodciclo"
             android:inputType="text"
-            android:maxLength="20" />
-    </TableRow> <TableRow> <TextView android:text="@string/idEncargadoLocal" />
-    <EditText
-        android:id="@+id/editNombreEncargadoLocal"
-        android:inputType="text"
-        android:maxLength="2" />
-</TableRow> <TableRow> <TextView android:text="@string/IdTipoLocal" />
-    <EditText
-        android:id="@+id/editIdTipoLocal"
-        android:inputType="text"
-        android:maxLength="2" />
-</TableRow> <TableRow> <TextView android:text="@string/UbicacionLocal" />
-    <EditText
-        android:id="@+id/editUbicacionLocal"
-        android:inputType="text"
-        android:maxLength="40" />
-</TableRow> <TableRow> <TextView android:text="@string/CapacidadLocal" />
-    <EditText
-        android:id="@+id/editCapacidadLocal"
-        android:inputType="number"
-         />
-</TableRow> <TableRow> <Button
-    android:onClick="actualizarLocal"
-    android:text="@string/actualizar" />
-</TableRow> <TableRow> <Button
-    android:onClick="limpiarTexto"
-    android:text="@string/limpiar" />
-</TableRow>
+            android:hint="@string/formato_ciclo"
+            android:maxLength="7" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/fechaInicio" />
+        <EditText
+            android:id="@+id/editFechainicio"
+            android:inputType="text"
+            android:hint="@string/formato_fecha"
+            android:maxLength="30" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/fechaFin" />
+        <EditText
+            android:id="@+id/editFechafin"
+            android:inputType="text"
+            android:hint="@string/formato_fecha"
+            android:maxLength="30" />
+    </TableRow>
+    <TableRow>
+        <Button
+            android:onClick="actualizarCiclo"
+            android:text="@string/actualizar" />
+    </TableRow>
+    <TableRow>
+        <Button
+            android:onClick="limpiarTexto"
+            android:text="@string/limpiar" />
+    </TableRow>
 </TableLayout>
