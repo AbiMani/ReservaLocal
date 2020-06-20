@@ -13,6 +13,8 @@ public class ControlReserveLocal {
 
     //campos de las tablas de la base de datos
     private static final String[] camposEncargado = new String[]{"idEncargadoLocal", "nomEncargadoLocal", "apeEncargadoLocal"};
+    private static final String[]camposDGrupo = new String [] {"idHorario","idRolDocente","codigoAsignatura","codigoCiclo","carnetDocente","idGrupo","codigoLocal"};
+
     private static final String[] camposLocal = new String[]{"codigoLocal", "idEncargadoLocal", "idTipoLocal", "ubicacionLocal", "capacidadLocal"};
     private static final String[] camposAsignatura = new String[] {"codigoAsignatura","codigoLocal","codigoEscuela","nomAsignatura","idPrioridad"};
     private static final String[] camposCargaAcademica = new String[] {"idRolDocente","codigoAsignatura", "codigoCiclo","carnetDocente"};
@@ -201,6 +203,8 @@ public class ControlReserveLocal {
                 db.execSQL("CREATE TABLE ciclo(codigociclo VARCHAR(7) NOT NULL PRIMARY KEY,fechainicio VARCHAR(10),fechafin VARCHAR(10));");
                 db.execSQL("CREATE TABLE grupo(idroldocente INTEGER NOT NULL,codigoasignatura VARCHAR(30) NOT NULL,codigociclo VARCHAR(1) NOT NULL,carnetdocente VARCHAR(7) NOT NULL,idgrupo VARCHAR(7) NOT NULL, nummaximoestudiantes INTEGER, PRIMARY KEY(idgrupo, idroldocente, codigoasignatura, codigociclo, carnetdocente));");
                 db.execSQL("CREATE TABLE diasnohabiles(iddiasnohabiles VARCHAR(2) NOT NULL PRIMARY KEY,codigociclo VARCHAR(7) NOT NULL ,nomdiasnohabiles VARCHAR(30) ,fechadesde VARCHAR(10), fechahasta VARCHAR(10));");
+                db.execSQL("CREATE TABLE detallegruporeserva(idhorario INTEGER NOT NULL, idroldocente INTEGER NOT NULL,codigoasignatura VARCHAR(30) NOT NULL,codigociclo VARCHAR(1) NOT NULL,carnetdocente VARCHAR(7) NOT NULL,idgrupo VARCHAR(7) NOT NULL, codigolocal varchar(20) NOT NULL, PRIMARY KEY(idhorario, idgrupo, idroldocente, codigoasignatura, codigociclo, carnetdocente, idcodigolocal));");
+
             }catch (SQLException e){
                 e.printStackTrace();
             }
@@ -223,6 +227,41 @@ public class ControlReserveLocal {
     }
     public void cerrar(){
         DBHelper.close();
+    }
+
+    ////////////////////////////////////CRUD DE TABLA Detalle GRUPO /////////////////////////////////////////////////////////
+    public String eliminarDetalleGrupo(DetalleGrupoReserva detalleGrupo) {
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String where=" idhorario='"+detalleGrupo.getIdHorario()+"'";
+        where=where+" idroldocente='"+detalleGrupo.getIdroldocente()+"'";
+        where=where+" AND codigoasignatura='"+detalleGrupo.getCodigoAsignatura()+"'";
+        where=where+" AND codigociclo='"+detalleGrupo.getCodigoCiclo()+"'";
+        where=where+" AND carnetdocente='"+detalleGrupo.getCarnetDocente()+"'";
+        where=where+" AND idgrupo="+detalleGrupo.getIdGrupo();
+        contador+=db.delete("grupo", where, null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+
+    public DetalleGrupoReserva consultarDetalleGrupo(String idhorario, String idroldocente, String codigoasignatura, String codigociclo, String carnetdocente ,String idgrupo) {
+
+        String[] id = {idgrupo,idroldocente, codigoasignatura, codigociclo,carnetdocente};
+        Cursor cursor = db.query("detallegruporeserva", camposDGrupo, "idhorario= ? AND idroldocente = ? AND codigoasignatura = ?" +
+                " AND codigociclo = ? AND carnetdocente =? AND idgrupo = ? ", id, null, null, null);
+        if (cursor.moveToFirst()) {
+            DetalleGrupoReserva dGrupo = new DetalleGrupoReserva();
+            dGrupo.setIdHorario(cursor.getInt(0));
+            dGrupo.setIdroldocente(cursor.getInt(1));
+            dGrupo.setCodigoAsignatura(cursor.getString(2));
+            dGrupo.setCodigoCiclo(cursor.getString(3));
+            dGrupo.setCarnetDocente(cursor.getString(4));
+            dGrupo.setIdGrupo(cursor.getString(5));
+            dGrupo.setCodigoLocal(cursor.getString(6));
+            return dGrupo;
+        } else {
+            return null;
+        }
     }
 
     ////////////////////////////////////CRUD DE TABLAS CICLO DIAS NO HABILES Y GRUPO /////////////////////////////////////////////////////////
@@ -720,6 +759,7 @@ public class ControlReserveLocal {
 
         }return lista;
     }
+
 
     public ArrayList<Prioridad> listaPrioridad(){
         abrirConsultar();
@@ -2099,6 +2139,8 @@ public class ControlReserveLocal {
         final String[] VGidGrupo = {"1","2","3"};
         final Integer[] VGnumMaximoEstudiantes = {100,60,89,90};
 
+
+
         abrir();
         db.execSQL("DELETE FROM Encargado");
         db.execSQL("DELETE FROM Local");
@@ -2116,8 +2158,10 @@ public class ControlReserveLocal {
         db.execSQL("DELETE FROM ciclo");
         db.execSQL("DELETE FROM diasnohabiles");
 
+
         db.execSQL("DELETE FROM reservaevento");
         db.execSQL("DELETE FROM detallereserva");
+
         //llenado tabla Asignatura
         Asignatura asignatura = new Asignatura();
         for(int i=0;i<4;i++){
